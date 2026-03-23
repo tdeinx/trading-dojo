@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Trading Dojo</title>
+<meta name="description" content="Master the markets. Learn stocks, options, crypto, forex and futures. Earn ranks. Build your legacy."/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;
+  --ink:#0A0A0F;--ink-3:#1A1A24;--ink-4:#22222E;
+  --panel:#13131C;--panel-2:#0F0F18;
+  --border:rgba(201,168,76,0.16);--border-b:rgba(201,168,76,0.5);
+  --text:#E8E0CC;--text-dim:#8A8070;--text-faint:#3A3630;
+  --teal:#4CC9A8;--red:#C94C4C;--purple:#8B6FD4;--blue:#4C8BC9;--amber:#C9904C;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* noise */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.5;}
+
+/* orbs */
+.orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orbs span{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.05;}
+.orbs span:nth-child(1){width:800px;height:800px;top:-400px;left:-200px;background:var(--gold);animation:o1 24s ease-in-out infinite;}
+.orbs span:nth-child(2){width:600px;height:600px;bottom:-300px;right:-200px;background:var(--purple);animation:o2 30s ease-in-out infinite;}
+.orbs span:nth-child(3){width:400px;height:400px;top:40%;left:55%;background:var(--teal);animation:o3 20s ease-in-out infinite;}
+@keyframes o1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+@keyframes o2{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,-80px)}}
+@keyframes o3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-42%,-58%)}}
+
+.app{position:relative;z-index:1;}
+
+/* ── NAV ── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.85);backdrop-filter:blur(14px);position:sticky;top:0;z-index:100;}
+.logo{font-family:'Cinzel Decorative',serif;font-size:1.15rem;color:var(--gold);display:flex;align-items:center;gap:10px;}
+.logo-mark{width:32px;height:32px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.9rem;position:relative;}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.25);}
+.nav-links{display:flex;gap:4px;list-style:none;}
+.nav-links a{font-family:'Cinzel',serif;font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);text-decoration:none;padding:8px 14px;border:1px solid transparent;transition:all 0.22s;}
+.nav-links a:hover{color:var(--gold);border-color:var(--border);background:rgba(201,168,76,0.05);}
+.nav-cta{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:10px 24px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;text-decoration:none;display:inline-block;}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,168,76,0.22);}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:100px 24px 80px;max-width:800px;margin:0 auto;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.3em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:14px;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim));}
+.hero-eyebrow::after{background:linear-gradient(90deg,var(--gold-dim),transparent);}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(2.8rem,7vw,5.2rem);font-weight:900;color:var(--gold);line-height:1.05;margin-bottom:10px;text-shadow:0 0 80px rgba(201,168,76,0.18);}
+.hero-sub{font-family:'Cinzel',serif;font-size:clamp(0.85rem,2vw,1.1rem);letter-spacing:0.2em;color:var(--text-dim);margin-bottom:28px;}
+.hero-desc{font-size:1.1rem;line-height:1.75;color:var(--text-dim);font-weight:300;max-width:560px;margin:0 auto 48px;}
+.hero-desc strong{color:var(--text);font-weight:500;}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{font-family:'Cinzel',serif;font-size:0.8rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:17px 48px;cursor:pointer;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all 0.25s;text-decoration:none;display:inline-block;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(201,168,76,0.25);}
+.btn-ghost{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:600;letter-spacing:0.15em;color:var(--gold);background:transparent;border:1px solid var(--border-b);padding:16px 36px;cursor:pointer;clip-path:polygon(9px 0%,100% 0%,calc(100% - 9px) 100%,0% 100%);transition:all 0.22s;text-decoration:none;display:inline-block;}
+.btn-ghost:hover{background:rgba(201,168,76,0.07);}
+
+/* ── STATS ── */
+.stats{display:flex;justify-content:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:0 40px;}
+.stat{padding:28px 44px;text-align:center;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat-num{font-family:'Cinzel Decorative',serif;font-size:2.2rem;color:var(--gold);font-weight:700;line-height:1;}
+.stat-label{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.15em;color:var(--text-dim);margin-top:6px;text-transform:uppercase;}
+
+/* ── MODULE GRID ── */
+.modules-section{padding:80px 40px;}
+.section-eyebrow{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.28em;color:var(--gold-dim);text-transform:uppercase;text-align:center;margin-bottom:12px;}
+.section-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:var(--text);text-align:center;margin-bottom:8px;}
+.section-desc{text-align:center;font-size:1rem;color:var(--text-dim);font-weight:300;max-width:500px;margin:0 auto 52px;}
+
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1100px;margin:0 auto;}
+
+.module-card{background:var(--panel);border:1px solid var(--border);padding:0;overflow:hidden;transition:all 0.25s;position:relative;text-decoration:none;display:block;cursor:pointer;}
+.module-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--mc-color,var(--gold));transform:scaleX(0);transform-origin:left;transition:transform 0.3s;}
+.module-card:hover::before{transform:scaleX(1);}
+.module-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.3);}
+.module-card.locked{opacity:0.45;cursor:default;}
+.module-card.locked:hover{transform:none;border-color:var(--border);}
+.module-card.locked:hover::before{transform:scaleX(0);}
+
+.mc-top{padding:28px 28px 0;}
+.mc-num{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.22em;color:var(--text-faint);text-transform:uppercase;margin-bottom:12px;}
+.mc-icon{font-size:2.4rem;margin-bottom:14px;display:block;filter:drop-shadow(0 0 14px var(--mc-color-dim,rgba(201,168,76,0.2)));}
+.mc-title{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:0.04em;}
+.module-card:hover .mc-title{color:var(--mc-color,var(--gold));}
+.mc-desc{font-size:0.9rem;color:var(--text-dim);line-height:1.55;font-weight:300;margin-bottom:20px;}
+
+.mc-footer{padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.mc-lessons{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.12em;color:var(--text-faint);}
+.mc-xp{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;color:var(--mc-color,var(--gold));}
+.mc-status{display:flex;align-items:center;gap:6px;}
+.mc-dot{width:6px;height:6px;border-radius:50%;background:var(--mc-color,var(--gold));}
+.mc-dot.idle{background:var(--text-faint);}
+.mc-status-text{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;color:var(--text-faint);}
+
+/* progress bar on card */
+.mc-progress{height:2px;background:var(--ink-4);margin:0 28px 0;}
+.mc-prog-fill{height:100%;background:var(--mc-color,var(--gold));transition:width 0.6s ease;}
+
+/* ── PATH SECTION ── */
+.path-section{padding:0 40px 80px;}
+.path-inner{max-width:1100px;margin:0 auto;background:var(--panel);border:1px solid var(--border);padding:40px 48px;position:relative;overflow:hidden;}
+.path-inner::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--gold),var(--purple),var(--teal));}
+.path-title{font-family:'Cinzel Decorative',serif;font-size:1.5rem;font-weight:700;color:var(--gold);margin-bottom:8px;}
+.path-sub{font-size:1rem;color:var(--text-dim);font-weight:300;margin-bottom:32px;line-height:1.6;}
+.path-sub strong{color:var(--text);font-weight:500;}
+.path-steps{display:flex;gap:0;flex-wrap:wrap;}
+.path-step{flex:1;min-width:140px;padding:16px 20px;border-right:1px solid var(--border);position:relative;}
+.path-step:last-child{border-right:none;}
+.ps-num{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:rgba(201,168,76,0.12);line-height:1;margin-bottom:6px;}
+.ps-title{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:0.04em;}
+.ps-desc{font-size:0.8rem;color:var(--text-dim);line-height:1.45;font-weight:300;}
+
+/* ── ARCHETYPE SECTION ── */
+.archetype-section{padding:0 40px 80px;}
+.arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;max-width:1100px;margin:0 auto;}
+.arch-card{background:var(--panel);border:1px solid var(--border);border-top:2px solid var(--ac-color,var(--gold));padding:20px 18px;text-align:center;transition:all 0.22s;cursor:pointer;text-decoration:none;display:block;}
+.arch-card:hover{transform:translateY(-3px);border-color:rgba(201,168,76,0.3);}
+.arch-emoji{font-size:2.2rem;display:block;margin-bottom:10px;filter:drop-shadow(0 0 10px var(--ac-color-dim,rgba(201,168,76,0.2)));}
+.arch-name{font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:0.04em;}
+.arch-type{font-size:0.72rem;color:var(--text-dim);font-weight:300;}
+.arch-tag{display:inline-block;margin-top:8px;padding:3px 10px;font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.1em;color:var(--ac-color,var(--gold));border:1px solid currentColor;opacity:0.7;}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-logo{font-family:'Cinzel Decorative',serif;font-size:0.9rem;color:var(--gold-dim);}
+.footer-tagline{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--text-faint);text-transform:uppercase;}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--text-faint);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--gold-dim);}
+
+/* ── ORNAMENT ── */
+.ornament{display:flex;align-items:center;gap:16px;max-width:1100px;margin:0 auto 48px;padding:0 40px;}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
+.ornament span{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.22em;color:var(--text-faint);white-space:nowrap;}
+
+/* ── PROGRESS BANNER (shows after onboarding) ── */
+.progress-banner{display:none;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--gold);margin:24px 40px 0;padding:16px 24px;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.progress-banner.show{display:flex;}
+.pb-left{display:flex;align-items:center;gap:14px;}
+.pb-avatar{font-size:1.8rem;line-height:1;}
+.pb-name{font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;color:var(--gold);}
+.pb-rank{font-size:0.82rem;color:var(--text-dim);}
+.pb-xp-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:160px;}
+.pb-xp-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.12em;color:var(--text-faint);}
+.pb-xp-track{width:160px;height:4px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
+.pb-xp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.8s ease;}
+
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .nav-links{display:none;}
+  .hero{padding:60px 20px 50px;}
+  .stats{margin:0 20px;flex-wrap:wrap;}
+  .stat{padding:18px 24px;min-width:50%;}
+  .modules-section,.path-section,.archetype-section{padding-left:20px;padding-right:20px;}
+  .path-inner{padding:28px 24px;}
+  .path-steps{flex-direction:column;}
+  .path-step{border-right:none;border-bottom:1px solid var(--border);}
+  footer{padding:24px 20px;}
+}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="orbs"><span></span><span></span><span></span></div>
+<div class="app">
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo"><div class="logo-mark">⚔</div>The Trading Dojo</div>
+    <ul class="nav-links">
+      <li><a href="dna-quiz.html">Trader DNA</a></li>
+      <li><a href="instruments.html">Instruments</a></li>
+      <li><a href="styles.html">Styles</a></li>
+      <li><a href="platforms.html">Platforms</a></li>
+    </ul>
+    <a href="dna-quiz.html" class="nav-cta">Start Training</a>
+  </nav>
+
+  <!-- PROGRESS BANNER (shows if returning user) -->
+  <div class="progress-banner" id="progress-banner">
+    <div class="pb-left">
+      <div class="pb-avatar" id="pb-avatar">⚔</div>
+      <div>
+        <div class="pb-name" id="pb-name">Welcome back</div>
+        <div class="pb-rank" id="pb-rank">Continue your training</div>
+      </div>
+    </div>
+    <div class="pb-xp-wrap">
+      <div class="pb-xp-label">XP · LEVEL <span id="pb-level">1</span></div>
+      <div class="pb-xp-track"><div class="pb-xp-fill" id="pb-xp-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section>
+    <div class="hero">
+      <div class="hero-eyebrow">Master the Markets</div>
+      <div class="hero-title">The Trading<br>Dojo</div>
+      <div class="hero-sub">Where Traders Are Forged</div>
+      <p class="hero-desc">
+        Learn <strong>stocks, options, crypto, forex & futures</strong>.
+        Master <strong>day trading, swing trading, and sniper entries</strong>.
+        Discover your Trader DNA. Earn ranks. Build your legacy.
+      </p>
+      <div class="hero-btns">
+        <a href="dna-quiz.html" class="btn-primary">Begin Your Training</a>
+        <a href="instruments.html" class="btn-ghost">Browse Modules</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Instruments</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Trading Styles</div></div>
+    <div class="stat"><div class="stat-num">9</div><div class="stat-label">Platforms</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Archetypes</div></div>
+    <div class="stat"><div class="stat-num">3,150</div><div class="stat-label">XP Available</div></div>
+  </div>
+
+  <!-- MODULES -->
+  <section class="modules-section">
+    <div class="section-eyebrow">The Curriculum</div>
+    <div class="section-title">Your Training Path</div>
+    <p class="section-desc">Each module builds on the last. Complete them in order for maximum impact.</p>
+
+    <div class="modules-grid">
+
+      <a href="dna-quiz.html" class="module-card" style="--mc-color:#C9A84C;--mc-color-dim:rgba(201,168,76,0.2)">
+        <div class="mc-top">
+          <div class="mc-num">Start Here · Identity</div>
+          <span class="mc-icon">🧬</span>
+          <div class="mc-title">Trader DNA Quiz</div>
+          <p class="mc-desc">10 real-world scenarios reveal your natural trading personality. Unlock your archetype, avatar, and custom learning path.</p>
+        </div>
+        <div class="mc-progress"><div class="mc-prog-fill" id="prog-dna" style="width:0%"></div></div>
+        <div class="mc-footer">
+          <div class="mc-lessons">10 Questions</div>
+          <div class="mc-status"><div class="mc-dot" id="dot-dna"></div><div class="mc-status-text" id="stat-dna">Not started</div></div>
+        </div>
+      </a>
+
+      <a href="instruments.html" class="module-card" style="--mc-color:#4CC9A8;--mc-color-dim:rgba(76,201,168,0.2)">
+        <div class="mc-top">
+          <div class="mc-num">Module I · What to Trade</div>
+          <span class="mc-icon">📊</span>
+          <div class="mc-title">Trading Instruments</div>
+          <p class="mc-desc">Stocks, options, crypto, forex, and futures. Deep dives into each instrument — how they work, real examples, key terms, and quizzes.</p>
+        </div>
+        <div class="mc-progress"><div class="mc-prog-fill" id="prog-inst" style="width:0%"></div></div>
+        <div class="mc-footer">
+          <div class="mc-lessons">5 Lessons · 1,250 XP</div>
+          <div class="mc-status"><div class="mc-dot idle" id="dot-inst"></div><div class="mc-status-text" id="stat-inst">Not started</div></div>
+        </div>
+      </a>
+
+      <a href="styles.html" class="module-card" style="--mc-color:#8B6FD4;--mc-color-dim:rgba(139,111,212,0.2)">
+        <div class="mc-top">
+          <div class="mc-num">Module II · How to Trade</div>
+          <span class="mc-icon">⚔️</span>
+          <div class="mc-title">Trading Styles</div>
+          <p class="mc-desc">Day trading, swing trading, scalping, sniper, momentum, and algorithmic. Learn the full profile of each style including a day-in-the-life breakdown.</p>
+        </div>
+        <div class="mc-progress"><div class="mc-prog-fill" id="prog-styles" style="width:0%"></div></div>
+        <div class="mc-footer">
+          <div class="mc-lessons">6 Styles · 1,500 XP</div>
+          <div class="mc-status"><div class="mc-dot idle" id="dot-styles"></div><div class="mc-status-text" id="stat-styles">Not started</div></div>
+        </div>
+      </a>
+
+      <a href="platforms.html" class="module-card" style="--mc-color:#C9904C;--mc-color-dim:rgba(201,144,76,0.2)">
+        <div class="mc-top">
+          <div class="mc-num">Module III · Your Arsenal</div>
+          <span class="mc-icon">🖥️</span>
+          <div class="mc-title">Platforms &amp; Tools</div>
+          <p class="mc-desc">Robinhood, WeBull, ThinkorSwim, TradingView, Finviz and more. Spec sheets, ratings, pros/cons, and a custom stack builder by Trader DNA.</p>
+        </div>
+        <div class="mc-progress"><div class="mc-prog-fill" id="prog-plat" style="width:0%"></div></div>
+        <div class="mc-footer">
+          <div class="mc-lessons">9 Platforms · 400 XP</div>
+          <div class="mc-status"><div class="mc-dot idle" id="dot-plat"></div><div class="mc-status-text" id="stat-plat">Not started</div></div>
+        </div>
+      </a>
+
+      <div class="module-card locked" style="--mc-color:#C94C4C;--mc-color-dim:rgba(201,76,76,0.2)">
+        <div class="mc-top">
+          <div class="mc-num">Module IV · Coming Soon</div>
+          <span class="mc-icon">📈</span>
+          <div class="mc-title">Paper Trading Simulator</div>
+          <p class="mc-desc">Practice trading with fake money in a real market environment. Place orders, manage positions, track your P&amp;L, and build confidence before going live.</p>
+        </div>
+        <div class="mc-progress"><div class="mc-prog-fill" style="width:0%"></div></div>
+        <div class="mc-footer">
+          <div class="mc-lessons">Live Sim · In Development</div>
+          <div class="mc-status"><div class="mc-dot idle"></div><div class="mc-status-text">🔒 Coming Soon</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LEARNING PATH -->
+  <section class="path-section">
+    <div class="ornament"><span>◆ THE PATH ◆</span></div>
+    <div class="path-inner">
+      <div class="path-title">The Recommended Path</div>
+      <p class="path-sub">New to trading? Follow this sequence. Each step builds the foundation for the next. <strong>Skip nothing — every piece connects.</strong></p>
+      <div class="path-steps">
+        <div class="path-step">
+          <div class="ps-num">01</div>
+          <div class="ps-title">Discover Your DNA</div>
+          <p class="ps-desc">Take the Trader DNA quiz first. Your archetype shapes everything that follows.</p>
+        </div>
+        <div class="path-step">
+          <div class="ps-num">02</div>
+          <div class="ps-title">Learn the Instruments</div>
+          <p class="ps-desc">Understand what you can trade before deciding how or where to trade it.</p>
+        </div>
+        <div class="path-step">
+          <div class="ps-num">03</div>
+          <div class="ps-title">Master Your Style</div>
+          <p class="ps-desc">Find the trading style that matches your personality, schedule, and risk tolerance.</p>
+        </div>
+        <div class="path-step">
+          <div class="ps-num">04</div>
+          <div class="ps-title">Build Your Stack</div>
+          <p class="ps-desc">Choose the right broker and tools for your archetype. Spend nothing until you know what you need.</p>
+        </div>
+        <div class="path-step">
+          <div class="ps-num">05</div>
+          <div class="ps-title">Paper Trade First</div>
+          <p class="ps-desc">Practice with zero risk until you are consistently profitable on paper. Then — and only then — go live.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHETYPES -->
+  <section class="archetype-section">
+    <div class="section-eyebrow">The Six Archetypes</div>
+    <div class="section-title">Which Trader Are You?</div>
+    <p class="section-desc" style="margin-bottom:36px">Take the DNA quiz to find out. Each archetype unlocks a custom learning path.</p>
+    <div class="arch-grid">
+      <a href="dna-quiz.html" class="arch-card" style="--ac-color:#C9A84C;--ac-color-dim:rgba(201,168,76,0.2)">
+        <span class="arch-emoji">🥷</span>
+        <div class="arch-name">The Sniper</div>
+        <div class="arch-type">Precision · Patience</div>
+        <div class="arch-tag">Precision Entry</div>
+      </a>
+      <a href="dna-quiz.html" class="arch-card" style="--ac-color:#C94C4C;--ac-color-dim:rgba(201,76,76,0.2)">
+        <span class="arch-emoji">🐺</span>
+        <div class="arch-name">The Momentum Rider</div>
+        <div class="arch-type">Fast · Aggressive</div>
+        <div class="arch-tag">Day Trade</div>
+      </a>
+      <a href="dna-quiz.html" class="arch-card" style="--ac-color:#8B6FD4;--ac-color-dim:rgba(139,111,212,0.2)">
+        <span class="arch-emoji">🦉</span>
+        <div class="arch-name">The Strategist</div>
+        <div class="arch-type">Calculated · Systematic</div>
+        <div class="arch-tag">Options</div>
+      </a>
+      <a href="dna-quiz.html" class="arch-card" style="--ac-color:#4CC9A8;--ac-color-dim:rgba(76,201,168,0.2)">
+        <span class="arch-emoji">🤖</span>
+        <div class="arch-name">The Quant</div>
+        <div class="arch-type">Data · Systems</div>
+        <div class="arch-tag">Algorithmic</div>
+      </a>
+      <a href="dna-quiz.html" class="arch-card" style="--ac-color:#4C8BC9;--ac-color-dim:rgba(76,139,201,0.2)">
+        <span class="arch-emoji">🐉</span>
+        <div class="arch-name">The Hodler</div>
+        <div class="arch-type">Long-Term · Conviction</div>
+        <div class="arch-tag">Position</div>
+      </a>
+      <a href="dna-quiz.html" class="arch-card" style="--ac-color:#C9904C;--ac-color-dim:rgba(201,144,76,0.2)">
+        <span class="arch-emoji">🦊</span>
+        <div class="arch-name">The Degen</div>
+        <div class="arch-type">High Risk · High Reward</div>
+        <div class="arch-tag">Volatility</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">⚔ The Trading Dojo</div>
+    <div class="footer-tagline">Where Traders Are Forged</div>
+    <div class="footer-links">
+      <a href="dna-quiz.html">DNA Quiz</a>
+      <a href="instruments.html">Instruments</a>
+      <a href="styles.html">Styles</a>
+      <a href="platforms.html">Platforms</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// Pull progress from localStorage across all modules
+function loadProgress(){
+  try{
+    // Dojo state (avatar, name, level)
+    const dojo = JSON.parse(localStorage.getItem('dojo_state')||'{}');
+    if(dojo.name || dojo.avatar){
+      const AVATAR_MAP = {
+        samurai:'🥷', phoenix:'🦅', dragon:'🐉', owl:'🦉',
+        wolf:'🐺', tiger:'🐯', kitsune:'🦊', crane:'🕊️'
+      };
+      const emoji = AVATAR_MAP[dojo.avatar] || '⚔';
+      const xp = (dojo.xp || 0);
+      const level = dojo.level || 1;
+      document.getElementById('pb-avatar').textContent = emoji;
+      document.getElementById('pb-name').textContent = dojo.name || 'Warrior';
+      document.getElementById('pb-rank').textContent = 'Level ' + level + ' · ' + xp + ' XP total';
+      document.getElementById('pb-level').textContent = level;
+      document.getElementById('pb-xp-fill').style.width = Math.min((xp % 1000) / 10, 100) + '%';
+      document.getElementById('progress-banner').classList.add('show');
+    }
+
+    // DNA quiz
+    if(dojo.traderDNA){
+      document.getElementById('prog-dna').style.width = '100%';
+      document.getElementById('dot-dna').classList.remove('idle');
+      document.getElementById('stat-dna').textContent = '✓ ' + dojo.traderDNA;
+    }
+
+    // Instruments
+    const inst = JSON.parse(localStorage.getItem('dojo_instruments')||'{}');
+    if(inst.completed){
+      const done = Object.keys(inst.completed).length;
+      const pct = done / 5 * 100;
+      document.getElementById('prog-inst').style.width = pct + '%';
+      if(done > 0){
+        document.getElementById('dot-inst').classList.remove('idle');
+        document.getElementById('stat-inst').textContent = done + '/5 complete';
+      }
+    }
+
+    // Styles
+    const styles = JSON.parse(localStorage.getItem('dojo_styles')||'{}');
+    if(styles.completed){
+      const done = Object.keys(styles.completed).length;
+      const pct = done / 6 * 100;
+      document.getElementById('prog-styles').style.width = pct + '%';
+      if(done > 0){
+        document.getElementById('dot-styles').classList.remove('idle');
+        document.getElementById('stat-styles').textContent = done + '/6 complete';
+      }
+    }
+
+    // Platforms
+    const plat = JSON.parse(localStorage.getItem('dojo_platforms')||'{}');
+    if(plat.quizScore !== null && plat.quizScore !== undefined){
+      document.getElementById('prog-plat').style.width = '100%';
+      document.getElementById('dot-plat').classList.remove('idle');
+      document.getElementById('stat-plat').textContent = '✓ Quiz: ' + plat.quizScore + '/8';
+    }
+  }catch(e){}
+}
+
+loadProgress();
+</script>
+</body>
+</html>
