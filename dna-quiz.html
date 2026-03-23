@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Trader DNA Quiz · The Trading Dojo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;
+  --ink:#0A0A0F;--ink-3:#1A1A24;--ink-4:#22222E;
+  --panel:#13131C;--border:rgba(201,168,76,0.18);--border-bright:rgba(201,168,76,0.55);
+  --text:#E8E0CC;--text-dim:#8A8070;
+  --red:#C94C4C;--teal:#4CC9A8;--purple:#8B6FD4;--blue:#4C8BC9;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.5;}
+.bg-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bg-orbs span{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.05;}
+.bg-orbs span:nth-child(1){width:700px;height:700px;top:-300px;left:-200px;background:var(--gold);animation:o1 22s ease-in-out infinite;}
+.bg-orbs span:nth-child(2){width:500px;height:500px;bottom:-200px;right:-100px;background:var(--purple);animation:o2 28s ease-in-out infinite;}
+.bg-orbs span:nth-child(3){width:350px;height:350px;top:50%;left:60%;background:var(--teal);animation:o3 18s ease-in-out infinite;}
+@keyframes o1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,50px)}}
+@keyframes o2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,-70px)}}
+@keyframes o3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-40%,-60%)}}
+
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
+
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 36px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.85);backdrop-filter:blur(12px);}
+.logo{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold);display:flex;align-items:center;gap:10px;}
+.logo-mark{width:30px;height:30px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.9rem;position:relative;}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.25);}
+.topbar-right{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;}
+
+main{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 24px 80px;}
+
+/* SCREENS */
+.screen{display:none;width:100%;max-width:780px;animation:fadeUp 0.4s ease forwards;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* INTRO */
+.intro{text-align:center;padding:20px 0;}
+.eyebrow{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.3em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.eyebrow::before,.eyebrow::after{content:'';flex:1;max-width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim));}
+.eyebrow::after{background:linear-gradient(90deg,var(--gold-dim),transparent);}
+.intro-title{font-family:'Cinzel Decorative',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:var(--gold);line-height:1.1;margin-bottom:10px;text-shadow:0 0 60px rgba(201,168,76,0.2);}
+.intro-sub{font-family:'Cinzel',serif;font-size:0.9rem;letter-spacing:0.15em;color:var(--text-dim);margin-bottom:36px;}
+.intro-desc{font-size:1.05rem;line-height:1.75;color:var(--text-dim);font-weight:300;max-width:540px;margin:0 auto 48px;}
+.intro-desc strong{color:var(--text);font-weight:500;}
+.trait-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:48px;}
+.trait-pill{padding:8px 18px;border:1px solid var(--border);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--text-dim);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);background:var(--panel);}
+.btn-start{font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:18px 56px;cursor:pointer;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all 0.25s;}
+.btn-start:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold));transform:translateY(-2px);box-shadow:0 10px 40px rgba(201,168,76,0.25);}
+
+/* QUIZ */
+.quiz-header{margin-bottom:36px;}
+.quiz-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.q-counter{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.2em;color:var(--gold-dim);}
+.q-counter span{color:var(--gold);font-size:0.9rem;font-weight:700;}
+.progress-track{width:100%;height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;position:relative;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-light));border-radius:2px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);position:relative;}
+.progress-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:8px;background:var(--gold-light);filter:blur(3px);}
+.trait-bar-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.trait-indicator{flex:1;min-width:80px;background:var(--panel);border:1px solid var(--border);padding:8px 10px;}
+.ti-label{font-size:0.58rem;font-family:'Cinzel',serif;letter-spacing:0.1em;color:var(--text-dim);margin-bottom:5px;display:flex;justify-content:space-between;}
+.ti-label span{color:var(--gold);}
+.ti-track{height:2px;background:var(--ink-4);border-radius:1px;overflow:hidden;}
+.ti-fill{height:100%;border-radius:1px;transition:width 0.6s ease;}
+.q-card{background:var(--panel);border:1px solid var(--border);padding:36px 40px;margin-bottom:24px;position:relative;overflow:hidden;}
+.q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.q-scenario{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;color:var(--gold-dim);margin-bottom:14px;text-transform:uppercase;}
+.q-text{font-size:1.2rem;font-weight:500;line-height:1.6;color:var(--text);}
+.q-text em{color:var(--gold);font-style:normal;font-weight:600;}
+.options-grid{display:flex;flex-direction:column;gap:12px;}
+.option-btn{background:var(--panel);border:1px solid var(--border);padding:18px 24px;cursor:pointer;text-align:left;transition:all 0.2s;display:flex;align-items:flex-start;gap:16px;position:relative;overflow:hidden;width:100%;}
+.option-btn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold-dim);transform:scaleY(0);transform-origin:center;transition:transform 0.25s;}
+.option-btn:hover::before,.option-btn.selected::before{transform:scaleY(1);}
+.option-btn.selected::before{background:var(--gold);}
+.option-btn:hover{border-color:rgba(201,168,76,0.4);background:var(--ink-3);transform:translateX(4px);}
+.option-btn.selected{border-color:var(--gold);background:rgba(201,168,76,0.08);}
+.opt-letter{width:28px;height:28px;border:1px solid var(--border-bright);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--gold);flex-shrink:0;transition:all 0.2s;}
+.option-btn:hover .opt-letter,.option-btn.selected .opt-letter{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+.opt-text{font-size:1rem;font-weight:400;line-height:1.5;color:var(--text-dim);padding-top:3px;transition:color 0.2s;}
+.option-btn:hover .opt-text,.option-btn.selected .opt-text{color:var(--text);}
+.quiz-nav{display:flex;justify-content:flex-end;align-items:center;gap:16px;margin-top:8px;}
+.btn-next{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:14px 40px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.25s;opacity:0.4;pointer-events:none;}
+.btn-next.enabled{opacity:1;pointer-events:all;}
+.btn-next.enabled:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,168,76,0.25);}
+.q-skip{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.15em;color:var(--text-dim);cursor:pointer;background:none;border:none;transition:color 0.2s;}
+.q-skip:hover{color:var(--gold-dim);}
+
+/* ANALYZING */
+.analyzing{text-align:center;padding:80px 20px;}
+.dna-spinner{width:80px;height:80px;margin:0 auto 32px;position:relative;}
+.dna-ring{position:absolute;inset:0;border:2px solid transparent;border-radius:50%;animation:spin 1.4s linear infinite;}
+.dna-ring:nth-child(1){border-top-color:var(--gold);animation-duration:1.4s;}
+.dna-ring:nth-child(2){inset:8px;border-right-color:var(--teal);animation-duration:1.8s;animation-direction:reverse;}
+.dna-ring:nth-child(3){inset:18px;border-bottom-color:var(--purple);animation-duration:2.2s;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dna-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.5rem;}
+.analyzing-title{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.analyzing-sub{font-size:0.9rem;color:var(--text-dim);font-weight:300;transition:opacity 0.4s;}
+.analyzing-dots span{display:inline-block;width:5px;height:5px;background:var(--gold);border-radius:50%;margin:0 3px;animation:dot 1.4s ease-in-out infinite;}
+.analyzing-dots span:nth-child(2){animation-delay:0.2s;}
+.analyzing-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes dot{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+
+/* RESULT */
+.result{padding:20px 0;}
+.result-header{text-align:center;margin-bottom:48px;}
+.result-eyebrow{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.3em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:20px;}
+.result-avatar-wrap{position:relative;display:inline-block;margin-bottom:20px;}
+.result-avatar{font-size:5rem;line-height:1;display:block;filter:drop-shadow(0 0 30px var(--archetype-glow,rgba(201,168,76,0.4)));animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.result-glow-ring{position:absolute;inset:-20px;border-radius:50%;border:1px solid var(--archetype-color,var(--gold));opacity:0.2;animation:pulse-ring 2s ease-in-out infinite;}
+.result-glow-ring:nth-child(2){inset:-35px;animation-delay:0.5s;opacity:0.1;}
+@keyframes pulse-ring{0%,100%{transform:scale(1);opacity:0.2}50%{transform:scale(1.05);opacity:0.35}}
+.archetype-name{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--archetype-color,var(--gold));margin-bottom:6px;}
+.archetype-title{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.2em;color:var(--text-dim);margin-bottom:16px;}
+.archetype-tagline{font-size:1.1rem;font-style:italic;color:var(--text-dim);font-weight:300;max-width:500px;margin:0 auto;line-height:1.6;}
+.trait-results{background:var(--panel);border:1px solid var(--border);padding:32px 36px;margin-bottom:28px;position:relative;}
+.trait-results::before{content:'YOUR TRADING DNA';position:absolute;top:-9px;left:28px;background:var(--panel);padding:0 10px;font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.2em;color:var(--gold-dim);}
+.trait-result-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.trait-result-row:last-child{margin-bottom:0;}
+.tr-label{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.1em;color:var(--text-dim);width:140px;flex-shrink:0;}
+.tr-track{flex:1;height:6px;background:var(--ink-4);border-radius:3px;overflow:hidden;}
+.tr-fill{height:100%;border-radius:3px;transition:width 1s cubic-bezier(0.4,0,0.2,1);width:0%;}
+.tr-score{font-family:'Cinzel',serif;font-size:0.72rem;color:var(--gold);width:60px;text-align:right;flex-shrink:0;}
+.ornament{display:flex;align-items:center;gap:16px;margin:32px 0;color:var(--gold-dim);}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-bright),transparent);}
+.ornament-sym{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.2em;white-space:nowrap;}
+.result-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+@media(max-width:560px){.result-cards{grid-template-columns:1fr;}}
+.result-card{background:var(--panel);border:1px solid var(--border);padding:24px;position:relative;}
+.result-card::before{position:absolute;top:-9px;left:16px;background:var(--panel);padding:0 8px;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.18em;color:var(--gold-dim);}
+.rc-strengths::before{content:'YOUR STRENGTHS';}
+.rc-watch::before{content:'WATCH OUT FOR';}
+.rc-instruments::before{content:'START WITH';}
+.rc-path::before{content:'FIRST MODULE';}
+.result-card ul{list-style:none;}
+.result-card ul li{padding:6px 0;font-size:0.92rem;font-weight:400;color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.06);display:flex;align-items:flex-start;gap:10px;line-height:1.4;}
+.result-card ul li:last-child{border-bottom:none;}
+.result-card ul li::before{content:'◆';font-size:0.4rem;color:var(--archetype-color,var(--gold));flex-shrink:0;margin-top:5px;}
+.path-rec{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--archetype-color,var(--gold));padding:28px 32px;margin-bottom:32px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;}
+.path-rec-icon{font-size:2.5rem;line-height:1;flex-shrink:0;}
+.path-rec-label{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--archetype-color,var(--gold));margin-bottom:6px;text-transform:uppercase;}
+.path-rec-title{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:8px;}
+.path-rec-desc{font-size:0.92rem;color:var(--text-dim);line-height:1.6;font-weight:300;}
+.result-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding-top:8px;}
+.btn-primary{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;letter-spacing:0.18em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:14px 40px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.25s;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,168,76,0.25);}
+.btn-ghost{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.15em;color:var(--gold);background:transparent;border:1px solid var(--border-bright);padding:13px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.25s;}
+.btn-ghost:hover{background:rgba(201,168,76,0.06);}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="bg-orbs"><span></span><span></span><span></span></div>
+<div class="app">
+  <div class="topbar">
+    <div class="logo"><div class="logo-mark">⚔</div>The Trading Dojo</div>
+    <div class="topbar-right">Trader DNA · Identity Protocol</div>
+  </div>
+  <main>
+
+    <!-- INTRO -->
+    <div class="screen active" id="screen-intro">
+      <div class="intro">
+        <div class="eyebrow">Identity Protocol</div>
+        <div class="intro-title">Trader DNA</div>
+        <div class="intro-sub">Discover Your Trading Archetype</div>
+        <p class="intro-desc">10 real-world scenarios. No right or wrong answers.<br/>We measure <strong>5 core traits</strong> to reveal your natural trading personality — then build your custom learning path around it.</p>
+        <div class="trait-pills">
+          <div class="trait-pill">⚡ Speed &amp; Timing</div>
+          <div class="trait-pill">🧠 Analysis Style</div>
+          <div class="trait-pill">🎯 Risk Appetite</div>
+          <div class="trait-pill">🧘 Emotion Control</div>
+          <div class="trait-pill">⏳ Patience</div>
+        </div>
+        <button class="btn-start" onclick="startQuiz()">Reveal My DNA</button>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="screen" id="screen-quiz">
+      <div class="quiz-header">
+        <div class="quiz-meta">
+          <div class="q-counter">Question <span id="q-num">1</span> of 10</div>
+          <div class="q-counter" id="q-trait-label"></div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        <div class="trait-bar-row" id="trait-bar-row"></div>
+      </div>
+      <div class="q-card" id="q-card">
+        <div class="q-scenario" id="q-scenario"></div>
+        <div class="q-text" id="q-text"></div>
+      </div>
+      <div class="options-grid" id="options-grid"></div>
+      <div class="quiz-nav">
+        <button class="q-skip" onclick="skipQuestion()">Skip →</button>
+        <button class="btn-next" id="btn-next" onclick="nextQuestion()">Next</button>
+      </div>
+    </div>
+
+    <!-- ANALYZING -->
+    <div class="screen" id="screen-analyzing">
+      <div class="analyzing">
+        <div class="dna-spinner">
+          <div class="dna-ring"></div><div class="dna-ring"></div><div class="dna-ring"></div>
+          <div class="dna-center">🧬</div>
+        </div>
+        <div class="analyzing-title">Sequencing Your DNA</div>
+        <p class="analyzing-sub" id="analyzing-msg">Analyzing your trading instincts</p>
+        <div class="analyzing-dots" style="margin-top:16px"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="screen" id="screen-result">
+      <div class="result">
+        <div class="result-header">
+          <div class="result-eyebrow">Your Trader DNA Has Been Sequenced</div>
+          <div class="result-avatar-wrap">
+            <span class="result-avatar" id="result-avatar">🥷</span>
+            <div class="result-glow-ring"></div>
+            <div class="result-glow-ring"></div>
+          </div>
+          <div class="archetype-name" id="archetype-name"></div>
+          <div class="archetype-title" id="archetype-title"></div>
+          <p class="archetype-tagline" id="archetype-tagline"></p>
+        </div>
+        <div class="trait-results" id="trait-results-panel"></div>
+        <div class="ornament"><span class="ornament-sym">◆ YOUR PROFILE ◆</span></div>
+        <div class="result-cards" id="result-cards"></div>
+        <div class="path-rec" id="path-rec"></div>
+        <div class="result-cta">
+          <button class="btn-primary" onclick="lockInResult()">Lock In This Path</button>
+          <button class="btn-ghost" onclick="retakeQuiz()">Retake Quiz</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script>
+const TRAITS = {
+  speed:    { label:'Speed & Timing',  color:'#C9A84C', icon:'⚡' },
+  analysis: { label:'Analysis Style',  color:'#8B6FD4', icon:'🧠' },
+  risk:     { label:'Risk Appetite',   color:'#C94C4C', icon:'🎯' },
+  emotion:  { label:'Emotion Control', color:'#4CC9A8', icon:'🧘' },
+  patience: { label:'Patience',        color:'#4C8BC9', icon:'⏳' },
+};
+
+const QUESTIONS = [
+  {
+    scenario:'Pre-Market — 7:42 AM',
+    text:'Your stock just gapped up <em>9% before the open</em>. You already hold a position. What do you do?',
+    options:[
+      {letter:'A',text:'Sell immediately at the open — lock in the profit before it fades.',scores:{speed:3,risk:-1,patience:-1}},
+      {letter:'B',text:'Set a limit order slightly below the gap high and wait for pullback confirmation.',scores:{analysis:2,patience:2,emotion:2}},
+      {letter:'C',text:'Hold — gaps like this often run further. Let it breathe.',scores:{patience:3,risk:2,speed:-1}},
+      {letter:'D',text:'Add to the position. Momentum is your friend right now.',scores:{risk:3,speed:2,emotion:-2}},
+    ]
+  },
+  {
+    scenario:'Trade Management',
+    text:'You are in a trade and it is <em>down 6%</em>. Your plan said cut at 5%. What happens?',
+    options:[
+      {letter:'A',text:'Cut it. The plan is the plan. No emotions.',scores:{emotion:3,risk:-1,patience:1}},
+      {letter:'B',text:'Hold a bit longer — it looks like it is forming a base. Maybe it bounces.',scores:{emotion:-2,patience:2,risk:2}},
+      {letter:'C',text:'Average down. Lower my cost basis and increase my position.',scores:{risk:3,emotion:-3,speed:1}},
+      {letter:'D',text:'Close half. Keep some exposure but reduce risk while I reassess.',scores:{analysis:2,emotion:2,patience:1}},
+    ]
+  },
+  {
+    scenario:'Research Style',
+    text:'You are looking for your next trade. <em>How do you find it?</em>',
+    options:[
+      {letter:'A',text:'I scan for volume spikes and price breakouts in real time.',scores:{speed:3,analysis:1,patience:-1}},
+      {letter:'B',text:'I dig into earnings reports, revenue growth, and fundamentals.',scores:{analysis:3,patience:3,speed:-2}},
+      {letter:'C',text:'I follow what smart money is doing — unusual options activity, dark pool prints.',scores:{analysis:2,risk:2,speed:1}},
+      {letter:'D',text:'I watch price action and chart patterns. The chart tells me everything.',scores:{analysis:2,speed:2,patience:2}},
+    ]
+  },
+  {
+    scenario:'Time Horizon',
+    text:'Your ideal trade lasts <em>how long</em>?',
+    options:[
+      {letter:'A',text:'Minutes to a couple of hours. In and out same day.',scores:{speed:3,patience:-2,risk:2}},
+      {letter:'B',text:'A few days to a couple of weeks. Ride the swing.',scores:{patience:2,speed:1,analysis:2}},
+      {letter:'C',text:'Months. I pick good assets and let them grow.',scores:{patience:3,speed:-3,analysis:3}},
+      {letter:'D',text:'I do not care — I hold until my target or stop is hit.',scores:{emotion:3,analysis:1,patience:1}},
+    ]
+  },
+  {
+    scenario:'Market Crash — Red Day',
+    text:'The market drops <em>4% in one session</em>. Everything is bleeding. Your reaction?',
+    options:[
+      {letter:'A',text:'Opportunity. I go shopping for quality assets at a discount.',scores:{patience:3,analysis:2,emotion:3}},
+      {letter:'B',text:'I short the weakness. If it is going down, I am riding it down.',scores:{speed:3,risk:3,emotion:1}},
+      {letter:'C',text:'I step back. No trading on panic days — too much noise.',scores:{patience:3,emotion:3,risk:-2}},
+      {letter:'D',text:'I check positions, tighten stop losses. Stay defensive.',scores:{emotion:2,analysis:2,risk:-1}},
+    ]
+  },
+  {
+    scenario:'Win Streak',
+    text:'You have hit <em>5 winning trades in a row</em>. What do you do next?',
+    options:[
+      {letter:'A',text:'Size up. I am in a flow state — capitalize on it.',scores:{risk:3,speed:2,emotion:-2}},
+      {letter:'B',text:'Stay exactly the same size. Discipline does not change with luck.',scores:{emotion:3,risk:-1,patience:2}},
+      {letter:'C',text:'Take a small break. Hot streaks can make you sloppy.',scores:{emotion:3,patience:3,analysis:1}},
+      {letter:'D',text:'Analyze the 5 trades. Why did they work? Can I replicate the edge?',scores:{analysis:3,patience:2,emotion:2}},
+    ]
+  },
+  {
+    scenario:'Instrument Preference',
+    text:'Given the choice, <em>what do you want to trade</em>?',
+    options:[
+      {letter:'A',text:'Options — leverage, defined risk, and the ability to play both directions.',scores:{analysis:3,risk:2,speed:1}},
+      {letter:'B',text:'Crypto — 24/7 markets, big volatility, massive potential moves.',scores:{risk:3,speed:3,patience:-1}},
+      {letter:'C',text:'Stocks — clear fundamentals, stable markets, long runway.',scores:{patience:3,analysis:2,risk:-1}},
+      {letter:'D',text:'Futures or Forex — liquid, global, always moving.',scores:{speed:3,risk:2,emotion:1}},
+    ]
+  },
+  {
+    scenario:'The Big Loss',
+    text:'You just took your <em>biggest loss ever</em> — 3x your normal risk. What happens next?',
+    options:[
+      {letter:'A',text:'Stop trading for the day. Review it tomorrow with fresh eyes.',scores:{emotion:3,patience:3,analysis:2}},
+      {letter:'B',text:'Take one more controlled trade to get my confidence back.',scores:{emotion:1,risk:2,speed:2}},
+      {letter:'C',text:'Revenge trade to make it back. I know I should not but the urge is real.',scores:{emotion:-3,risk:3,speed:2}},
+      {letter:'D',text:'Journal the trade in detail, identify the mistake, touch nothing for 24 hours.',scores:{emotion:3,analysis:3,patience:3}},
+    ]
+  },
+  {
+    scenario:'News Event',
+    text:'Big earnings drop <em>after market close</em>. The stock is up 15% after-hours. You do not own it yet.',
+    options:[
+      {letter:'A',text:'Buy AH right now. First mover wins.',scores:{speed:3,risk:3,patience:-2}},
+      {letter:'B',text:'Wait for the market open, see how it trades, then decide.',scores:{patience:3,analysis:2,emotion:2}},
+      {letter:'C',text:'Buy a small starter position AH, add more if it holds at the open.',scores:{analysis:2,risk:1,patience:2}},
+      {letter:'D',text:'Skip it entirely. I do not trade on hype — I will wait for it to base.',scores:{patience:3,emotion:3,risk:-2}},
+    ]
+  },
+  {
+    scenario:'Your Trading Goal',
+    text:'<em>Why are you learning to trade?</em> Be honest.',
+    options:[
+      {letter:'A',text:'I want to generate income — trading as a real skill and eventually a job.',scores:{speed:3,risk:2,patience:-1}},
+      {letter:'B',text:'I want to grow my wealth steadily over time without constant stress.',scores:{patience:3,risk:-1,emotion:3}},
+      {letter:'C',text:'I want to understand markets and eventually control my own financial future.',scores:{analysis:3,patience:2,emotion:2}},
+      {letter:'D',text:'I want financial freedom as fast as possible. I am willing to take risk.',scores:{risk:3,speed:2,emotion:-1}},
+    ]
+  },
+];
+
+const ARCHETYPES = [
+  {
+    id:'sniper',emoji:'🥷',name:'The Sniper',
+    title:'PRECISION · PATIENCE · PERFECT ENTRY',
+    tagline:'"You do not shoot at everything. You wait for the one shot that counts."',
+    color:'#C9A84C',glow:'rgba(201,168,76,0.4)',
+    strengths:['High win rate on carefully selected trades','Disciplined about stop losses','Excellent entry timing','Rarely overtrades'],
+    watchOut:['Missing moves by being too selective','Boredom turning into forced trades','Over-analyzing setups'],
+    instruments:['Stocks (breakout entries)','Options (defined risk)','ETFs'],
+    pathModule:'Trading Styles — Precision Entry & Sniper Setups',
+    pathDesc:'Your instinct is patience and precision. Start with chart patterns and entry criteria before anything else. You will naturally excel at swing trading and position sizing.',
+    pathIcon:'🎯',
+    match:(t)=>t.patience>=16&&t.emotion>=14,
+  },
+  {
+    id:'momentum',emoji:'🐺',name:'The Momentum Rider',
+    title:'FAST · AGGRESSIVE · RIDES THE WAVE',
+    tagline:'"When the crowd moves, you are already three steps ahead."',
+    color:'#C94C4C',glow:'rgba(201,76,76,0.4)',
+    strengths:['Quick to capitalize on breakouts','Reads market sentiment well','High activity means fast learning','Adapts quickly to changing conditions'],
+    watchOut:['Chasing extended moves past the setup','FOMO-driven late entries','Overtrading on slow, choppy days'],
+    instruments:['Stocks (momentum & breakouts)','Crypto','Leveraged ETFs'],
+    pathModule:'Trading Styles — Day Trading & Momentum Plays',
+    pathDesc:'You thrive in fast-moving markets. Focus on volume analysis, Level 2 data, and intraday setups. Your biggest challenge will be discipline — master that and you become dangerous.',
+    pathIcon:'🔥',
+    match:(t)=>t.speed>=18&&t.risk>=14,
+  },
+  {
+    id:'strategist',emoji:'🦉',name:'The Strategist',
+    title:'CALCULATED · SYSTEMATIC · ALWAYS PREPARED',
+    tagline:'"Every trade is a chess move. You see five steps ahead."',
+    color:'#8B6FD4',glow:'rgba(139,111,212,0.4)',
+    strengths:['Excellent trade planning and journaling','Strong risk/reward awareness','Learns deeply from every trade','Builds consistent repeatable process'],
+    watchOut:['Analysis paralysis before pulling the trigger','Missing spontaneous opportunities','Over-complicating simple setups'],
+    instruments:['Options strategies (spreads, covered calls)','Swing stocks','Defined risk plays'],
+    pathModule:'Risk Management — The Foundation of Everything',
+    pathDesc:'Your analytical mind is your edge. You will thrive in options and systematic approaches. Build your personal rulebook first — then every trade becomes a calculated decision, not a gamble.',
+    pathIcon:'♟️',
+    match:(t)=>t.analysis>=18&&t.emotion>=14,
+  },
+  {
+    id:'quant',emoji:'🤖',name:'The Quant',
+    title:'DATA-DRIVEN · LOGICAL · SYSTEM BUILDER',
+    tagline:'"You do not have feelings about trades. The data decides."',
+    color:'#4CC9A8',glow:'rgba(76,201,168,0.4)',
+    strengths:['Removes emotion from the equation','Builds scalable repeatable systems','Backtest-oriented mindset','Finds statistical edge in patterns'],
+    watchOut:['Over-optimizing (curve fitting past data)','Missing qualitative market signals','Slow to adapt when market conditions shift'],
+    instruments:['Algorithmic strategies','Options (systematic)','Quantitative ETF rotation'],
+    pathModule:'Trading Instruments — Understanding the Mechanics',
+    pathDesc:'You think in systems and probabilities. Your path leads to building and testing your own strategies. Learn every instrument deeply first — then you will know exactly what to systematize.',
+    pathIcon:'📊',
+    match:(t)=>t.analysis>=16&&t.emotion>=16&&t.speed<=14,
+  },
+  {
+    id:'hodler',emoji:'🐉',name:'The Hodler',
+    title:'LONG-TERM · CONVICTION · COMPOUNDING',
+    tagline:'"While others panic sell, you hold your vision."',
+    color:'#4C8BC9',glow:'rgba(76,139,201,0.4)',
+    strengths:['Strong conviction backed by real research','Immune to short-term market noise','Fully benefits from compounding over time','Low stress, sustainable approach'],
+    watchOut:['Holding losing positions too long when thesis breaks','Slow to recognize when fundamentals change','Opportunity cost of long lock-up periods'],
+    instruments:['Growth stocks','Index ETFs','Crypto (BTC/ETH long-term holds)'],
+    pathModule:'Trading Instruments — Stocks & Crypto Fundamentals',
+    pathDesc:'You play the long game — and that is a superpower most traders never develop. Learn to value assets, understand market cycles, and build a portfolio. Time is your biggest edge.',
+    pathIcon:'🏔️',
+    match:(t)=>t.patience>=18&&t.speed<=12,
+  },
+  {
+    id:'degen',emoji:'🦊',name:'The Degen',
+    title:'HIGH RISK · HIGH REWARD · LEARN FAST OR PAY FAST',
+    tagline:'"You came to play. Just make sure you have an exit strategy."',
+    color:'#C9A84C',glow:'rgba(201,168,76,0.35)',
+    strengths:['High risk tolerance when properly managed','Fast learner — losses hit different when real money is involved','Comfortable with volatility others fear','Can size up massively when conviction is right'],
+    watchOut:['Overleverage ends trading careers — seriously','No stop loss means full account at risk','Revenge trading after big losses','YOLO entries without any plan or edge'],
+    instruments:['Crypto (high volatility altcoins)','Options — start with DEFINED RISK only','Stocks (high-beta momentum)'],
+    pathModule:'Risk Management — Your Most Important Module First',
+    pathDesc:'Your energy and appetite are huge assets — but ONLY when paired with a risk foundation. Your path starts with the rules that keep you alive long enough to win big. No exceptions.',
+    pathIcon:'⚠️',
+    match:(t)=>t.risk>=20,
+  },
+];
+
+let currentQ=0,answers={},traitScores={speed:10,analysis:10,risk:10,emotion:10,patience:10};
+let resultArchetype=null;
+
+function startQuiz(){
+  currentQ=0;answers={};traitScores={speed:10,analysis:10,risk:10,emotion:10,patience:10};
+  showScreen('screen-quiz');
+  renderTraitBars();
+  renderQuestion();
+}
+
+function renderTraitBars(){
+  document.getElementById('trait-bar-row').innerHTML=Object.entries(TRAITS).map(([k,t])=>`
+    <div class="trait-indicator">
+      <div class="ti-label">${t.icon} ${t.label} <span id="ti-score-${k}">${traitScores[k]}</span></div>
+      <div class="ti-track"><div class="ti-fill" id="ti-fill-${k}" style="width:${traitScores[k]/30*100}%;background:${t.color}"></div></div>
+    </div>`).join('');
+}
+
+function updateTraitBars(){
+  Object.entries(traitScores).forEach(([k,v])=>{
+    const f=document.getElementById('ti-fill-'+k),s=document.getElementById('ti-score-'+k);
+    if(f)f.style.width=Math.min(v/30*100,100)+'%';
+    if(s)s.textContent=v;
+  });
+}
+
+function renderQuestion(){
+  const q=QUESTIONS[currentQ];
+  document.getElementById('q-num').textContent=currentQ+1;
+  document.getElementById('progress-fill').style.width=(currentQ/QUESTIONS.length*100)+'%';
+  document.getElementById('q-scenario').textContent=q.scenario;
+  document.getElementById('q-text').innerHTML=q.text;
+  document.getElementById('options-grid').innerHTML=q.options.map((o,i)=>`
+    <button class="option-btn${answers[currentQ]===i?' selected':''}" id="opt-${i}" onclick="selectOption(${i})">
+      <div class="opt-letter">${o.letter}</div>
+      <div class="opt-text">${o.text}</div>
+    </button>`).join('');
+  const btn=document.getElementById('btn-next');
+  btn.classList.toggle('enabled',answers[currentQ]!==undefined);
+  const card=document.getElementById('q-card');
+  card.style.animation='none';card.offsetHeight;card.style.animation='';
+}
+
+function selectOption(idx){
+  document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('opt-'+idx).classList.add('selected');
+  answers[currentQ]=idx;
+  document.getElementById('btn-next').classList.add('enabled');
+}
+
+function nextQuestion(){
+  if(answers[currentQ]===undefined)return;
+  const delta=QUESTIONS[currentQ].options[answers[currentQ]].scores;
+  Object.entries(delta).forEach(([t,v])=>{ traitScores[t]=Math.max(0,Math.min(30,(traitScores[t]||10)+v)); });
+  updateTraitBars();
+  currentQ++;
+  currentQ>=QUESTIONS.length?finishQuiz():renderQuestion();
+}
+
+function skipQuestion(){
+  currentQ++;
+  currentQ>=QUESTIONS.length?finishQuiz():renderQuestion();
+}
+
+const MSGS=['Analyzing your trading instincts...','Mapping your risk tolerance...','Sequencing emotion control patterns...','Calibrating patience index...','Cross-referencing 6 archetypes...','Generating your Trader DNA profile...'];
+
+function finishQuiz(){
+  showScreen('screen-analyzing');
+  let i=0;const el=document.getElementById('analyzing-msg');
+  const iv=setInterval(()=>{
+    i++;if(i<MSGS.length){el.style.opacity=0;setTimeout(()=>{el.textContent=MSGS[i];el.style.opacity=1;el.style.transition='opacity 0.4s';},200);}
+  },650);
+  setTimeout(()=>{clearInterval(iv);buildResult();},4200);
+}
+
+function buildResult(){
+  let arch=ARCHETYPES.find(a=>a.match(traitScores));
+  if(!arch){
+    const dom=Object.entries(traitScores).sort((a,b)=>b[1]-a[1])[0][0];
+    const fb={speed:'momentum',analysis:'strategist',risk:'degen',emotion:'sniper',patience:'hodler'};
+    arch=ARCHETYPES.find(a=>a.id===(fb[dom]||'strategist'));
+  }
+  resultArchetype=arch;
+  document.documentElement.style.setProperty('--archetype-color',arch.color);
+  document.documentElement.style.setProperty('--archetype-glow',arch.glow);
+  document.getElementById('result-avatar').textContent=arch.emoji;
+  document.getElementById('archetype-name').textContent=arch.name;
+  document.getElementById('archetype-title').textContent=arch.title;
+  document.getElementById('archetype-tagline').textContent=arch.tagline;
+
+  document.getElementById('trait-results-panel').innerHTML=Object.entries(TRAITS).map(([k,t])=>{
+    const pct=Math.min(traitScores[k]/30*100,100);
+    const lbl=pct>=67?'Strong':pct>=40?'Moderate':'Developing';
+    return `<div class="trait-result-row">
+      <div class="tr-label">${t.icon} ${t.label}</div>
+      <div class="tr-track"><div class="tr-fill" id="rtr-${k}" style="background:${t.color}"></div></div>
+      <div class="tr-score">${lbl}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('result-cards').innerHTML=`
+    <div class="result-card rc-strengths"><ul>${arch.strengths.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+    <div class="result-card rc-watch"><ul>${arch.watchOut.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+    <div class="result-card rc-instruments"><ul>${arch.instruments.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+    <div class="result-card rc-path"><ul><li style="border:none;padding-top:0">${arch.pathModule}</li></ul></div>`;
+
+  document.getElementById('path-rec').innerHTML=`
+    <div class="path-rec-icon">${arch.pathIcon}</div>
+    <div>
+      <div class="path-rec-label">Recommended Learning Path</div>
+      <div class="path-rec-title">${arch.pathModule}</div>
+      <p class="path-rec-desc">${arch.pathDesc}</p>
+    </div>`;
+
+  showScreen('screen-result');
+  setTimeout(()=>{
+    Object.keys(TRAITS).forEach(k=>{
+      const el=document.getElementById('rtr-'+k);
+      if(el)el.style.width=Math.min(traitScores[k]/30*100,100)+'%';
+    });
+  },200);
+
+  try{
+    const s=JSON.parse(localStorage.getItem('dojo_state')||'{}');
+    const avMap={sniper:'samurai',momentum:'wolf',strategist:'owl',quant:'owl',hodler:'crane',degen:'kitsune'};
+    s.traderDNA=arch.id;s.traitScores=traitScores;s.avatar=avMap[arch.id]||'samurai';
+    localStorage.setItem('dojo_state',JSON.stringify(s));
+  }catch(e){}
+}
+
+function lockInResult(){
+  alert('Your Trader DNA is locked in as ' + (resultArchetype?resultArchetype.name:'your archetype') + '! Next up: Instruments Module.');
+}
+function retakeQuiz(){startQuiz();}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id);
+  if(el){el.style.animation='none';el.offsetHeight;el.style.animation='';el.classList.add('active');}
+}
+</script>
+</body>
+</html>

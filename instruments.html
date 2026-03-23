@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Trading Instruments · The Trading Dojo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;--gold-faint:rgba(201,168,76,0.07);
+  --ink:#0A0A0F;--ink-2:#111118;--ink-3:#1A1A24;--ink-4:#22222E;
+  --panel:#13131C;--panel-2:#0F0F18;
+  --border:rgba(201,168,76,0.16);--border-bright:rgba(201,168,76,0.5);
+  --text:#E8E0CC;--text-dim:#8A8070;--text-faint:#4A4440;
+  --red:#C94C4C;--red-dim:rgba(201,76,76,0.15);
+  --teal:#4CC9A8;--teal-dim:rgba(76,201,168,0.12);
+  --purple:#8B6FD4;--purple-dim:rgba(139,111,212,0.12);
+  --blue:#4C8BC9;--blue-dim:rgba(76,139,201,0.12);
+  --amber:#C9904C;--amber-dim:rgba(201,144,76,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6;}
+
+/* ── LAYOUT ── */
+.app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.9);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;}
+.logo{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);display:flex;align-items:center;gap:9px;text-decoration:none;}
+.logo-mark{width:28px;height:28px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.85rem;position:relative;flex-shrink:0;}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.22);}
+.topbar-center{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.xp-chip{background:var(--panel);border:1px solid var(--border);padding:6px 14px;font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--gold);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+
+/* ── BODY LAYOUT ── */
+.body-layout{display:flex;flex:1;min-height:0;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:260px;flex-shrink:0;border-right:1px solid var(--border);background:var(--panel-2);display:flex;flex-direction:column;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.sidebar-header{padding:24px 20px 16px;border-bottom:1px solid var(--border);}
+.sidebar-title{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:4px;}
+.sidebar-sub{font-size:0.82rem;color:var(--text-dim);font-weight:300;}
+.sidebar-progress{margin-top:14px;}
+.sp-label{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:5px;}
+.sp-label span{color:var(--gold);}
+.sp-track{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.6s ease;}
+
+.sidebar-nav{padding:12px 0;flex:1;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:13px 20px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;position:relative;}
+.nav-item:hover{background:rgba(201,168,76,0.04);border-left-color:rgba(201,168,76,0.3);}
+.nav-item.active{background:rgba(201,168,76,0.07);border-left-color:var(--gold);}
+.nav-item.completed{opacity:0.7;}
+.nav-item.locked{opacity:0.35;cursor:not-allowed;}
+.nav-emoji{font-size:1.3rem;line-height:1;width:28px;text-align:center;flex-shrink:0;}
+.nav-info{flex:1;min-width:0;}
+.nav-name{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;color:var(--text);letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-item.active .nav-name{color:var(--gold);}
+.nav-status{font-size:0.65rem;color:var(--text-dim);margin-top:2px;}
+.nav-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;flex-shrink:0;}
+.nb-locked{background:var(--ink-4);color:var(--text-faint);}
+.nb-active{background:var(--gold);color:var(--ink);font-weight:700;font-family:'Cinzel',serif;animation:pulse-badge 2s ease-in-out infinite;}
+.nb-done{background:rgba(76,201,168,0.2);color:var(--teal);border:1px solid rgba(76,201,168,0.4);}
+@keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{box-shadow:0 0 0 5px rgba(201,168,76,0)}}
+
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);}
+.total-xp{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--gold-dim);}
+.total-xp span{color:var(--gold);font-size:0.85rem;}
+
+/* ── MAIN CONTENT ── */
+.content-area{flex:1;overflow-y:auto;padding:0;}
+
+/* ── INSTRUMENT LESSON ── */
+.lesson{display:none;animation:fadeIn 0.4s ease forwards;}
+.lesson.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* Hero banner */
+.lesson-hero{padding:48px 52px 40px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.lesson-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%, var(--instrument-color-dim,rgba(201,168,76,0.04)) 0%, transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow::after{content:'';flex:1;max-width:40px;height:1px;background:var(--border);}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.hero-left{}
+.hero-emoji{font-size:3.5rem;line-height:1;margin-bottom:16px;display:block;filter:drop-shadow(0 0 20px var(--instrument-color-dim,rgba(201,168,76,0.3)));}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:var(--instrument-color,var(--gold));line-height:1.1;margin-bottom:6px;}
+.hero-subtitle{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.18em;color:var(--text-dim);margin-bottom:20px;}
+.hero-tagline{font-size:1.1rem;font-weight:300;color:var(--text-dim);line-height:1.65;max-width:520px;}
+.hero-tagline strong{color:var(--text);font-weight:500;}
+
+/* Stat chips */
+.stat-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;}
+.stat-chip{background:var(--panel);border:1px solid var(--border);padding:10px 16px;min-width:110px;}
+.sc-label{font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;margin-bottom:4px;}
+.sc-value{font-family:'Cinzel',serif;font-size:0.82rem;font-weight:700;color:var(--text);}
+.sc-bar{height:2px;background:var(--ink-4);margin-top:6px;border-radius:1px;overflow:hidden;}
+.sc-fill{height:100%;border-radius:1px;background:var(--instrument-color,var(--gold));}
+
+/* ── LESSON BODY ── */
+.lesson-body{padding:48px 52px;max-width:900px;}
+
+.section-block{margin-bottom:48px;}
+.section-label{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.28em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Analogy card */
+.analogy-card{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--instrument-color,var(--gold));padding:24px 28px;display:flex;gap:20px;align-items:flex-start;}
+.analogy-icon{font-size:2rem;line-height:1;flex-shrink:0;}
+.analogy-text{font-size:1rem;line-height:1.7;color:var(--text-dim);font-weight:300;}
+.analogy-text strong{color:var(--text);font-weight:500;}
+
+/* How it works steps */
+.steps-list{display:flex;flex-direction:column;gap:0;}
+.step-item{display:flex;gap:20px;align-items:flex-start;padding:20px 0;border-bottom:1px solid var(--border);}
+.step-item:last-child{border-bottom:none;}
+.step-num{width:36px;height:36px;flex-shrink:0;border:2px solid var(--instrument-color,var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.8rem;font-weight:700;color:var(--instrument-color,var(--gold));position:relative;}
+.step-num::after{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.15);}
+.step-content{}
+.step-title{font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:5px;letter-spacing:0.04em;}
+.step-desc{font-size:0.95rem;line-height:1.65;color:var(--text-dim);font-weight:300;}
+.step-desc strong{color:var(--text);font-weight:500;}
+
+/* Real example box */
+.example-box{background:var(--panel);border:1px solid var(--border);padding:28px 32px;position:relative;}
+.example-box::before{content:'REAL EXAMPLE';position:absolute;top:-9px;left:20px;background:var(--panel);padding:0 8px;font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold-dim);}
+.example-scenario{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;color:var(--instrument-color,var(--gold));margin-bottom:12px;letter-spacing:0.06em;}
+.example-text{font-size:0.97rem;line-height:1.7;color:var(--text-dim);font-weight:300;}
+.example-text strong{color:var(--text);font-weight:500;}
+.example-callout{margin-top:16px;background:rgba(201,168,76,0.05);border:1px solid var(--border);padding:14px 18px;display:flex;gap:10px;align-items:flex-start;}
+.ec-icon{font-size:1rem;line-height:1.4;flex-shrink:0;}
+.ec-text{font-size:0.88rem;color:var(--text-dim);line-height:1.5;}
+.ec-text strong{color:var(--gold);font-weight:600;}
+
+/* Glossary */
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.glossary-item{background:var(--panel);border:1px solid var(--border);padding:16px 18px;transition:border-color 0.2s;}
+.glossary-item:hover{border-color:rgba(201,168,76,0.35);}
+.gi-term{font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;color:var(--instrument-color,var(--gold));margin-bottom:5px;letter-spacing:0.05em;}
+.gi-def{font-size:0.88rem;color:var(--text-dim);line-height:1.5;font-weight:300;}
+
+/* ── QUIZ SECTION ── */
+.quiz-section{background:var(--panel-2);border-top:1px solid var(--border);padding:48px 52px;}
+.quiz-header-block{margin-bottom:36px;}
+.quiz-title{font-family:'Cinzel Decorative',serif;font-size:1.5rem;font-weight:700;color:var(--instrument-color,var(--gold));margin-bottom:6px;}
+.quiz-subtitle{font-size:0.95rem;color:var(--text-dim);font-weight:300;}
+.quiz-q-block{margin-bottom:28px;}
+.qq-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:10px;}
+.qq-text{font-size:1.05rem;font-weight:500;color:var(--text);line-height:1.55;margin-bottom:16px;}
+.qq-options{display:flex;flex-direction:column;gap:8px;}
+.qq-opt{background:var(--panel);border:1px solid var(--border);padding:13px 18px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px;transition:all 0.18s;width:100%;}
+.qq-opt:hover{border-color:rgba(201,168,76,0.38);background:var(--ink-3);transform:translateX(3px);}
+.qq-opt.selected{border-color:var(--instrument-color,var(--gold));background:rgba(201,168,76,0.07);}
+.qq-opt.correct{border-color:var(--teal);background:rgba(76,201,168,0.08)!important;}
+.qq-opt.wrong{border-color:var(--red);background:rgba(201,76,76,0.08)!important;}
+.qq-opt-dot{width:22px;height:22px;border:1px solid var(--border-bright);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.55rem;transition:all 0.18s;}
+.qq-opt.selected .qq-opt-dot,.qq-opt.correct .qq-opt-dot{background:var(--instrument-color,var(--gold));border-color:var(--instrument-color,var(--gold));color:var(--ink);font-weight:700;}
+.qq-opt.correct .qq-opt-dot{background:var(--teal);border-color:var(--teal);}
+.qq-opt.wrong .qq-opt-dot{background:var(--red);border-color:var(--red);}
+.qq-opt-text{font-size:0.93rem;color:var(--text-dim);transition:color 0.18s;}
+.qq-opt:hover .qq-opt-text,.qq-opt.selected .qq-opt-text{color:var(--text);}
+.qq-feedback{margin-top:10px;padding:12px 16px;font-size:0.88rem;line-height:1.5;border-radius:0;display:none;}
+.qq-feedback.show{display:block;}
+.qq-feedback.correct-fb{background:rgba(76,201,168,0.08);border:1px solid rgba(76,201,168,0.25);color:var(--teal);}
+.qq-feedback.wrong-fb{background:rgba(201,76,76,0.08);border:1px solid rgba(201,76,76,0.25);color:#E87070;}
+
+/* Quiz submit / results */
+.quiz-submit-row{display:flex;align-items:center;gap:16px;margin-top:8px;flex-wrap:wrap;}
+.btn-submit{font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;letter-spacing:0.18em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 36px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.25s;opacity:0.4;pointer-events:none;}
+.btn-submit.ready{opacity:1;pointer-events:all;}
+.btn-submit.ready:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,0.22);}
+.btn-next-lesson{font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;letter-spacing:0.15em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 36px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.25s;display:none;}
+.btn-next-lesson:hover{transform:translateY(-2px);}
+
+/* Score reveal */
+.score-reveal{display:none;background:var(--panel);border:1px solid var(--border);padding:28px 32px;margin-top:28px;text-align:center;animation:fadeIn 0.4s ease;}
+.score-reveal.show{display:block;}
+.score-big{font-family:'Cinzel Decorative',serif;font-size:3rem;font-weight:900;color:var(--instrument-color,var(--gold));line-height:1;}
+.score-label{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;margin-top:6px;}
+.score-xp{display:inline-block;margin-top:14px;padding:8px 20px;background:rgba(201,168,76,0.1);border:1px solid var(--border-bright);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.15em;color:var(--gold);}
+.score-msg{margin-top:16px;font-size:0.95rem;color:var(--text-dim);font-weight:300;line-height:1.5;}
+
+/* Divider ornament */
+.ornament{display:flex;align-items:center;gap:14px;margin:36px 0;color:var(--text-faint);}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:var(--border);}
+.ornament-sym{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.2em;white-space:nowrap;}
+
+/* Buttons */
+.btn-ghost{font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.14em;color:var(--gold);background:transparent;border:1px solid var(--border-bright);padding:12px 28px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;}
+.btn-ghost:hover{background:rgba(201,168,76,0.07);}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+
+@media(max-width:768px){
+  .sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);}
+  .body-layout{flex-direction:column;}
+  .lesson-hero,.lesson-body,.quiz-section{padding-left:24px;padding-right:24px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <a class="logo" href="trading-dojo.html"><div class="logo-mark">⚔</div>The Trading Dojo</a>
+    <div class="topbar-center">Module I · Trading Instruments</div>
+    <div class="topbar-right">
+      <div class="xp-chip">⚡ <span id="total-xp-display">0</span> XP</div>
+    </div>
+  </div>
+
+  <div class="body-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">Module I</div>
+        <div class="sidebar-sub">Trading Instruments</div>
+        <div class="sidebar-progress">
+          <div class="sp-label">Progress <span id="sp-text">0 / 5</span></div>
+          <div class="sp-track"><div class="sp-fill" id="sp-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div class="total-xp">Module XP: <span id="sidebar-xp">0</span></div>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="content-area" id="content-area">
+      <!-- Lessons injected here by JS -->
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const INSTRUMENTS = [
+  {
+    id:'stocks',
+    emoji:'📈',
+    name:'Stocks',
+    subtitle:'EQUITY · OWNERSHIP · LONG-TERM',
+    color:'#C9A84C',
+    colorDim:'rgba(201,168,76,0.08)',
+    tagline:'When you buy a <strong>stock</strong>, you are buying a tiny piece of a real company. You become a part-owner — and when the company grows, so does your investment.',
+    stats:[
+      {label:'Risk Level',value:'Medium',pct:50},
+      {label:'Time Horizon',value:'Days – Years',pct:60},
+      {label:'Complexity',value:'Beginner',pct:25},
+      {label:'Min Capital',value:'$1+',pct:10},
+    ],
+    analogy:{icon:'🏪',text:'Think of it like this: <strong>Apple is a massive company</strong> worth trillions. But Apple is split into billions of tiny pieces called "shares." When you buy one share, you own a tiny slice of Apple. If Apple grows and becomes more valuable, your slice is worth more. If Apple struggles, your slice is worth less.'},
+    steps:[
+      {title:'Companies go public (IPO)',desc:'A company decides to raise money by selling shares to the public on a stock exchange like the <strong>NYSE or NASDAQ</strong>. This is called an IPO — Initial Public Offering.'},
+      {title:'You buy shares',desc:'You use a broker (like Robinhood or WeBull) to buy shares. The price is determined by supply and demand — what buyers are willing to pay and what sellers will accept.'},
+      {title:'Price moves with perception',desc:'If investors believe the company will be more profitable, demand goes up and price rises. If earnings disappoint or bad news hits, price drops. <strong>Price = collective opinion of future value.</strong>'},
+      {title:'You profit (or lose)',desc:'If you buy at $50 and sell at $80, you made $30 per share. If you sell at $35, you lost $15 per share. You can also earn <strong>dividends</strong> — a share of profits paid to shareholders regularly.'},
+      {title:'The market is always open (almost)',desc:'US stock markets are open <strong>Monday through Friday, 9:30am–4:00pm ET</strong>. Pre-market (4am–9:30am) and after-hours (4pm–8pm) trading also exists but with less volume.'},
+    ],
+    example:{
+      scenario:'NVDA — The GPU Boom',
+      text:'In early 2023, <strong>NVIDIA (NVDA)</strong> was trading around $150/share. As AI exploded, demand for their chips skyrocketed. By mid-2024, the stock was trading above <strong>$900/share</strong>. If you had bought 10 shares at $150 ($1,500 invested), you would have had over $9,000 — a 500%+ gain.',
+      callout:{icon:'💡',text:'<strong>Key lesson:</strong> Stocks reward research. People who understood AI before the crowd and bought NVDA early were rewarded massively. This is why learning fundamentals matters.'},
+    },
+    glossary:[
+      {term:'Share',def:'A single unit of ownership in a company.'},
+      {term:'Stock Exchange',def:'A marketplace where stocks are bought and sold (NYSE, NASDAQ).'},
+      {term:'IPO',def:'Initial Public Offering — when a company first sells shares to the public.'},
+      {term:'Bull Market',def:'A period when stock prices are rising and sentiment is positive.'},
+      {term:'Bear Market',def:'A period when stock prices are falling, typically 20%+ from highs.'},
+      {term:'Dividend',def:'A portion of company profits paid regularly to shareholders.'},
+      {term:'Market Cap',def:'Total value of a company = share price × total shares outstanding.'},
+      {term:'Volume',def:'The number of shares traded in a given time period.'},
+    ],
+    quiz:[
+      {q:'When you buy a stock, what are you actually buying?',opts:['A loan to the company','A tiny ownership stake in the company','A promise of future dividends','Access to the company\'s products'],correct:1,feedback:'Correct! Buying stock means buying ownership — you become a shareholder, a part-owner of that company.'},
+      {q:'The NYSE and NASDAQ are examples of what?',opts:['Banks that lend money to companies','Stock exchanges where shares are traded','Government agencies','Investment apps'],correct:1,feedback:'Right! NYSE and NASDAQ are the two biggest stock exchanges in the US, where millions of trades happen every day.'},
+      {q:'If you bought 5 shares at $100 each and sold them at $140 each, what did you earn?',opts:['$40','$200','$700','$100'],correct:1,feedback:'Profit per share = $40. Times 5 shares = $200 total profit. Always calculate per share first, then multiply.'},
+      {q:'What does a "bull market" mean?',opts:['Prices are falling sharply','Trading is paused by regulators','Prices are rising and sentiment is positive','Only large investors can participate'],correct:2,feedback:'A bull market is when prices trend upward and investor confidence is high. Bears pull prices down, bulls push them up.'},
+      {q:'US stock markets are open on which days and hours?',opts:['24/7 like crypto','Mon–Fri, 9:30am–4:00pm ET','Mon–Sat, 8am–5pm ET','Mon–Fri, 6am–8pm ET'],correct:1,feedback:'Regular market hours are Monday–Friday, 9:30am to 4:00pm Eastern Time. Pre-market and after-hours trading also exist but have less volume.'},
+    ],
+  },
+
+  {
+    id:'options',
+    emoji:'🎯',
+    name:'Options',
+    subtitle:'CONTRACTS · LEVERAGE · DEFINED RISK',
+    color:'#8B6FD4',
+    colorDim:'rgba(139,111,212,0.08)',
+    tagline:'Options are <strong>contracts</strong> that give you the <strong>right — but not the obligation</strong> — to buy or sell a stock at a specific price before a specific date. They are powerful, flexible, and require real study.',
+    stats:[
+      {label:'Risk Level',value:'Medium–High',pct:72},
+      {label:'Time Horizon',value:'Days – Months',pct:45},
+      {label:'Complexity',value:'Intermediate',pct:65},
+      {label:'Min Capital',value:'$50+',pct:20},
+    ],
+    analogy:{icon:'🏠',text:'Imagine a house worth <strong>$300,000</strong>. You pay the owner $5,000 for the right to buy it at $300,000 any time in the next 3 months. Two months later the house is worth $360,000. You exercise your right, buy at $300K, sell at $360K — profit of $60,000 minus your $5K fee. That $5K was your <strong>option premium</strong>. If the house drops to $250K, you just walk away. You only lose the $5,000.'},
+    steps:[
+      {title:'Two types: Calls and Puts',desc:'A <strong>Call option</strong> gives you the right to BUY a stock at a set price. You buy calls when you think the stock will go UP. A <strong>Put option</strong> gives you the right to SELL a stock at a set price. You buy puts when you think the stock will go DOWN.'},
+      {title:'The Strike Price',desc:'This is the price at which you have the right to buy or sell. If Apple is at $200 and you buy a Call with a <strong>$210 strike</strong>, you have the right to buy Apple at $210 — useful if Apple goes above $210.'},
+      {title:'Expiration Date',desc:'Every option contract has an expiration date. After this date, the contract is worthless if not exercised. <strong>Time decay (Theta)</strong> eats into the option\'s value as expiration approaches — this is a key concept.'},
+      {title:'The Premium',desc:'The price you pay for the option contract. If you buy 1 Apple call for $3.00, you pay <strong>$300 total</strong> (each contract controls 100 shares). This is your maximum loss if the trade goes against you.'},
+      {title:'Leverage is the key feature',desc:'Options let you control 100 shares for a fraction of the cost of owning them. This is leverage — it amplifies both gains AND losses. A 10% move in the stock can mean a 100%+ move in the option price.'},
+    ],
+    example:{
+      scenario:'Tesla Call Option — Earnings Play',
+      text:'Tesla is trading at <strong>$250</strong>. Earnings are next week and you think it will pop. You buy 1 Tesla <strong>$260 Call</strong> expiring in 2 weeks for $4.00 ($400 total). Tesla reports great earnings and jumps to $285. Your $260 Call is now worth $25+ ($2,500). You sell it for a <strong>$2,100 profit</strong> on a $400 investment — over 500% return.',
+      callout:{icon:'⚠️',text:'<strong>The flip side:</strong> If Tesla dropped to $230 and stayed there until expiration, your option expires worthless. You lose the full $400 premium. Options can expire at zero — never risk money you cannot afford to lose.'},
+    },
+    glossary:[
+      {term:'Call Option',def:'The right to BUY a stock at the strike price before expiration.'},
+      {term:'Put Option',def:'The right to SELL a stock at the strike price before expiration.'},
+      {term:'Strike Price',def:'The price at which you can buy (call) or sell (put) the stock.'},
+      {term:'Premium',def:'The price you pay for the option contract.'},
+      {term:'Expiration Date',def:'The date the option contract becomes void if not exercised.'},
+      {term:'Theta',def:'Time decay — the rate at which an option loses value as expiration approaches.'},
+      {term:'In the Money (ITM)',def:'When the option has intrinsic value (e.g., call strike below current price).'},
+      {term:'Leverage',def:'Controlling a large position with a smaller amount of capital.'},
+    ],
+    quiz:[
+      {q:'A Call option gives you the right to do what?',opts:['Sell a stock at the strike price','Borrow shares from a broker','Buy a stock at the strike price','Receive dividends from a stock'],correct:2,feedback:'A Call = right to BUY. A Put = right to SELL. This is the most fundamental concept in options.'},
+      {q:'If you buy an options contract and the trade goes against you, what is your maximum loss?',opts:['Unlimited — you can lose everything','Only the premium you paid for the contract','50% of the stock value','Your entire brokerage account'],correct:1,feedback:'When you BUY options (not sell), your max loss is limited to the premium paid. This is why buying options is considered "defined risk."'},
+      {q:'Each standard options contract controls how many shares?',opts:['10 shares','50 shares','100 shares','1,000 shares'],correct:2,feedback:'One options contract always controls 100 shares of the underlying stock. So if a contract is priced at $3.00, you pay $300 total.'},
+      {q:'What is "Theta" in options trading?',opts:['The profit percentage','Time decay — the rate an option loses value approaching expiration','The implied volatility measurement','The difference between bid and ask price'],correct:1,feedback:'Theta is time decay. Every day that passes, an option loses some value just from the passage of time. This works FOR option sellers and AGAINST option buyers.'},
+      {q:'You buy a Put option on a stock. When do you profit?',opts:['When the stock price goes up','When the stock stays flat','When the stock price goes down','When the company pays a dividend'],correct:2,feedback:'Puts profit when the stock goes DOWN. You have the right to sell at the strike price, so if the stock falls below it, your put gains value.'},
+    ],
+  },
+
+  {
+    id:'crypto',
+    emoji:'₿',
+    name:'Crypto',
+    subtitle:'DIGITAL ASSETS · BLOCKCHAIN · 24/7 MARKETS',
+    color:'#F0A84C',
+    colorDim:'rgba(240,168,76,0.08)',
+    tagline:'Cryptocurrency is <strong>digital money</strong> secured by cryptography and recorded on a <strong>blockchain</strong> — a decentralized ledger no single person or government controls. It trades 24 hours a day, 7 days a week.',
+    stats:[
+      {label:'Risk Level',value:'High',pct:85},
+      {label:'Time Horizon',value:'Hours – Years',pct:50},
+      {label:'Complexity',value:'Beginner–Adv',pct:50},
+      {label:'Min Capital',value:'$1+',pct:10},
+    ],
+    analogy:{icon:'🏦',text:'Traditional money (USD, EUR) is controlled by governments and central banks — they can print more of it. <strong>Bitcoin</strong> is different. It has a hard cap of 21 million coins, ever. No government controls it. It lives on a global network of computers. Think of it as <strong>digital gold</strong> — scarce, decentralized, and borderless.'},
+    steps:[
+      {title:'The Blockchain',desc:'Every crypto transaction is recorded on a <strong>blockchain</strong> — a public, permanent ledger maintained by thousands of computers worldwide. No single entity controls it, making it nearly impossible to hack or fake.'},
+      {title:'Bitcoin vs Altcoins',desc:'<strong>Bitcoin (BTC)</strong> is the original and largest by market cap — often called digital gold and used as a store of value. <strong>Altcoins</strong> are everything else: Ethereum (ETH), Solana (SOL), and thousands more. Each has different use cases.'},
+      {title:'Wallets and Exchanges',desc:'You buy crypto on exchanges like <strong>Coinbase, Kraken, or Binance</strong>. Your crypto is stored in a wallet — either on the exchange (custodial) or in a personal wallet where only you hold the keys (self-custodial).'},
+      {title:'24/7 Volatility',desc:'Unlike stocks, crypto <strong>never sleeps</strong>. Markets are open every hour of every day including weekends and holidays. This creates massive opportunities — and massive risk. 20–40% swings in a single day are not unusual.'},
+      {title:'Cycles and Halving',desc:'Bitcoin operates in roughly <strong>4-year cycles</strong> tied to the "halving" — an event that cuts the new supply of Bitcoin in half. Historically, each halving has been followed by a major bull run 12–18 months later.'},
+    ],
+    example:{
+      scenario:'Bitcoin Halving Cycle — 2020',
+      text:'Bitcoin\'s third halving happened in <strong>May 2020</strong> at around $8,700. Eighteen months later, in November 2021, Bitcoin hit its all-time high of nearly <strong>$69,000</strong> — a gain of over 690%. Those who understood the cycle and held through the volatility were rewarded significantly.',
+      callout:{icon:'💡',text:'<strong>Key lesson:</strong> Crypto rewards patience AND timing. The people who bought near the top in 2021 then watched Bitcoin fall 75% to $16,000 in 2022. Context, cycle awareness, and position sizing are everything.'},
+    },
+    glossary:[
+      {term:'Blockchain',def:'A decentralized digital ledger that records all transactions permanently.'},
+      {term:'Bitcoin (BTC)',def:'The first and largest cryptocurrency — often called digital gold.'},
+      {term:'Altcoin',def:'Any cryptocurrency other than Bitcoin.'},
+      {term:'Wallet',def:'Software or hardware that stores your crypto keys and balances.'},
+      {term:'Halving',def:'An event every ~4 years that cuts the rate of new Bitcoin supply in half.'},
+      {term:'Market Cap',def:'Total value of a crypto = price × circulating supply.'},
+      {term:'DeFi',def:'Decentralized Finance — financial services built on blockchain without banks.'},
+      {term:'Gas Fee',def:'The transaction fee paid to the network to process a blockchain transaction.'},
+    ],
+    quiz:[
+      {q:'What makes Bitcoin fundamentally different from traditional money like the US Dollar?',opts:['It is issued by a large bank','It has a fixed supply cap of 21 million and is decentralized','It can only be used online for purchases','It was created by the US government'],correct:1,feedback:'Bitcoin has a hard cap of 21 million coins that can ever exist, and no central authority controls it. This scarcity and decentralization is its core value proposition.'},
+      {q:'Crypto markets are open during which hours?',opts:['Mon–Fri, 9:30am–4pm ET','Mon–Sat, 8am–6pm ET','24 hours a day, 7 days a week','Only when US markets are open'],correct:2,feedback:'Crypto never sleeps — it trades 24/7 including weekends and holidays. This is a major difference from stock markets and creates both opportunities and risk.'},
+      {q:'What is a blockchain?',opts:['A type of crypto wallet','A company that makes cryptocurrency','A decentralized public ledger recording all transactions','A government database for tracking digital payments'],correct:2,feedback:'A blockchain is a distributed, public, permanent ledger maintained by thousands of computers worldwide. No single entity controls it — this is what makes crypto decentralized.'},
+      {q:'Bitcoin\'s "halving" event is significant because it:',opts:['Doubles the supply of Bitcoin','Cuts the rate of new Bitcoin creation in half','Splits existing Bitcoin holdings','Resets the Bitcoin price'],correct:1,feedback:'The halving cuts the block reward (new supply) in half roughly every 4 years. Historically this has reduced selling pressure from miners and preceded major bull cycles.'},
+      {q:'What is an "altcoin"?',opts:['An old or outdated cryptocurrency','Any cryptocurrency that is not Bitcoin','A stablecoin pegged to the US Dollar','A government-issued digital currency'],correct:1,feedback:'Altcoin means "alternative coin" — any cryptocurrency that is not Bitcoin. This includes Ethereum, Solana, and thousands of others.'},
+    ],
+  },
+
+  {
+    id:'forex',
+    emoji:'💱',
+    name:'Forex',
+    subtitle:'CURRENCY PAIRS · GLOBAL MARKET · LEVERAGE',
+    color:'#4CC9A8',
+    colorDim:'rgba(76,201,168,0.08)',
+    tagline:'<strong>Forex (Foreign Exchange)</strong> is the global market for trading currencies against each other. It is the largest financial market in the world — over <strong>$7 trillion</strong> traded every single day.',
+    stats:[
+      {label:'Risk Level',value:'High',pct:80},
+      {label:'Time Horizon',value:'Minutes – Weeks',pct:35},
+      {label:'Complexity',value:'Intermediate',pct:62},
+      {label:'Min Capital',value:'$100+',pct:15},
+    ],
+    analogy:{icon:'✈️',text:'You land in Japan with $1,000 USD. The exchange rate is 150 yen per dollar, so you get <strong>150,000 yen</strong>. A week later the dollar strengthens — the rate is now 160 yen per dollar. You exchange your yen back and get <strong>$937.50</strong>. You lost money because of currency movement. Forex traders profit from predicting these exact movements — but at massive scale and speed.'},
+    steps:[
+      {title:'Currency Pairs',desc:'Forex is always traded in pairs. <strong>EUR/USD</strong> means Euros vs US Dollars. If you think the Euro will strengthen against the Dollar, you BUY EUR/USD. If you think it will weaken, you SELL. The first currency (EUR) is the base, the second (USD) is the quote.'},
+      {title:'Pips and Lots',desc:'Price movements in Forex are measured in <strong>pips</strong> (usually the 4th decimal place). A "lot" is the standard trade size — 100,000 units of the base currency. Mini lots (10,000) and micro lots (1,000) are also common for beginners.'},
+      {title:'Massive Leverage',desc:'Forex brokers offer extreme leverage — sometimes <strong>50:1 or even 100:1</strong>. That means with $1,000 you can control $100,000 of currency. This magnifies profits AND losses dramatically. Most new traders blow accounts with leverage.'},
+      {title:'The Interbank Market',desc:'Unlike stocks, Forex has <strong>no central exchange</strong>. It operates through a global network of banks, institutions, and brokers. This is called the over-the-counter (OTC) market and is why it runs 24 hours a day, 5 days a week.'},
+      {title:'Major, Minor, and Exotic Pairs',desc:'<strong>Major pairs</strong> always include USD (EUR/USD, GBP/USD, USD/JPY). <strong>Minor pairs</strong> are major currencies without USD (EUR/GBP). <strong>Exotic pairs</strong> include emerging market currencies (USD/MXN). Majors have the tightest spreads and most liquidity.'},
+    ],
+    example:{
+      scenario:'EUR/USD Trade — ECB Rate Decision',
+      text:'EUR/USD is trading at <strong>1.0800</strong>. You expect the European Central Bank to raise rates, making the Euro more attractive. You BUY 1 mini lot (10,000 EUR). Each pip is worth ~$1. The ECB raises rates and EUR/USD rises to <strong>1.0950</strong> — a 150 pip move. You close the trade for a <strong>$150 profit</strong>.',
+      callout:{icon:'⚠️',text:'<strong>The danger:</strong> With 50:1 leverage, a 2% move against you wipes out your entire margin. Forex rewards disciplined, risk-managed trading above all else. Successful Forex traders are obsessed with pip risk per trade.'},
+    },
+    glossary:[
+      {term:'Currency Pair',def:'Two currencies quoted against each other (e.g., EUR/USD).'},
+      {term:'Pip',def:'The smallest standard price move in a forex pair (usually 0.0001).'},
+      {term:'Lot',def:'Standard trade size: 1 lot = 100,000 units of base currency.'},
+      {term:'Leverage',def:'Borrowed capital that amplifies both gains and losses.'},
+      {term:'Spread',def:'The difference between the buy (ask) and sell (bid) price.'},
+      {term:'Base Currency',def:'The first currency in a pair (EUR in EUR/USD).'},
+      {term:'Quote Currency',def:'The second currency in a pair (USD in EUR/USD).'},
+      {term:'OTC',def:'Over-the-counter — traded directly between parties, not on a central exchange.'},
+    ],
+    quiz:[
+      {q:'Forex is the largest financial market in the world. Approximately how much is traded daily?',opts:['$700 million','$7 billion','$700 billion','$7 trillion'],correct:3,feedback:'Over $7 trillion is traded in the Forex market every single day, making it by far the largest and most liquid financial market in the world.'},
+      {q:'In the currency pair EUR/USD, which is the base currency?',opts:['USD — the US Dollar','EUR — the Euro','Both equally','Whichever is stronger'],correct:1,feedback:'The first currency listed is always the base currency. EUR/USD means: "How many US Dollars does 1 Euro cost?" If EUR/USD = 1.08, one Euro buys 1.08 Dollars.'},
+      {q:'A trader uses 50:1 leverage with $500 in their account. How much can they control?',opts:['$500','$2,500','$25,000','$50,000'],correct:2,feedback:'50:1 leverage means for every $1 you have, you can control $50. So $500 × 50 = $25,000 in buying power. This is powerful and extremely dangerous without risk management.'},
+      {q:'Forex markets are open which hours?',opts:['Only during New York market hours','24 hours, 5 days a week (Mon–Fri)','24/7 including weekends','Only during London and New York overlap'],correct:1,feedback:'Forex runs 24 hours, 5 days a week — from Sunday evening (Sydney open) to Friday afternoon (New York close). Unlike crypto, it is closed on weekends.'},
+      {q:'EUR/USD rises from 1.0800 to 1.0900. How many pips did it move?',opts:['10 pips','100 pips','1,000 pips','1 pip'],correct:1,feedback:'Each pip is 0.0001 in most major pairs. From 1.0800 to 1.0900 = 0.0100 difference = 100 pips. Pips are the standard unit of measurement in Forex.'},
+    ],
+  },
+
+  {
+    id:'futures',
+    emoji:'⚡',
+    name:'Futures',
+    subtitle:'CONTRACTS · COMMODITIES · SPECULATION',
+    color:'#C94C4C',
+    colorDim:'rgba(201,76,76,0.08)',
+    tagline:'Futures are <strong>contracts to buy or sell an asset at a predetermined price on a specific future date</strong>. They were created for farmers and businesses to hedge risk — and became one of the most powerful trading instruments in existence.',
+    stats:[
+      {label:'Risk Level',value:'Very High',pct:92},
+      {label:'Time Horizon',value:'Days – Months',pct:40},
+      {label:'Complexity',value:'Advanced',pct:85},
+      {label:'Min Capital',value:'$5,000+',pct:60},
+    ],
+    analogy:{icon:'🌽',text:'A corn farmer knows they will harvest 10,000 bushels in October. They are worried corn prices might crash by then. So they enter a <strong>futures contract</strong> to sell 10,000 bushels at today\'s price of $5/bushel, delivered in October. A cereal company agrees — they lock in their supply cost. Both parties have <strong>hedged their risk</strong>. Traders speculate on which direction these prices will move.'},
+    steps:[
+      {title:'What can you trade with futures?',desc:'Almost anything: <strong>commodities</strong> (oil, gold, corn, wheat), <strong>stock indexes</strong> (S&P 500 futures = /ES, Nasdaq futures = /NQ), <strong>currencies</strong>, <strong>bonds</strong>, and even <strong>crypto</strong>. Index futures like /ES are the most popular among active traders.'},
+      {title:'Standardized Contracts',desc:'Each futures contract has a <strong>standardized size</strong>. One S&P 500 futures contract (/ES) controls $50 × the S&P 500 index. If the S&P is at 5,000, one contract is worth $250,000. This is why futures require significant capital and margin.'},
+      {title:'Mark-to-Market',desc:'Futures are settled <strong>daily</strong> — gains and losses are credited and debited from your account every day the market closes. This is called mark-to-market. If you are on the wrong side of a big move, you can receive a <strong>margin call</strong> — forced to add funds or close.'},
+      {title:'Leverage and Margin',desc:'Futures use margin — you only need to put up a fraction of the contract\'s value. The S&P /ES micro contract (/MES) requires roughly <strong>$1,200 margin</strong> to control a $25,000 position. Each 1-point move in the S&P = $5 profit or loss.'},
+      {title:'Expiration and Rollover',desc:'Futures contracts <strong>expire</strong> on specific dates (quarterly for most). Traders who want to maintain positions must "roll" their contracts to the next expiration before the current one expires. Most traders close well before expiration.'},
+    ],
+    example:{
+      scenario:'Trading /MES — Micro S&P 500 Futures',
+      text:'The S&P 500 is at <strong>5,200</strong>. You think it will rise after a strong jobs report. You buy 1 /MES contract (Micro E-mini S&P) at 5,200. Margin required: ~$1,200. Each 1-point move = $5. The jobs report comes in strong and the S&P rises to <strong>5,250</strong> — a 50-point move. You close your trade for a <strong>$250 profit</strong> ($5 × 50 points).',
+      callout:{icon:'⚠️',text:'<strong>Risk reality:</strong> If the S&P dropped 50 points against you, that\'s a $250 loss on $1,200 margin — a 20% loss in one trade. Futures move fast. The /MES is the beginner-friendly version of futures — start there if you explore this instrument.'},
+    },
+    glossary:[
+      {term:'Futures Contract',def:'An agreement to buy or sell an asset at a fixed price on a future date.'},
+      {term:'/ES',def:'E-mini S&P 500 futures — the standard S&P 500 futures contract.'},
+      {term:'/MES',def:'Micro E-mini S&P 500 — 1/10th the size of /ES, better for beginners.'},
+      {term:'Margin',def:'The deposit required to hold a futures position.'},
+      {term:'Margin Call',def:'A demand to add funds when your account falls below minimum margin.'},
+      {term:'Mark-to-Market',def:'Daily settlement of gains/losses in a futures account.'},
+      {term:'Rollover',def:'Closing an expiring contract and opening the next one to maintain exposure.'},
+      {term:'Contango',def:'When futures prices are higher than the expected spot price — common in commodity markets.'},
+    ],
+    quiz:[
+      {q:'Futures contracts were originally created for what purpose?',opts:['To allow day traders to speculate quickly','To help producers and buyers hedge against price uncertainty','To replace stock trading entirely','To allow banks to create new currencies'],correct:1,feedback:'Futures were created as hedging tools — corn farmers, oil producers, and airline companies use them to lock in prices and protect against volatile commodity costs.'},
+      {q:'If you hold a futures contract and the market moves significantly against you overnight, what might happen?',opts:['Your position is automatically closed at a small loss','You receive a margin call and must add funds','Nothing — futures are not marked daily','Your broker absorbs the loss'],correct:1,feedback:'Futures are marked-to-market daily. If losses eat into your margin below the maintenance level, you get a margin call — you must deposit more funds or your position is forcibly closed.'},
+      {q:'The /MES contract is the Micro E-mini S&P 500. What is its advantage over /ES?',opts:['It has no expiration date','It is 1/10th the size of /ES — making it more accessible for smaller accounts','It has lower fees than all other instruments','It tracks the Nasdaq instead of the S&P'],correct:1,feedback:'The /MES is 1/10th the size of a standard /ES contract, requiring much less margin (~$1,200 vs ~$12,000). It lets newer traders experience real futures markets without massive capital requirements.'},
+      {q:'In the /MES contract, each 1-point move in the S&P 500 equals how much profit or loss?',opts:['$50','$25','$10','$5'],correct:3,feedback:'Each 1-point move in the S&P 500 index = $5 profit or loss on one /MES contract. On /ES (full-size), each point = $50. Always know your dollar-per-point before entering a futures trade.'},
+      {q:'What does it mean to "roll" a futures contract?',opts:['Add more contracts to your position','Close the expiring contract and open the next expiration to maintain your position','Take physical delivery of the commodity','Convert a futures contract into a stock position'],correct:1,feedback:'Rolling means closing your current contract before it expires and simultaneously opening a position in the next expiration. This lets traders maintain exposure without taking actual delivery of the asset.'},
+    ],
+  },
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let state = {
+  currentLesson: 0,
+  completed: {},   // { lessonIdx: score }
+  totalXP: 0,
+  quizAnswers: {}, // { lessonIdx: { qIdx: optIdx } }
+  quizSubmitted: {},
+};
+
+function loadState(){
+  try{
+    const s = JSON.parse(localStorage.getItem('dojo_instruments')||'{}');
+    if(s.completed) state.completed = s.completed;
+    if(s.totalXP) state.totalXP = s.totalXP;
+    if(s.quizAnswers) state.quizAnswers = s.quizAnswers;
+    if(s.quizSubmitted) state.quizSubmitted = s.quizSubmitted;
+  }catch(e){}
+}
+
+function saveState(){
+  try{ localStorage.setItem('dojo_instruments', JSON.stringify({
+    completed: state.completed,
+    totalXP: state.totalXP,
+    quizAnswers: state.quizAnswers,
+    quizSubmitted: state.quizSubmitted,
+  })); }catch(e){}
+}
+
+// ══════════════════════════════════════════
+// BUILD UI
+// ══════════════════════════════════════════
+function buildSidebar(){
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = INSTRUMENTS.map((inst, i) => {
+    const isDone = state.completed[i] !== undefined;
+    const isActive = i === state.currentLesson;
+    const isLocked = false; // all unlocked for now
+    let badgeClass = 'nb-active', badgeContent = '▶';
+    if(isDone){ badgeClass='nb-done'; badgeContent='✓'; }
+    else if(!isActive){ badgeClass='nb-locked'; badgeContent=(i+1)+''; }
+    const statusText = isDone ? `${state.completed[i]}/5 correct` : isActive ? 'In progress' : 'Not started';
+    return `<div class="nav-item${isActive?' active':''}${isDone?' completed':''}${isLocked?' locked':''}" onclick="selectLesson(${i})" id="nav-item-${i}">
+      <div class="nav-emoji">${inst.emoji}</div>
+      <div class="nav-info">
+        <div class="nav-name">${inst.name}</div>
+        <div class="nav-status">${statusText}</div>
+      </div>
+      <div class="nav-badge ${badgeClass}">${badgeContent}</div>
+    </div>`;
+  }).join('');
+  updateSidebarProgress();
+}
+
+function updateSidebarProgress(){
+  const done = Object.keys(state.completed).length;
+  document.getElementById('sp-text').textContent = done + ' / ' + INSTRUMENTS.length;
+  document.getElementById('sp-fill').style.width = (done / INSTRUMENTS.length * 100) + '%';
+  document.getElementById('total-xp-display').textContent = state.totalXP;
+  document.getElementById('sidebar-xp').textContent = state.totalXP;
+}
+
+function buildLesson(idx){
+  const inst = INSTRUMENTS[idx];
+  const existing = document.getElementById('lesson-'+idx);
+  if(existing) return; // already built
+
+  const content = document.getElementById('content-area');
+  const div = document.createElement('div');
+  div.className = 'lesson';
+  div.id = 'lesson-'+idx;
+  div.style.setProperty('--instrument-color', inst.color);
+  div.style.setProperty('--instrument-color-dim', inst.colorDim);
+
+  div.innerHTML = `
+    <!-- HERO -->
+    <div class="lesson-hero">
+      <div class="hero-eyebrow">Module I · Instrument ${idx+1} of ${INSTRUMENTS.length}</div>
+      <div class="hero-top">
+        <div class="hero-left">
+          <span class="hero-emoji">${inst.emoji}</span>
+          <div class="hero-title">${inst.name}</div>
+          <div class="hero-subtitle">${inst.subtitle}</div>
+          <p class="hero-tagline">${inst.tagline}</p>
+        </div>
+      </div>
+      <div class="stat-chips">
+        ${inst.stats.map(s=>`
+          <div class="stat-chip">
+            <div class="sc-label">${s.label}</div>
+            <div class="sc-value">${s.value}</div>
+            <div class="sc-bar"><div class="sc-fill" style="width:${s.pct}%"></div></div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="lesson-body">
+
+      <!-- ANALOGY -->
+      <div class="section-block">
+        <div class="section-label">Think of It This Way</div>
+        <div class="analogy-card">
+          <div class="analogy-icon">${inst.analogy.icon}</div>
+          <div class="analogy-text">${inst.analogy.text}</div>
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS -->
+      <div class="section-block">
+        <div class="section-label">How It Works</div>
+        <div class="steps-list">
+          ${inst.steps.map((s,si)=>`
+            <div class="step-item">
+              <div class="step-num">${si+1}</div>
+              <div class="step-content">
+                <div class="step-title">${s.title}</div>
+                <div class="step-desc">${s.desc}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- EXAMPLE -->
+      <div class="section-block">
+        <div class="section-label">Real World Example</div>
+        <div class="example-box">
+          <div class="example-scenario">${inst.example.scenario}</div>
+          <div class="example-text">${inst.example.text}</div>
+          <div class="example-callout">
+            <div class="ec-icon">${inst.example.callout.icon}</div>
+            <div class="ec-text">${inst.example.callout.text}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GLOSSARY -->
+      <div class="section-block">
+        <div class="section-label">Key Terms</div>
+        <div class="glossary-grid">
+          ${inst.glossary.map(g=>`
+            <div class="glossary-item">
+              <div class="gi-term">${g.term}</div>
+              <div class="gi-def">${g.def}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+    </div><!-- end lesson-body -->
+
+    <!-- QUIZ -->
+    <div class="quiz-section" id="quiz-section-${idx}">
+      <div class="quiz-header-block">
+        <div class="quiz-title">Knowledge Check</div>
+        <div class="quiz-subtitle">5 questions · Answer all to submit · Earn up to 250 XP</div>
+      </div>
+
+      ${inst.quiz.map((q,qi)=>`
+        <div class="quiz-q-block" id="qqb-${idx}-${qi}">
+          <div class="qq-label">Question ${qi+1}</div>
+          <div class="qq-text">${q.q}</div>
+          <div class="qq-options" id="qq-opts-${idx}-${qi}">
+            ${q.opts.map((o,oi)=>`
+              <button class="qq-opt" id="qq-opt-${idx}-${qi}-${oi}" onclick="selectQuizOpt(${idx},${qi},${oi})">
+                <div class="qq-opt-dot">${String.fromCharCode(65+oi)}</div>
+                <div class="qq-opt-text">${o}</div>
+              </button>`).join('')}
+          </div>
+          <div class="qq-feedback" id="qq-fb-${idx}-${qi}"></div>
+        </div>`).join('')}
+
+      <div class="ornament"><span class="ornament-sym">◆</span></div>
+
+      <div class="quiz-submit-row">
+        <button class="btn-submit" id="btn-submit-${idx}" onclick="submitQuiz(${idx})">Submit Answers</button>
+        <button class="btn-next-lesson" id="btn-next-lesson-${idx}" onclick="goNextLesson(${idx})">
+          ${idx < INSTRUMENTS.length-1 ? 'Next: '+INSTRUMENTS[idx+1].name+' →' : 'Complete Module ✓'}
+        </button>
+        <button class="btn-ghost" onclick="scrollToTop()">↑ Review Lesson</button>
+      </div>
+
+      <div class="score-reveal" id="score-reveal-${idx}">
+        <div class="score-big" id="score-big-${idx}">0/5</div>
+        <div class="score-label">Questions Correct</div>
+        <div class="score-xp" id="score-xp-${idx}">+0 XP Earned</div>
+        <div class="score-msg" id="score-msg-${idx}"></div>
+      </div>
+    </div>
+  `;
+
+  content.appendChild(div);
+
+  // Restore saved answers if any
+  if(state.quizAnswers[idx]){
+    Object.entries(state.quizAnswers[idx]).forEach(([qi,oi])=>{
+      const btn = document.getElementById(`qq-opt-${idx}-${qi}-${oi}`);
+      if(btn) btn.classList.add('selected');
+    });
+  }
+  if(state.quizSubmitted[idx]){
+    setTimeout(()=>renderSubmittedQuiz(idx), 50);
+  }
+  checkSubmitReady(idx);
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function selectLesson(idx){
+  state.currentLesson = idx;
+  // Hide all lessons
+  document.querySelectorAll('.lesson').forEach(l=>l.classList.remove('active'));
+  // Build if needed
+  buildLesson(idx);
+  // Show
+  document.getElementById('lesson-'+idx).classList.add('active');
+  // Update sidebar
+  document.querySelectorAll('.nav-item').forEach((el,i)=>{
+    el.classList.toggle('active', i===idx);
+  });
+  // Scroll content to top
+  document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'});
+}
+
+function goNextLesson(currentIdx){
+  if(currentIdx < INSTRUMENTS.length-1){
+    selectLesson(currentIdx+1);
+  } else {
+    alert('🏆 You completed the Trading Instruments module! All 5 instruments mastered. Your XP: '+state.totalXP);
+  }
+}
+
+function scrollToTop(){
+  document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════
+// QUIZ LOGIC
+// ══════════════════════════════════════════
+function selectQuizOpt(lessonIdx, qIdx, optIdx){
+  if(state.quizSubmitted[lessonIdx]) return; // locked after submit
+  // Deselect others in this question
+  const inst = INSTRUMENTS[lessonIdx];
+  inst.quiz[qIdx].opts.forEach((_,oi)=>{
+    document.getElementById(`qq-opt-${lessonIdx}-${qIdx}-${oi}`)?.classList.remove('selected');
+  });
+  document.getElementById(`qq-opt-${lessonIdx}-${qIdx}-${optIdx}`)?.classList.add('selected');
+  // Save answer
+  if(!state.quizAnswers[lessonIdx]) state.quizAnswers[lessonIdx]={};
+  state.quizAnswers[lessonIdx][qIdx] = optIdx;
+  saveState();
+  checkSubmitReady(lessonIdx);
+}
+
+function checkSubmitReady(lessonIdx){
+  if(state.quizSubmitted[lessonIdx]) return;
+  const inst = INSTRUMENTS[lessonIdx];
+  const answers = state.quizAnswers[lessonIdx] || {};
+  const allAnswered = inst.quiz.every((_,qi) => answers[qi] !== undefined);
+  const btn = document.getElementById('btn-submit-'+lessonIdx);
+  if(btn) btn.classList.toggle('ready', allAnswered);
+}
+
+function submitQuiz(lessonIdx){
+  const inst = INSTRUMENTS[lessonIdx];
+  const answers = state.quizAnswers[lessonIdx] || {};
+  const allAnswered = inst.quiz.every((_,qi) => answers[qi] !== undefined);
+  if(!allAnswered) return;
+
+  state.quizSubmitted[lessonIdx] = true;
+  renderSubmittedQuiz(lessonIdx);
+
+  // Score
+  let correct = 0;
+  inst.quiz.forEach((q,qi)=>{ if(answers[qi]===q.correct) correct++; });
+  const xpEarned = correct * 50;
+  state.completed[lessonIdx] = correct;
+  state.totalXP += xpEarned;
+  saveState();
+
+  // Score reveal
+  const msgs = ['Keep studying — revisit the lesson and try again!','Good effort! Review the ones you missed.','Solid work! You are building real knowledge.','Great job — you clearly paid attention!','Perfect score! You have mastered this instrument! 🏆'];
+  document.getElementById('score-big-'+lessonIdx).textContent = correct+'/5';
+  document.getElementById('score-xp-'+lessonIdx).textContent = '+'+xpEarned+' XP Earned';
+  document.getElementById('score-msg-'+lessonIdx).textContent = msgs[correct] || msgs[2];
+  document.getElementById('score-reveal-'+lessonIdx).classList.add('show');
+
+  // Show next button
+  document.getElementById('btn-submit-'+lessonIdx).style.display='none';
+  document.getElementById('btn-next-lesson-'+lessonIdx).style.display='inline-block';
+
+  // Update sidebar
+  buildSidebar();
+  updateSidebarProgress();
+
+  // Scroll to score
+  setTimeout(()=>{
+    document.getElementById('score-reveal-'+lessonIdx)?.scrollIntoView({behavior:'smooth',block:'center'});
+  }, 200);
+}
+
+function renderSubmittedQuiz(lessonIdx){
+  const inst = INSTRUMENTS[lessonIdx];
+  const answers = state.quizAnswers[lessonIdx] || {};
+  inst.quiz.forEach((q,qi)=>{
+    q.opts.forEach((_,oi)=>{
+      const btn = document.getElementById(`qq-opt-${lessonIdx}-${qi}-${oi}`);
+      if(!btn) return;
+      btn.classList.remove('selected','correct','wrong');
+      if(oi === q.correct) btn.classList.add('correct');
+      else if(answers[qi]===oi && oi!==q.correct) btn.classList.add('wrong');
+      btn.disabled = true;
+    });
+    // Feedback
+    const fb = document.getElementById(`qq-fb-${lessonIdx}-${qi}`);
+    if(fb){
+      const isCorrect = answers[qi]===q.correct;
+      fb.className = 'qq-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+      fb.textContent = (isCorrect?'✓ ':  '✗ Correct answer: '+q.opts[q.correct]+'. ')+q.feedback;
+    }
+  });
+  // Buttons
+  const submitBtn = document.getElementById('btn-submit-'+lessonIdx);
+  const nextBtn = document.getElementById('btn-next-lesson-'+lessonIdx);
+  if(submitBtn) submitBtn.style.display='none';
+  if(nextBtn) nextBtn.style.display='inline-block';
+
+  // Score reveal
+  if(state.completed[lessonIdx] !== undefined){
+    const correct = state.completed[lessonIdx];
+    const msgs=['Keep studying — revisit the lesson and try again!','Good effort! Review the ones you missed.','Solid work! You are building real knowledge.','Great job — you clearly paid attention!','Perfect score! You have mastered this instrument! 🏆'];
+    document.getElementById('score-big-'+lessonIdx).textContent = correct+'/5';
+    document.getElementById('score-xp-'+lessonIdx).textContent = '+'+(correct*50)+' XP Earned';
+    document.getElementById('score-msg-'+lessonIdx).textContent = msgs[correct]||msgs[2];
+    document.getElementById('score-reveal-'+lessonIdx)?.classList.add('show');
+  }
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+loadState();
+buildSidebar();
+buildLesson(state.currentLesson);
+document.getElementById('lesson-'+state.currentLesson).classList.add('active');
+updateSidebarProgress();
+</script>
+</body>
+</html>

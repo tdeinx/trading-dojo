@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Platforms & Tools · The Trading Dojo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;
+  --ink:#0A0A0F;--ink-3:#1A1A24;--ink-4:#22222E;
+  --panel:#13131C;--panel-2:#0F0F18;
+  --border:rgba(201,168,76,0.15);--border-b:rgba(201,168,76,0.5);
+  --text:#E8E0CC;--text-dim:#8A8070;--text-faint:#3A3630;
+  --teal:#4CC9A8;--red:#C94C4C;--purple:#8B6FD4;--blue:#4C8BC9;--amber:#C9904C;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.92);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;}
+.logo{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);display:flex;align-items:center;gap:9px;cursor:pointer;}
+.logo-mark{width:28px;height:28px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.85rem;position:relative;flex-shrink:0;}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.22);}
+.topbar-center{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
+.xp-chip{background:var(--panel);border:1px solid var(--border);padding:6px 14px;font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--gold);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+
+/* LAYOUT */
+.body-layout{display:flex;flex:1;min-height:0;}
+
+/* SIDEBAR */
+.sidebar{width:268px;flex-shrink:0;border-right:1px solid var(--border);background:var(--panel-2);display:flex;flex-direction:column;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.sb-header{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
+.sb-title{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;}
+.sb-sub{font-size:0.85rem;color:var(--text-dim);font-weight:300;}
+.sb-progress{margin-top:14px;}
+.sp-row{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:5px;}
+.sp-row span{color:var(--gold);}
+.sp-track{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.6s ease;}
+.sb-section-label{padding:14px 18px 6px;font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.22em;color:var(--text-faint);text-transform:uppercase;}
+.sb-nav{flex:1;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 18px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
+.nav-item:hover{background:rgba(201,168,76,0.04);border-left-color:rgba(201,168,76,0.25);}
+.nav-item.active{background:rgba(201,168,76,0.07);border-left-color:var(--gold);}
+.nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.nav-info{flex:1;min-width:0;}
+.nav-name{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-item.active .nav-name{color:var(--gold);}
+.nav-meta{font-size:0.62rem;color:var(--text-dim);margin-top:1px;}
+.nav-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.52rem;flex-shrink:0;font-family:'Cinzel',serif;}
+.nb-idle{background:var(--ink-4);color:var(--text-faint);}
+.nb-active{background:var(--gold);color:var(--ink);font-weight:700;animation:pb 2s ease-in-out infinite;}
+.nb-done{background:rgba(76,201,168,0.18);color:var(--teal);border:1px solid rgba(76,201,168,0.35);}
+@keyframes pb{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{box-shadow:0 0 0 5px rgba(201,168,76,0)}}
+.sb-footer{padding:14px 18px;border-top:1px solid var(--border);}
+.sb-xp{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.14em;color:var(--text-faint);}
+.sb-xp span{color:var(--gold);font-size:0.82rem;}
+
+/* CONTENT */
+.content-area{flex:1;overflow-y:auto;}
+.page{display:none;animation:fu 0.38s ease forwards;}
+.page.active{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* MODULE HERO */
+.mod-hero{padding:44px 52px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.mod-hero::after{content:'';position:absolute;top:0;right:0;width:320px;height:100%;background:radial-gradient(ellipse at right,var(--page-glow,rgba(201,168,76,0.05)) 0%,transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:14px;}
+.hero-emoji{font-size:3rem;line-height:1;display:block;margin-bottom:14px;filter:drop-shadow(0 0 18px var(--page-color-dim,rgba(201,168,76,0.3)));}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:900;color:var(--page-color,var(--gold));line-height:1.1;margin-bottom:6px;}
+.hero-sub{font-family:'Cinzel',serif;font-size:0.8rem;letter-spacing:0.18em;color:var(--text-dim);margin-bottom:16px;}
+.hero-desc{font-size:1.05rem;font-weight:300;color:var(--text-dim);line-height:1.68;max-width:580px;}
+.hero-desc strong{color:var(--text);font-weight:500;}
+
+/* PLATFORM CARD */
+.platforms-grid{padding:40px 52px;display:flex;flex-direction:column;gap:32px;max-width:960px;}
+.platform-card{background:var(--panel);border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color 0.25s;}
+.platform-card:hover{border-color:rgba(201,168,76,0.28);}
+.platform-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--pc-color,var(--gold)),transparent);opacity:0.6;}
+.pc-header{display:flex;align-items:flex-start;justify-content:space-between;padding:28px 32px 0;gap:20px;flex-wrap:wrap;}
+.pc-left{display:flex;align-items:flex-start;gap:18px;}
+.pc-icon{font-size:2.4rem;line-height:1;flex-shrink:0;filter:drop-shadow(0 0 14px var(--pc-color-dim,rgba(201,168,76,0.25)));}
+.pc-id{}
+.pc-name{font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:var(--pc-color,var(--gold));margin-bottom:3px;}
+.pc-type{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--text-dim);text-transform:uppercase;}
+.pc-verdict{padding:8px 14px;background:rgba(201,168,76,0.07);border:1px solid var(--border);font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;color:var(--gold-dim);clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);text-align:center;max-width:180px;line-height:1.4;}
+.pc-verdict strong{color:var(--gold);display:block;font-size:0.68rem;margin-bottom:2px;}
+
+/* Rating bars */
+.pc-ratings{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1px;background:var(--border);margin:20px 0 0;}
+.pc-rating-cell{background:var(--panel);padding:14px 18px;}
+.pcr-label{font-family:'Cinzel',serif;font-size:0.54rem;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;margin-bottom:5px;}
+.pcr-val{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+.pcr-track{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
+.pcr-fill{height:100%;border-radius:2px;background:var(--pc-color,var(--gold));}
+
+/* Tags row */
+.pc-tags{display:flex;flex-wrap:wrap;gap:8px;padding:18px 32px 0;}
+.pc-tag{padding:5px 12px;background:var(--ink-3);border:1px solid var(--border);font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-dim);clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);}
+.pc-tag.best{border-color:rgba(201,168,76,0.3);color:var(--gold-dim);background:rgba(201,168,76,0.05);}
+
+/* Body */
+.pc-body{padding:24px 32px 28px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:600px){.pc-body{grid-template-columns:1fr;}}
+.pc-section-title{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.18em;color:var(--text-faint);text-transform:uppercase;margin-bottom:10px;}
+.pc-list{list-style:none;}
+.pc-list li{padding:5px 0;font-size:0.88rem;color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.04);display:flex;align-items:flex-start;gap:9px;line-height:1.4;}
+.pc-list li:last-child{border-bottom:none;}
+.pc-list li::before{font-size:0.42rem;flex-shrink:0;margin-top:5px;}
+.list-pros li::before{content:'◆';color:var(--teal);}
+.list-cons li::before{content:'◆';color:var(--red);}
+.list-features li::before{content:'◆';color:var(--pc-color,var(--gold));}
+
+/* Key feature highlight */
+.pc-feature-hl{margin:0 32px 24px;background:rgba(201,168,76,0.04);border:1px solid var(--border);border-left:3px solid var(--pc-color,var(--gold));padding:16px 20px;display:flex;gap:14px;align-items:flex-start;}
+.pf-icon{font-size:1.4rem;line-height:1;flex-shrink:0;}
+.pf-content{}
+.pf-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--pc-color,var(--gold));margin-bottom:4px;text-transform:uppercase;}
+.pf-text{font-size:0.9rem;color:var(--text-dim);line-height:1.55;font-weight:300;}
+.pf-text strong{color:var(--text);font-weight:500;}
+
+/* SECTION DIVIDER */
+.section-divider{padding:36px 52px 20px;display:flex;align-items:center;gap:14px;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.sd-label{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);white-space:nowrap;text-transform:uppercase;}
+
+/* DECISION GUIDE */
+.decision-guide{padding:0 52px 52px;max-width:960px;}
+.dg-intro{font-size:1rem;color:var(--text-dim);line-height:1.7;font-weight:300;margin-bottom:32px;}
+.dg-intro strong{color:var(--text);font-weight:500;}
+.stack-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.stack-card{background:var(--panel);border:1px solid var(--border);padding:22px;position:relative;transition:border-color 0.2s;}
+.stack-card:hover{border-color:rgba(201,168,76,0.3);}
+.stack-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc-color,var(--gold));opacity:0.5;}
+.sc-archetype{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--sc-color,var(--gold));margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.sc-title{font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:12px;}
+.sc-stack{display:flex;flex-direction:column;gap:5px;}
+.sc-tool{display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--text-dim);}
+.sc-tool-dot{width:5px;height:5px;border-radius:50%;background:var(--sc-color,var(--gold));flex-shrink:0;}
+
+/* QUIZ */
+.quiz-wrap{background:var(--panel-2);border-top:1px solid var(--border);padding:48px 52px;}
+.qz-title{font-family:'Cinzel Decorative',serif;font-size:1.45rem;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.qz-sub{font-size:0.93rem;color:var(--text-dim);font-weight:300;margin-bottom:36px;}
+.qz-block{margin-bottom:26px;}
+.qz-num{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:8px;}
+.qz-q{font-size:1.04rem;font-weight:500;color:var(--text);line-height:1.55;margin-bottom:14px;}
+.qz-q em{color:var(--gold);font-style:normal;font-weight:600;}
+.qz-opts{display:flex;flex-direction:column;gap:8px;}
+.qz-opt{background:var(--panel);border:1px solid var(--border);padding:13px 18px;cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:12px;transition:all 0.17s;width:100%;}
+.qz-opt:hover{border-color:rgba(201,168,76,0.38);background:var(--ink-3);transform:translateX(3px);}
+.qz-opt.sel{border-color:var(--gold);background:rgba(201,168,76,0.07);}
+.qz-opt.ok{border-color:var(--teal)!important;background:rgba(76,201,168,0.07)!important;}
+.qz-opt.no{border-color:var(--red)!important;background:rgba(201,76,76,0.07)!important;}
+.qz-opt:disabled{cursor:default;transform:none!important;}
+.qz-dot{width:22px;height:22px;border:1px solid var(--border-b);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.54rem;font-family:'Cinzel',serif;transition:all 0.17s;margin-top:1px;}
+.qz-opt.sel .qz-dot{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+.qz-opt.ok .qz-dot{background:var(--teal);border-color:var(--teal);color:var(--ink);}
+.qz-opt.no .qz-dot{background:var(--red);border-color:var(--red);color:#fff;}
+.qz-opt-text{font-size:0.92rem;color:var(--text-dim);line-height:1.45;}
+.qz-opt:hover .qz-opt-text,.qz-opt.sel .qz-opt-text{color:var(--text);}
+.qz-fb{margin-top:9px;padding:11px 15px;font-size:0.87rem;line-height:1.5;display:none;}
+.qz-fb.show{display:block;}
+.qz-fb.ok{background:rgba(76,201,168,0.07);border:1px solid rgba(76,201,168,0.22);color:var(--teal);}
+.qz-fb.no{background:rgba(201,76,76,0.07);border:1px solid rgba(201,76,76,0.22);color:#E87878;}
+.qz-nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px;}
+.btn-sub{font-family:'Cinzel',serif;font-size:0.73rem;font-weight:700;letter-spacing:0.18em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 34px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;opacity:0.38;pointer-events:none;}
+.btn-sub.rdy{opacity:1;pointer-events:all;}
+.btn-sub.rdy:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(201,168,76,0.22);}
+.btn-done{font-family:'Cinzel',serif;font-size:0.73rem;font-weight:700;letter-spacing:0.16em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 34px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;display:none;}
+.btn-done:hover{transform:translateY(-2px);}
+.btn-ghost{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);background:transparent;border:1px solid var(--border-b);padding:12px 26px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;}
+.btn-ghost:hover{background:rgba(201,168,76,0.06);}
+.score-box{display:none;background:var(--panel);border:1px solid var(--border);padding:26px 30px;margin-top:26px;text-align:center;animation:fu 0.38s ease;}
+.score-box.show{display:block;}
+.score-big{font-family:'Cinzel Decorative',serif;font-size:2.8rem;font-weight:900;color:var(--gold);line-height:1;}
+.score-lbl{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.18em;color:var(--text-dim);margin-top:5px;}
+.score-xp{display:inline-block;margin-top:12px;padding:7px 18px;background:rgba(201,168,76,0.09);border:1px solid var(--border-b);font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.14em;color:var(--gold);}
+.score-msg{margin-top:14px;font-size:0.93rem;color:var(--text-dim);font-weight:300;line-height:1.5;}
+.ornament{display:flex;align-items:center;gap:12px;margin:28px 0;}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:var(--border);}
+.ornament span{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.2em;color:var(--text-faint);}
+
+@media(max-width:768px){
+  .sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);}
+  .body-layout{flex-direction:column;}
+  .mod-hero,.platforms-grid,.decision-guide,.quiz-wrap,.section-divider{padding-left:22px;padding-right:22px;}
+}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="logo"><div class="logo-mark">⚔</div>The Trading Dojo</div>
+    <div class="topbar-center">Module III · Platforms &amp; Tools</div>
+    <div class="topbar-right"><div class="xp-chip">⚡ <span id="xp-disp">0</span> XP</div></div>
+  </div>
+
+  <div class="body-layout">
+    <aside class="sidebar">
+      <div class="sb-header">
+        <div class="sb-title">Module III</div>
+        <div class="sb-sub">Platforms &amp; Tools</div>
+        <div class="sb-progress">
+          <div class="sp-row">Progress <span id="sp-txt">0 / 3</span></div>
+          <div class="sp-track"><div class="sp-fill" id="sp-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="sb-nav" id="sb-nav"></div>
+      <div class="sb-footer"><div class="sb-xp">Module XP: <span id="sb-xp">0</span></div></div>
+    </aside>
+
+    <div class="content-area" id="content-area"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA — BROKERS
+// ═══════════════════════════════════════════
+const BROKERS = [
+  {
+    id:'robinhood', icon:'🟢', name:'Robinhood',
+    type:'Commission-Free Broker · Mobile-First',
+    color:'#4CC9A8', colorDim:'rgba(76,201,168,0.25)',
+    verdict:{label:'Best For', value:'Complete beginners making their first trades'},
+    ratings:[
+      {label:'Ease of Use',val:'Excellent',pct:95},
+      {label:'Charting',val:'Basic',pct:22},
+      {label:'Options Tools',val:'Moderate',pct:45},
+      {label:'Crypto Access',val:'Good',pct:65},
+      {label:'Cost',val:'Free',pct:100},
+    ],
+    tags:['✅ Best for Beginners','📱 Mobile-First','₿ Crypto Available','🆓 Commission-Free','⚠️ Limited Charts'],
+    featureHighlight:{icon:'🎯',label:'The Key Feature',text:'<strong>Fractional shares</strong> — buy $5 worth of Amazon or Tesla without needing to afford a full share. This is how beginners with small accounts can own big-name stocks. Also offers a <strong>Cash Card</strong> and 5% APY on uninvested cash.'},
+    pros:['Zero commissions on stocks, ETFs, and options','Fractional shares let you invest any dollar amount','Clean, intuitive interface — zero learning curve','Instant deposit up to $1,000 for immediate trading','Crypto trading available directly in the app'],
+    cons:['Charts are very basic — no advanced technical analysis','Customer support is notoriously slow','Payment for order flow model may result in slightly worse fills','No direct market access or advanced order types','Limited research tools compared to professional platforms'],
+    features:['Commission-free stocks, ETFs, options, crypto','Fractional shares from $1','Basic charts with a few indicators','Options chain view (simple)','Recurring investment automation','IRA accounts available'],
+  },
+  {
+    id:'webull', icon:'📊', name:'WeBull',
+    type:'Commission-Free Broker · Technical Traders',
+    color:'#4C8BC9', colorDim:'rgba(76,139,201,0.25)',
+    verdict:{label:'Best For', value:'Intermediate traders who want real charts for free'},
+    ratings:[
+      {label:'Ease of Use',val:'Moderate',pct:58},
+      {label:'Charting',val:'Very Good',pct:80},
+      {label:'Options Tools',val:'Good',pct:72},
+      {label:'Crypto Access',val:'Good',pct:68},
+      {label:'Cost',val:'Free',pct:100},
+    ],
+    tags:['📈 Real Charting','🆓 Commission-Free','📱 Desktop + Mobile','₿ Crypto','⚙️ Extended Hours'],
+    featureHighlight:{icon:'📈',label:'The Key Feature',text:'<strong>Full-featured charts for free</strong> — WeBull gives you candlestick charts, 50+ technical indicators, drawing tools, and multi-timeframe analysis at no cost. This is what most traders pay for on other platforms. It also offers <strong>extended hours trading</strong> from 4am to 8pm ET.'},
+    pros:['Robust charting with 50+ indicators at no cost','Paper trading built in — practice without real money','Extended hours trading (4am–8pm ET)','Level 2 quotes available (subscription)','Desktop and mobile apps both strong','Options chain analysis tools'],
+    cons:['Interface has a steeper learning curve than Robinhood','Not ideal for absolute beginners — overwhelming at first','Customer support not best-in-class','Fewer educational resources than some competitors','Margin rates are average'],
+    features:['Commission-free stocks, ETFs, options, crypto','50+ technical indicators','Paper trading simulator','Extended hours: 4am – 8pm ET','Level 2 quotes (paid subscription)','Screener and watchlist tools','Options analysis including P&L charts'],
+  },
+  {
+    id:'thinkorswim', icon:'🖥️', name:'ThinkorSwim (ToS)',
+    type:'Professional Platform · TD Ameritrade / Schwab',
+    color:'#C9A84C', colorDim:'rgba(201,168,76,0.25)',
+    verdict:{label:'Best For', value:'Serious active traders and options specialists'},
+    ratings:[
+      {label:'Ease of Use',val:'Complex',pct:28},
+      {label:'Charting',val:'Professional',pct:98},
+      {label:'Options Tools',val:'Best in Class',pct:100},
+      {label:'Scanners',val:'Powerful',pct:92},
+      {label:'Cost',val:'Free w/ Account',pct:100},
+    ],
+    tags:['🏆 Professional Grade','📊 Best Options Platform','🔍 Advanced Scanners','💻 Desktop-First','⚠️ High Learning Curve'],
+    featureHighlight:{icon:'🏆',label:'The Key Feature',text:'<strong>thinkScript</strong> — ToS has a built-in scripting language that lets you build custom indicators, scanners, and strategy alerts. Combined with the most powerful options analysis suite in retail trading (P&L diagrams, risk graphs, probability cones), this is the platform serious traders graduate to. <strong>Free with a Charles Schwab account.</strong>'},
+    pros:['Industry-leading options analysis and strategy tools','Fully customizable interface with multiple layouts','Advanced scanner with custom thinkScript conditions','Paper trading with real market data','Risk/reward diagrams and probability analysis','Futures and forex trading available'],
+    cons:['Steep learning curve — overwhelming for beginners','Desktop app is resource-intensive (older computers struggle)','Mobile app is significantly less powerful than desktop','UI looks dated compared to modern platforms','Requires time investment to set up properly'],
+    features:['Full professional charting suite','Options chains with greeks, P&L diagrams, risk graphs','thinkScript custom indicators and scanners','Real-time paper trading','Futures and forex access','Pre-built and custom watchlists','Earnings analysis tools','Backtesting via thinkOnDemand'],
+  },
+  {
+    id:'ibkr', icon:'🏦', name:'Interactive Brokers',
+    type:'Professional Broker · Global Markets',
+    color:'#8B6FD4', colorDim:'rgba(139,111,212,0.25)',
+    verdict:{label:'Best For', value:'Advanced traders, algo traders, international access'},
+    ratings:[
+      {label:'Ease of Use',val:'Difficult',pct:18},
+      {label:'Global Access',val:'Unmatched',pct:100},
+      {label:'Margin Rates',val:'Industry Low',pct:95},
+      {label:'API Access',val:'Excellent',pct:98},
+      {label:'Cost',val:'Low / Tiered',pct:85},
+    ],
+    tags:['🌍 150+ Markets Globally','🤖 API / Algo Trading','💰 Lowest Margin Rates','⚙️ Advanced Orders','⚠️ Not for Beginners'],
+    featureHighlight:{icon:'🤖',label:'The Key Feature',text:'<strong>The IBKR API</strong> — Interactive Brokers offers one of the most powerful trading APIs in retail finance, used by algorithmic traders to automate strategies in Python, Java, C++, and more. Combined with access to <strong>150+ markets in 33 countries</strong> and the lowest margin rates in the industry, this is the platform for serious systematic traders.'},
+    pros:['Lowest margin interest rates in retail brokerage','API access for algorithmic and automated trading','Access to 150+ markets across 33 countries','Extremely sophisticated order types','IBKR Lite tier is commission-free for US stocks/ETFs'],
+    cons:['Interface is notoriously complex and dated','Not appropriate for beginners — steep learning curve','Minimum activity fees on some account types','Customer service can be slow','The learning curve is genuinely significant'],
+    features:['Stocks, options, futures, forex, bonds, crypto','150+ global markets','Python/Java/C++ API for algorithmic trading','Portfolio Margin for advanced traders','Risk Navigator (portfolio risk analysis)','Lowest margin rates (~5–6% vs 8–12% elsewhere)','Paper trading account available','TWS (Trader Workstation) desktop platform'],
+  },
+  {
+    id:'coinbase', icon:'₿', name:'Coinbase',
+    type:'Crypto Exchange · Beginner to Intermediate',
+    color:'#C9904C', colorDim:'rgba(201,144,76,0.25)',
+    verdict:{label:'Best For', value:'Getting started with crypto safely and simply'},
+    ratings:[
+      {label:'Ease of Use',val:'Excellent',pct:90},
+      {label:'Security',val:'Industry Leader',pct:96},
+      {label:'Coin Selection',val:'Good',pct:68},
+      {label:'Fees',val:'Higher than avg',pct:40},
+      {label:'Advanced Tools',val:'Coinbase Adv.',pct:75},
+    ],
+    tags:['₿ Crypto Specialist','🔐 Top Security','📱 Easy Onboarding','💸 Higher Fees','🏛️ Publicly Traded'],
+    featureHighlight:{icon:'🔐',label:'The Key Feature',text:'<strong>Regulated and insured</strong> — Coinbase is a publicly traded company (NASDAQ: COIN) and one of the most regulated crypto exchanges globally. USD balances are FDIC-insured up to $250K. For beginners entering crypto, this level of <strong>trust and security matters more than fees</strong>. Use <strong>Coinbase Advanced Trade</strong> (same account, lower fees) for active trading.'},
+    pros:['Most trusted and regulated US crypto exchange','Simple onboarding — verified and trading in minutes','FDIC insurance on USD balances','Strong security track record','Coinbase Advanced Trade has competitive maker/taker fees'],
+    cons:['Standard Coinbase fees are among the highest (up to 1.49%)','Smaller coin selection vs Binance or Kraken','Has experienced outages during peak market volatility','Not suitable for stock or options trading','Coinbase Advanced Trade interface less intuitive than standard'],
+    features:['200+ cryptocurrencies','Simple buy/sell interface for beginners','Coinbase Advanced Trade (lower fees, full charts)','Earn crypto rewards on holdings','Coinbase Wallet (self-custody option)','Recurring buys for DCA strategy','Staking rewards on eligible assets'],
+  },
+];
+
+// ═══════════════════════════════════════════
+// DATA — CHARTING & RESEARCH TOOLS
+// ═══════════════════════════════════════════
+const TOOLS = [
+  {
+    id:'tradingview', icon:'📈', name:'TradingView',
+    type:'Charting Platform · Community · Screener',
+    color:'#4CC9A8', colorDim:'rgba(76,201,168,0.25)',
+    verdict:{label:'Best For', value:'The go-to charting tool for 90% of retail traders'},
+    ratings:[
+      {label:'Chart Quality',val:'Best in Class',pct:100},
+      {label:'Indicators',val:'100,000+',pct:100},
+      {label:'Community',val:'Massive',pct:95},
+      {label:'Free Tier',val:'Solid',pct:72},
+      {label:'Screener',val:'Very Good',pct:82},
+    ],
+    tags:['📊 #1 Retail Charting Tool','🌐 Web-Based','📱 Mobile App','🤝 Social Features','💡 Pine Script'],
+    featureHighlight:{icon:'💡',label:'The Key Feature',text:'<strong>Pine Script</strong> — TradingView\'s built-in programming language lets you write custom indicators, strategies, and alerts. The community has published over 100,000 free scripts. Combined with the most polished charting interface in retail trading and <strong>multi-asset coverage</strong> (stocks, crypto, forex, futures, indices), TradingView is the hub most traders use every day.'},
+    pros:['Best-in-class chart interface — smooth, responsive, beautiful','Access to stocks, crypto, forex, indices, futures in one place','100,000+ community indicators and strategies','Pine Script for custom indicators and backtesting','Free tier is genuinely useful (3 indicators, 1 chart layout)','Social features — follow top traders, see published ideas'],
+    cons:['Advanced features (more charts, more indicators) require paid plan','Some data has slight delays on free tier','Execution requires connecting to a broker (cannot trade directly on free)','Can become a distraction — "chart surfing" instead of trading'],
+    features:['Multi-asset charting (stocks, crypto, forex, futures)','100,000+ community published indicators','Pine Script custom indicator language','Stock, crypto, and forex screeners','Alerts on price, indicator conditions, drawing tools','Replay mode — practice on historical data','Economic calendar integration','Social community — published ideas and analysis'],
+  },
+  {
+    id:'finviz', icon:'🔍', name:'Finviz',
+    type:'Stock Screener · Market Heatmap · News',
+    color:'#C9A84C', colorDim:'rgba(201,168,76,0.25)',
+    verdict:{label:'Best For', value:'Finding trade ideas fast with visual stock screening'},
+    ratings:[
+      {label:'Screener Power',val:'Excellent',pct:90},
+      {label:'Heatmap',val:'Iconic',pct:96},
+      {label:'Speed',val:'Very Fast',pct:88},
+      {label:'Free Tier',val:'Very Good',pct:82},
+      {label:'Charting',val:'Basic',pct:30},
+    ],
+    tags:['🔍 Stock Screener','🗺️ Market Heatmap','📰 News Feed','🆓 Strong Free Tier','⚡ Fast'],
+    featureHighlight:{icon:'🗺️',label:'The Key Feature',text:'<strong>The Finviz Heatmap</strong> — a color-coded visual of the entire market showing which sectors and stocks are up (green) and down (red) in real time. At a glance you can see exactly where money is flowing in and out of the market. This single tool gives you a <strong>10-second market overview</strong> that would take an hour to build manually.'},
+    pros:['Most powerful free stock screener available','Iconic heatmap gives instant visual market overview','Filter by 60+ criteria: P/E, volume, float, pattern, sector and more','Integrated news feed for each stock','Excellent for finding breakout candidates and momentum stocks'],
+    cons:['Charts are basic — use TradingView for real chart analysis','Real-time data requires Finviz Elite subscription ($24.96/mo)','No crypto or forex screening','Mobile experience is not great','No trade execution — screener and research tool only'],
+    features:['Screen 8,000+ US stocks by 60+ filters','Market and sector heatmaps','Insider trading tracker','Earnings calendar with estimates','Futures and forex overview page','News aggregated by ticker','Chart pattern recognition (Elite)','Portfolio tracking'],
+  },
+  {
+    id:'benzinga', icon:'⚡', name:'Benzinga Pro',
+    type:'Real-Time News · Squawk · Catalyst Scanner',
+    color:'#C94C4C', colorDim:'rgba(201,76,76,0.25)',
+    verdict:{label:'Best For', value:'Day and momentum traders who live off news catalysts'},
+    ratings:[
+      {label:'News Speed',val:'Fastest Retail',pct:98},
+      {label:'Catalyst Coverage',val:'Excellent',pct:92},
+      {label:'Squawk',val:'Unique Feature',pct:96},
+      {label:'Cost',val:'Paid ($27+/mo)',pct:35},
+      {label:'Charting',val:'None',pct:0},
+    ],
+    tags:['📰 Fastest News','🎙️ Audio Squawk','⚡ Real-Time Alerts','💊 FDA Catalyst Tracker','🔴 Paid Tool'],
+    featureHighlight:{icon:'🎙️',label:'The Key Feature',text:'<strong>The Benzinga Squawk</strong> — a live audio news feed that reads breaking market news aloud in real time, so day traders can keep their eyes on charts while staying informed on catalysts. When a surprise earnings number drops, FDA approval comes through, or a major economic release hits — <strong>you hear it in seconds</strong>, before it shows up anywhere else.'},
+    pros:['Fastest breaking news delivery in retail trading','Audio squawk keeps day traders informed without leaving charts','Excellent coverage of FDA, earnings, and economic catalysts','Movers & alerts customizable by market cap and sector','Trusted by professional day traders and momentum players'],
+    cons:['Paid subscription required for most useful features','No charting tools — purely news and data','Overkill for swing traders or long-term investors','Information overload can be distracting for new traders','Free tier is very limited'],
+    features:['Real-time breaking market news','Audio squawk service','Earnings and guidance alerts','FDA/biotech catalyst calendar','Options activity unusual flow alerts','Pre-market and after-hours mover coverage','Customizable alert filters by sector and market cap','Analyst rating changes'],
+  },
+  {
+    id:'tradeideas', icon:'🤖', name:'Trade Ideas',
+    type:'AI Scanner · Real-Time Alerts · Day Trading',
+    color:'#8B6FD4', colorDim:'rgba(139,111,212,0.25)',
+    verdict:{label:'Best For', value:'Advanced day traders who want AI-powered scanning'},
+    ratings:[
+      {label:'Scanner Power',val:'Best in Class',pct:100},
+      {label:'AI Features',val:'Unique',pct:95},
+      {label:'Alert Speed',val:'Real-Time',pct:98},
+      {label:'Cost',val:'Premium ($118+/mo)',pct:15},
+      {label:'Learning Curve',val:'High',pct:82},
+    ],
+    tags:['🤖 AI-Powered (Holly)','⚡ Real-Time Scanner','📊 Backtesting','🔴 Premium Tool','🏆 Professional Grade'],
+    featureHighlight:{icon:'🤖',label:'The Key Feature',text:'<strong>Holly AI</strong> — Trade Ideas\' artificial intelligence engine that scans the entire market overnight, backtests thousands of strategies, and presents the best trade setups for the next day\'s session before the market opens. Holly uses <strong>real historical win-rate data</strong> to rank setups by probability of success. It\'s the closest thing retail traders have to institutional-grade AI research.'},
+    pros:['Most powerful real-time stock scanner available to retail','Holly AI provides backtested setups with win-rate data','Hundreds of customizable scan parameters','Backtesting engine to validate scan strategies historically','Used by many professional day traders'],
+    cons:['Expensive — starts at $118/month for standard plan','Very high learning curve — significant setup time required','Overkill for beginners or part-time traders','Requires pairing with a separate charting tool','Investment in time to learn the platform is significant'],
+    features:['Real-time market-wide scanning with 100+ parameters','Holly AI overnight strategy generation','Backtesting of scanner configurations','Channel alerts (stocks breaking out of ranges)','Correlated pairs and relative strength tools','Pre-built strategies for day trading setups','OTC and small-cap coverage','Simulated trading mode'],
+  },
+];
+
+// ═══════════════════════════════════════════
+// DATA — STACK GUIDE
+// ═══════════════════════════════════════════
+const STACKS = [
+  {dna:'🥷 The Sniper',color:'#8B6FD4',title:'Sniper / Strategist Stack',
+   tools:['TradingView (daily chart analysis)','Finviz (find setups by sector/pattern)','WeBull or ToS (execution + watchlist)','Earnings calendar (Yahoo Finance / Earnings Whispers)']},
+  {dna:'🐺 The Momentum Rider',color:'#C94C4C',title:'Momentum / Day Trader Stack',
+   tools:['ThinkorSwim (execution + scanner)','Benzinga Pro (catalyst news feed)','TradingView (charts)','Trade Ideas (optional — for advanced scanning)']},
+  {dna:'🦉 The Strategist',color:'#C9A84C',title:'Strategist / Options Stack',
+   tools:['ThinkorSwim (options analysis — best-in-class)','TradingView (chart analysis)','Finviz (sector screening)','WeBull (backup broker with paper trading)']},
+  {dna:'🤖 The Quant',color:'#4C8BC9',title:'Algorithmic / Systematic Stack',
+   tools:['Interactive Brokers (API access)','Python + QuantConnect (strategy building)','TradingView + Pine Script (indicator testing)','Alpaca API (commission-free algo execution)']},
+  {dna:'🐉 The Hodler',color:'#4CC9A8',title:'Long-Term Investor Stack',
+   tools:['Robinhood or WeBull (simple execution)','TradingView (monthly/weekly charts)','Finviz (fundamental screening)','Coinbase (for crypto holdings)']},
+  {dna:'🦊 The Degen',color:'#C9904C',title:'High-Volatility Stack',
+   tools:['WeBull (charts + free options tools)','Coinbase Advanced Trade (crypto)','Benzinga Pro (catalyst alerts — essential)','TradingView (charts — free tier works)']},
+];
+
+// ═══════════════════════════════════════════
+// DATA — QUIZ (covers ALL platforms)
+// ═══════════════════════════════════════════
+const QUIZ = [
+  {q:'A beginner with $200 wants to buy fractional shares of Apple and Tesla. Which platform is most appropriate?',
+   opts:['Interactive Brokers — lowest commissions','ThinkorSwim — best charting tools','Robinhood — fractional shares from $1, zero commission, beginner-friendly interface','Trade Ideas — AI scanner finds the best entries'],
+   correct:2,feedback:'Robinhood\'s fractional shares and clean beginner interface make it the right starting tool. Beginners do not need professional-grade tools — they need to learn without being overwhelmed.'},
+  {q:'Which platform is widely considered the best in retail trading specifically for options analysis — including P&L diagrams, probability cones, and risk graphs?',
+   opts:['Robinhood','WeBull','Coinbase Advanced Trade','ThinkorSwim (ToS)'],
+   correct:3,feedback:'ThinkorSwim is the gold standard for options analysis in retail trading. Its risk graphs, probability analysis, and thinkScript capabilities are used by professional options traders. It\'s free with a Charles Schwab account.'},
+  {q:'A swing trader wants to analyze charts with 50+ indicators without paying monthly fees. Which broker is best suited?',
+   opts:['Robinhood — cleanest interface','WeBull — robust free charting with 50+ indicators and paper trading','Interactive Brokers — lowest margin rates','Coinbase — best for chart analysis'],
+   correct:1,feedback:'WeBull offers professional-quality charts and 50+ indicators completely free. It\'s the sweet spot for intermediate traders who need real technical analysis tools without paying for TradingView Pro.'},
+  {q:'A day trader needs to hear breaking news instantly while keeping their eyes on price charts. Which tool was specifically built for this?',
+   opts:['Finviz — fastest news aggregator','TradingView — has an economic calendar','Benzinga Pro\'s Squawk — a live audio news feed that reads market-moving news aloud in real time','Trade Ideas — Holly AI scans news overnight'],
+   correct:2,feedback:'Benzinga Pro\'s Squawk is unique — it reads breaking market news ALOUD in real time. Day traders can keep their eyes locked on price action while staying informed on catalysts. No other retail tool does this.'},
+  {q:'What is the Finviz Heatmap used for?',
+   opts:['Viewing candlestick charts with technical indicators','Scanning for unusual options activity','A color-coded visual of the entire stock market showing which sectors and stocks are moving up or down','Tracking the real-time order book for individual stocks'],
+   correct:2,feedback:'The Finviz heatmap gives you a visual overview of the entire market in seconds — green squares are up, red squares are down, sized by market cap. It\'s one of the most efficient market overview tools available for free.'},
+  {q:'An algorithmic trader in the US needs API access to automate their Python-based trading strategy with the lowest possible margin rates. Which broker is best?',
+   opts:['Robinhood — free trades save money','WeBull — has paper trading for testing','Interactive Brokers — industry-leading API and lowest margin rates in retail brokerage','Coinbase — best for automated crypto strategies'],
+   correct:2,feedback:'Interactive Brokers is the choice for algorithmic traders — they offer one of the most powerful trading APIs in retail finance, support Python/Java/C++ integration, access to 150+ global markets, and the lowest margin rates in the industry.'},
+  {q:'TradingView\'s Pine Script is best described as:',
+   opts:['A mobile app for monitoring your portfolio','A built-in programming language for creating custom indicators, strategies, and alerts on TradingView charts','A type of options strategy used for income generation','The name of TradingView\'s AI scanning feature'],
+   correct:1,feedback:'Pine Script is TradingView\'s scripting language. It lets you write custom indicators, backtest strategies, and build alert conditions. The community has published over 100,000 free Pine Script tools — this is one of TradingView\'s most powerful features.'},
+  {q:'A trader is just getting into crypto and wants the safest, most regulated exchange for a beginner. Which is most appropriate?',
+   opts:['Trade Ideas — best AI for crypto scanning','Coinbase — publicly traded, regulated, FDIC-insured USD balances, beginner-friendly','Interactive Brokers — offers crypto futures','Finviz — has crypto screening tools'],
+   correct:1,feedback:'Coinbase is the most trusted and regulated US crypto exchange — publicly traded on NASDAQ, with FDIC-insured USD balances and a clean onboarding process. For a crypto beginner prioritizing safety over fees, Coinbase is the right starting point.'},
+];
+
+// ═══════════════════════════════════════════
+// PAGES CONFIG
+// ═══════════════════════════════════════════
+const PAGES = [
+  {id:'brokers',    label:'Brokers & Apps',    icon:'🏦', meta:'5 platforms covered'},
+  {id:'tools',      label:'Charting & Research',icon:'📊', meta:'4 tools covered'},
+  {id:'pickstack',  label:'Build Your Stack',   icon:'🎯', meta:'By Trader DNA'},
+];
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let state = {
+  current: 'brokers',
+  quizAnswers: {},
+  quizSubmitted: false,
+  quizScore: null,
+  totalXP: 0,
+};
+
+function loadState(){
+  try{
+    const s = JSON.parse(localStorage.getItem('dojo_platforms')||'{}');
+    Object.assign(state, s);
+  }catch(e){}
+}
+function saveState(){
+  try{ localStorage.setItem('dojo_platforms', JSON.stringify(state)); }catch(e){}
+}
+
+// ═══════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════
+function buildSidebar(){
+  const nav = document.getElementById('sb-nav');
+  nav.innerHTML = '';
+
+  // Brokers
+  addSbSection(nav, 'Brokers & Apps');
+  BROKERS.forEach(b=>{
+    const el = makeNavItem(b.id, b.icon+' '+b.name, b.type.split('·')[0].trim(), b.color, 'broker-'+b.id);
+    nav.appendChild(el);
+  });
+
+  // Tools
+  addSbSection(nav, 'Charting & Research');
+  TOOLS.forEach(t=>{
+    const el = makeNavItem(t.id, t.icon+' '+t.name, t.type.split('·')[0].trim(), t.color, 'tool-'+t.id);
+    nav.appendChild(el);
+  });
+
+  // Pages
+  addSbSection(nav, 'Guides');
+  const stackEl = makeNavItem('pickstack', '🎯 Build Your Stack', 'By Trader DNA', '#C9A84C', 'page-pickstack');
+  nav.appendChild(stackEl);
+
+  const quizEl = makeNavItem('quiz', '📝 Knowledge Quiz', '8 questions · 400 XP', '#4CC9A8', 'page-quiz');
+  nav.appendChild(quizEl);
+
+  markActive();
+  updateProgress();
+}
+
+function addSbSection(nav, label){
+  const d = document.createElement('div');
+  d.className = 'sb-section-label';
+  d.textContent = label;
+  nav.appendChild(d);
+}
+
+function makeNavItem(id, name, meta, color, navId){
+  const done = id === 'quiz' && state.quizScore !== null;
+  const active = state.current === id;
+  let badgeClass = 'nb-idle', badgeContent = '→';
+  if(active){ badgeClass='nb-active'; badgeContent='▶'; }
+  if(done){ badgeClass='nb-done'; badgeContent='✓'; }
+  const el = document.createElement('div');
+  el.className = 'nav-item' + (active?' active':'');
+  el.id = 'nav-'+navId;
+  el.onclick = () => selectPage(id);
+  el.innerHTML = `
+    <div class="nav-dot" style="background:${color}"></div>
+    <div class="nav-info">
+      <div class="nav-name">${name}</div>
+      <div class="nav-meta">${meta}</div>
+    </div>
+    <div class="nav-badge ${badgeClass}">${badgeContent}</div>`;
+  return el;
+}
+
+function markActive(){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const id = state.current;
+  // find by data
+  const all = document.querySelectorAll('.nav-item');
+  all.forEach(n=>{
+    if(n.onclick && n.onclick.toString().includes(`'${id}'`)) n.classList.add('active');
+  });
+}
+
+function updateProgress(){
+  const done = state.quizScore !== null ? 3 : 0;
+  document.getElementById('sp-txt').textContent = (state.quizScore!==null?'3':'0') + ' / 3';
+  document.getElementById('sp-fill').style.width = (state.quizScore!==null?100:0) + '%';
+  document.getElementById('xp-disp').textContent = state.totalXP;
+  document.getElementById('sb-xp').textContent = state.totalXP;
+}
+
+// ═══════════════════════════════════════════
+// PAGE SELECTION
+// ═══════════════════════════════════════════
+function selectPage(id){
+  state.current = id;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+
+  if(id === 'brokers') showBrokers();
+  else if(id === 'tools') showToolsPage();
+  else if(id === 'pickstack') showStackGuide();
+  else if(id === 'quiz') showQuiz();
+  else {
+    // Individual broker or tool
+    const broker = BROKERS.find(b=>b.id===id);
+    const tool   = TOOLS.find(t=>t.id===id);
+    if(broker) showBrokers(id);
+    else if(tool) showToolsPage(id);
+  }
+
+  buildSidebar();
+  document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════
+// RENDER HELPERS
+// ═══════════════════════════════════════════
+function getOrCreate(id, tag='div'){
+  let el = document.getElementById('page-'+id);
+  if(el) return {el, fresh:false};
+  el = document.createElement(tag);
+  el.className = 'page';
+  el.id = 'page-'+id;
+  document.getElementById('content-area').appendChild(el);
+  return {el, fresh:true};
+}
+
+function renderPlatformCard(p){
+  return `
+    <div class="platform-card" style="--pc-color:${p.color};--pc-color-dim:${p.colorDim}">
+      <div class="pc-header">
+        <div class="pc-left">
+          <div class="pc-icon">${p.icon}</div>
+          <div class="pc-id">
+            <div class="pc-name">${p.name}</div>
+            <div class="pc-type">${p.type}</div>
+          </div>
+        </div>
+        <div class="pc-verdict"><strong>${p.verdict.label}</strong>${p.verdict.value}</div>
+      </div>
+      <div class="pc-ratings">
+        ${p.ratings.map(r=>`
+          <div class="pc-rating-cell">
+            <div class="pcr-label">${r.label}</div>
+            <div class="pcr-val">${r.val}</div>
+            <div class="pcr-track"><div class="pcr-fill" style="width:${r.pct}%"></div></div>
+          </div>`).join('')}
+      </div>
+      <div class="pc-tags">
+        ${p.tags.map((t,i)=>`<div class="pc-tag${i===0?' best':''}">${t}</div>`).join('')}
+      </div>
+      <div class="pc-feature-hl">
+        <div class="pf-icon">${p.featureHighlight.icon}</div>
+        <div class="pf-content">
+          <div class="pf-label">${p.featureHighlight.label}</div>
+          <div class="pf-text">${p.featureHighlight.text}</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <div>
+          <div class="pc-section-title">Pros</div>
+          <ul class="pc-list list-pros">${p.pros.map(x=>`<li>${x}</li>`).join('')}</ul>
+        </div>
+        <div>
+          <div class="pc-section-title">Cons</div>
+          <ul class="pc-list list-cons">${p.cons.map(x=>`<li>${x}</li>`).join('')}</ul>
+        </div>
+        <div style="grid-column:1/-1">
+          <div class="pc-section-title">Key Features</div>
+          <ul class="pc-list list-features" style="column-count:2;column-gap:24px">${p.features.map(x=>`<li style="break-inside:avoid">${x}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
+// BROKERS PAGE
+// ═══════════════════════════════════════════
+function showBrokers(highlight){
+  const {el, fresh} = getOrCreate('brokers');
+  if(fresh){
+    el.innerHTML = `
+      <div class="mod-hero" style="--page-color:#4CC9A8;--page-color-dim:rgba(76,201,168,0.25)">
+        <div class="hero-eyebrow">Module III · Section 1</div>
+        <span class="hero-emoji">🏦</span>
+        <div class="hero-title">Brokers &amp; Apps</div>
+        <div class="hero-sub">WHERE YOU HOLD YOUR ACCOUNT AND EXECUTE TRADES</div>
+        <p class="hero-desc">Your broker is your <strong>gateway to the market</strong>. They hold your capital, execute your orders, and provide the tools you trade with. Choosing the right broker for your style and experience level is one of the most important early decisions you will make.</p>
+      </div>
+      <div class="platforms-grid">${BROKERS.map(b=>renderPlatformCard(b)).join('')}</div>
+      <div style="padding:0 52px 40px;display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn-ghost" onclick="selectPage('tools')">Next: Charting &amp; Research Tools →</button>
+      </div>`;
+  }
+  el.classList.add('active');
+  if(highlight){
+    setTimeout(()=>{
+      const cards = el.querySelectorAll('.platform-card');
+      const idx = BROKERS.findIndex(b=>b.id===highlight);
+      if(idx>=0) cards[idx]?.scrollIntoView({behavior:'smooth',block:'start'});
+    },300);
+  }
+}
+
+// ═══════════════════════════════════════════
+// TOOLS PAGE
+// ═══════════════════════════════════════════
+function showToolsPage(highlight){
+  const {el, fresh} = getOrCreate('tools');
+  if(fresh){
+    el.innerHTML = `
+      <div class="mod-hero" style="--page-color:#C9A84C;--page-color-dim:rgba(201,168,76,0.25)">
+        <div class="hero-eyebrow">Module III · Section 2</div>
+        <span class="hero-emoji">📊</span>
+        <div class="hero-title">Charting &amp; Research</div>
+        <div class="hero-sub">THE TOOLS YOU USE TO ANALYZE, FIND, AND TIME YOUR TRADES</div>
+        <p class="hero-desc">Your broker gives you execution. These tools give you <strong>intelligence</strong> — the charts, scanners, news feeds, and analytics that help you find the right trade at the right time. Most serious traders use both a broker platform AND separate research tools.</p>
+      </div>
+      <div class="platforms-grid">${TOOLS.map(t=>renderPlatformCard(t)).join('')}</div>
+      <div style="padding:0 52px 40px;display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn-ghost" onclick="selectPage('pickstack')">Next: Build Your Stack →</button>
+      </div>`;
+  }
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════════
+// STACK GUIDE PAGE
+// ═══════════════════════════════════════════
+function showStackGuide(){
+  const {el, fresh} = getOrCreate('pickstack');
+  if(fresh){
+    el.innerHTML = `
+      <div class="mod-hero" style="--page-color:#C9A84C;--page-color-dim:rgba(201,168,76,0.25)">
+        <div class="hero-eyebrow">Module III · Stack Guide</div>
+        <span class="hero-emoji">🎯</span>
+        <div class="hero-title">Build Your Stack</div>
+        <div class="hero-sub">THE RIGHT TOOLS FOR YOUR TRADER DNA</div>
+        <p class="hero-desc">Not every trader needs every tool. The right stack depends on <strong>your trading style, experience level, and what you are trying to accomplish</strong>. Here is what each Trader DNA archetype should start with.</p>
+      </div>
+      <div class="decision-guide">
+        <p class="dg-intro">Find your archetype from the <strong>Trader DNA Quiz</strong> and build your initial toolkit around these recommendations. Start with the minimum — add tools only when you have outgrown what you have. <strong>A simple stack used consistently beats a complex stack used inconsistently every time.</strong></p>
+        <div class="stack-cards">
+          ${STACKS.map(s=>`
+            <div class="stack-card" style="--sc-color:${s.color}">
+              <div class="sc-archetype">${s.dna}</div>
+              <div class="sc-title">${s.title}</div>
+              <div class="sc-stack">
+                ${s.tools.map(t=>`
+                  <div class="sc-tool">
+                    <div class="sc-tool-dot"></div>
+                    <span>${t}</span>
+                  </div>`).join('')}
+              </div>
+            </div>`).join('')}
+        </div>
+
+        <div style="margin-top:40px;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--gold);padding:24px 28px;">
+          <div style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--gold-dim);margin-bottom:8px;text-transform:uppercase">The Golden Rule</div>
+          <div style="font-size:1rem;color:var(--text-dim);line-height:1.7;font-weight:300">
+            <strong style="color:var(--text)">Free stack for beginners:</strong> WeBull (broker + charts) + TradingView free (charting) + Finviz free (screening). That is $0/month and covers 90% of what a new trader needs. Only add paid tools when your account size and skill level justify the cost.
+          </div>
+        </div>
+
+        <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn-ghost" onclick="selectPage('quiz')">Take the Knowledge Quiz →</button>
+        </div>
+      </div>`;
+  }
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════════
+// QUIZ PAGE
+// ═══════════════════════════════════════════
+function showQuiz(){
+  const {el, fresh} = getOrCreate('quiz');
+  if(fresh){
+    el.innerHTML = `
+      <div class="mod-hero" style="--page-color:#C9A84C">
+        <div class="hero-eyebrow">Module III · Final Assessment</div>
+        <span class="hero-emoji">📝</span>
+        <div class="hero-title">Knowledge Quiz</div>
+        <div class="hero-sub">TEST YOUR PLATFORM KNOWLEDGE</div>
+        <p class="hero-desc">8 questions covering brokers, charting tools, and when to use each. Earn up to <strong>400 XP</strong>.</p>
+      </div>
+      <div class="quiz-wrap">
+        <div class="qz-title">Platform Mastery Check</div>
+        <div class="qz-sub">Answer all 8 questions · 50 XP each · 400 XP total</div>
+        ${QUIZ.map((q,qi)=>`
+          <div class="qz-block">
+            <div class="qz-num">Question ${qi+1}</div>
+            <div class="qz-q">${q.q}</div>
+            <div class="qz-opts" id="qopts-${qi}">
+              ${q.opts.map((o,oi)=>`
+                <button class="qz-opt" id="qopt-${qi}-${oi}" onclick="pickQ(${qi},${oi})">
+                  <div class="qz-dot">${String.fromCharCode(65+oi)}</div>
+                  <div class="qz-opt-text">${o}</div>
+                </button>`).join('')}
+            </div>
+            <div class="qz-fb" id="qfb-${qi}"></div>
+          </div>`).join('')}
+        <div class="ornament"><span>◆</span></div>
+        <div class="qz-nav">
+          <button class="btn-sub" id="btn-qsub" onclick="submitAllQuiz()">Submit Answers</button>
+          <button class="btn-done" id="btn-qdone" onclick="selectPage('brokers')">Review Module ↺</button>
+          <button class="btn-ghost" onclick="document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+        </div>
+        <div class="score-box" id="qscore">
+          <div class="score-big" id="qscore-big">0/8</div>
+          <div class="score-lbl">Questions Correct</div>
+          <div class="score-xp" id="qscore-xp">+0 XP</div>
+          <div class="score-msg" id="qscore-msg"></div>
+        </div>
+      </div>`;
+
+    // Restore
+    Object.entries(state.quizAnswers).forEach(([qi,oi])=>{
+      document.getElementById(`qopt-${qi}-${oi}`)?.classList.add('sel');
+    });
+    if(state.quizSubmitted) setTimeout(()=>renderQuizResults(), 50);
+    checkQuizReady();
+  }
+  el.classList.add('active');
+}
+
+function pickQ(qi, oi){
+  if(state.quizSubmitted) return;
+  QUIZ[qi].opts.forEach((_,o)=>document.getElementById(`qopt-${qi}-${o}`)?.classList.remove('sel'));
+  document.getElementById(`qopt-${qi}-${oi}`)?.classList.add('sel');
+  state.quizAnswers[qi] = oi;
+  saveState();
+  checkQuizReady();
+}
+
+function checkQuizReady(){
+  const all = QUIZ.every((_,qi)=>state.quizAnswers[qi]!==undefined);
+  document.getElementById('btn-qsub')?.classList.toggle('rdy', all);
+}
+
+function submitAllQuiz(){
+  const all = QUIZ.every((_,qi)=>state.quizAnswers[qi]!==undefined);
+  if(!all) return;
+  state.quizSubmitted = true;
+  renderQuizResults();
+  let correct = 0;
+  QUIZ.forEach((q,qi)=>{ if(state.quizAnswers[qi]===q.correct) correct++; });
+  const xp = correct*50;
+  state.quizScore = correct;
+  state.totalXP = xp;
+  saveState();
+  const msgs=['Keep reviewing the platforms — revisit the module.','Good effort — you are building platform knowledge.','Solid understanding of the trading tool landscape.','Strong — you know your platforms well.','Excellent platform knowledge!','Excellent!','Outstanding!','Outstanding platform mastery!','Perfect score — Platform Master! 🏆'];
+  document.getElementById('qscore-big').textContent = correct+'/8';
+  document.getElementById('qscore-xp').textContent = '+'+xp+' XP Earned';
+  document.getElementById('qscore-msg').textContent = msgs[correct]||msgs[4];
+  document.getElementById('qscore').classList.add('show');
+  document.getElementById('btn-qsub').style.display='none';
+  document.getElementById('btn-qdone').style.display='inline-block';
+  updateProgress();
+  setTimeout(()=>document.getElementById('qscore')?.scrollIntoView({behavior:'smooth',block:'center'}),200);
+}
+
+function renderQuizResults(){
+  QUIZ.forEach((q,qi)=>{
+    q.opts.forEach((_,oi)=>{
+      const btn = document.getElementById(`qopt-${qi}-${oi}`);
+      if(!btn) return;
+      btn.classList.remove('sel','ok','no');
+      if(oi===q.correct) btn.classList.add('ok');
+      else if(state.quizAnswers[qi]===oi) btn.classList.add('no');
+      btn.disabled=true;
+    });
+    const fb = document.getElementById(`qfb-${qi}`);
+    if(fb){
+      const ok = state.quizAnswers[qi]===q.correct;
+      fb.className='qz-fb show '+(ok?'ok':'no');
+      fb.textContent=(ok?'✓ ':'✗ Correct: '+q.opts[q.correct]+'. ')+q.feedback;
+    }
+  });
+  document.getElementById('btn-qsub').style.display='none';
+  document.getElementById('btn-qdone').style.display='inline-block';
+  if(state.quizScore!==null){
+    const msgs=['Keep reviewing.','Good effort.','Solid understanding.','Strong knowledge.','Excellent!','Excellent!','Outstanding!','Outstanding!','Perfect score — Platform Master! 🏆'];
+    document.getElementById('qscore-big').textContent=state.quizScore+'/8';
+    document.getElementById('qscore-xp').textContent='+'+(state.quizScore*50)+' XP Earned';
+    document.getElementById('qscore-msg').textContent=msgs[state.quizScore]||msgs[4];
+    document.getElementById('qscore')?.classList.add('show');
+  }
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+loadState();
+buildSidebar();
+showBrokers();
+document.getElementById('page-brokers').classList.add('active');
+</script>
+</body>
+</html>

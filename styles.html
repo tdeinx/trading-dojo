@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Trading Styles · The Trading Dojo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;
+  --ink:#0A0A0F;--ink-2:#111118;--ink-3:#1A1A24;--ink-4:#22222E;
+  --panel:#13131C;--panel-2:#0F0F18;
+  --border:rgba(201,168,76,0.15);--border-bright:rgba(201,168,76,0.5);
+  --text:#E8E0CC;--text-dim:#8A8070;--text-faint:#3A3630;
+  --teal:#4CC9A8;--red:#C94C4C;--purple:#8B6FD4;--blue:#4C8BC9;--amber:#C9904C;--green:#4CAF50;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.55;}
+
+.app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.92);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;}
+.logo{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);display:flex;align-items:center;gap:9px;text-decoration:none;cursor:pointer;}
+.logo-mark{width:28px;height:28px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.85rem;position:relative;flex-shrink:0;}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.22);}
+.topbar-center{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
+.xp-chip{background:var(--panel);border:1px solid var(--border);padding:6px 14px;font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--gold);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+
+/* ── LAYOUT ── */
+.body-layout{display:flex;flex:1;min-height:0;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:268px;flex-shrink:0;border-right:1px solid var(--border);background:var(--panel-2);display:flex;flex-direction:column;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.sidebar-header{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
+.sidebar-title{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;}
+.sidebar-sub{font-size:0.85rem;color:var(--text-dim);font-weight:300;}
+.sidebar-progress{margin-top:14px;}
+.sp-label{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:5px;}
+.sp-label span{color:var(--gold);}
+.sp-track{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.6s ease;}
+.sidebar-nav{padding:10px 0;flex:1;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:12px 18px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;position:relative;}
+.nav-item:hover{background:rgba(201,168,76,0.04);border-left-color:rgba(201,168,76,0.25);}
+.nav-item.active{background:rgba(201,168,76,0.07);border-left-color:var(--gold);}
+.nav-color-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.nav-info{flex:1;min-width:0;}
+.nav-name{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--text);letter-spacing:0.04em;}
+.nav-item.active .nav-name{color:var(--gold);}
+.nav-meta{font-size:0.63rem;color:var(--text-dim);margin-top:2px;}
+.nav-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.54rem;flex-shrink:0;font-family:'Cinzel',serif;}
+.nb-idle{background:var(--ink-4);color:var(--text-faint);}
+.nb-active{background:var(--gold);color:var(--ink);font-weight:700;animation:pulse-b 2s ease-in-out infinite;}
+.nb-done{background:rgba(76,201,168,0.18);color:var(--teal);border:1px solid rgba(76,201,168,0.35);}
+@keyframes pulse-b{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{box-shadow:0 0 0 5px rgba(201,168,76,0)}}
+.sidebar-footer{padding:14px 18px;border-top:1px solid var(--border);}
+.total-xp{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.14em;color:var(--text-faint);}
+.total-xp span{color:var(--gold);font-size:0.82rem;}
+
+/* ── CONTENT ── */
+.content-area{flex:1;overflow-y:auto;}
+.lesson{display:none;animation:fadeUp 0.38s ease forwards;}
+.lesson.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ── */
+.lesson-hero{padding:44px 52px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.lesson-hero::after{content:'';position:absolute;top:0;right:0;width:300px;height:100%;background:radial-gradient(ellipse at right center, var(--style-color-glow,rgba(201,168,76,0.05)) 0%, transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:14px;}
+.hero-badge-row{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
+.style-badge{padding:5px 14px;border:1px solid var(--style-color,var(--gold));font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--style-color,var(--gold));clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);}
+.style-badge.filled{background:var(--style-color,var(--gold));color:var(--ink);}
+.hero-emoji{font-size:3.2rem;line-height:1;display:block;margin-bottom:14px;filter:drop-shadow(0 0 18px var(--style-color-glow,rgba(201,168,76,0.35)));}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.7rem,3.2vw,2.6rem);font-weight:900;color:var(--style-color,var(--gold));line-height:1.1;margin-bottom:5px;}
+.hero-sub{font-family:'Cinzel',serif;font-size:0.8rem;letter-spacing:0.18em;color:var(--text-dim);margin-bottom:18px;}
+.hero-tagline{font-size:1.08rem;font-weight:300;color:var(--text-dim);line-height:1.68;max-width:560px;}
+.hero-tagline strong{color:var(--text);font-weight:500;}
+.hero-quote{margin-top:20px;padding:14px 20px;border-left:2px solid var(--style-color,var(--gold));font-family:'Cinzel',serif;font-size:0.82rem;font-style:italic;color:var(--text-dim);letter-spacing:0.04em;}
+
+/* ── COMBAT PROFILE ── */
+.combat-profile{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:36px 52px 0;}
+.cp-cell{background:var(--panel);padding:18px 20px;}
+.cp-label{font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.18em;color:var(--text-faint);text-transform:uppercase;margin-bottom:6px;}
+.cp-value{font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:8px;}
+.cp-meter{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
+.cp-fill{height:100%;border-radius:2px;background:var(--style-color,var(--gold));}
+
+/* ── LESSON BODY ── */
+.lesson-body{padding:44px 52px;max-width:940px;}
+.section-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.28em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.section-block{margin-bottom:44px;}
+
+/* Analogy */
+.analogy-card{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--style-color,var(--gold));padding:22px 26px;display:flex;gap:18px;align-items:flex-start;}
+.analogy-icon{font-size:1.9rem;line-height:1;flex-shrink:0;margin-top:2px;}
+.analogy-text{font-size:0.97rem;line-height:1.7;color:var(--text-dim);font-weight:300;}
+.analogy-text strong{color:var(--text);font-weight:500;}
+
+/* Day in the life timeline */
+.timeline{display:flex;flex-direction:column;gap:0;position:relative;}
+.timeline::before{content:'';position:absolute;left:17px;top:8px;bottom:8px;width:1px;background:linear-gradient(180deg,var(--style-color,var(--gold)),transparent);opacity:0.3;}
+.tl-item{display:flex;gap:20px;align-items:flex-start;padding:16px 0;position:relative;}
+.tl-dot{width:35px;height:35px;border-radius:50%;border:2px solid var(--style-color,var(--gold));background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;position:relative;z-index:1;}
+.tl-dot.highlight{background:var(--style-color,var(--gold));}
+.tl-content{}
+.tl-time{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.15em;color:var(--style-color,var(--gold));margin-bottom:4px;}
+.tl-title{font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.tl-desc{font-size:0.92rem;line-height:1.6;color:var(--text-dim);font-weight:300;}
+.tl-desc strong{color:var(--text);font-weight:500;}
+
+/* Pro/Con grid */
+.procon-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:580px){.procon-grid{grid-template-columns:1fr;}}
+.procon-card{background:var(--panel);border:1px solid var(--border);padding:22px 24px;position:relative;}
+.procon-card::before{position:absolute;top:-9px;left:14px;background:var(--panel);padding:0 8px;font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.18em;}
+.pc-pros::before{content:'STRENGTHS';color:var(--teal);}
+.pc-cons::before{content:'CHALLENGES';color:var(--red);}
+.procon-card ul{list-style:none;}
+.procon-card ul li{padding:7px 0;font-size:0.9rem;color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.05);display:flex;align-items:flex-start;gap:9px;line-height:1.45;}
+.procon-card ul li:last-child{border-bottom:none;}
+.procon-card ul li::before{font-size:0.5rem;flex-shrink:0;margin-top:5px;}
+.pc-pros ul li::before{content:'◆';color:var(--teal);}
+.pc-cons ul li::before{content:'◆';color:var(--red);}
+
+/* Tools needed */
+.tools-row{display:flex;flex-wrap:wrap;gap:10px;}
+.tool-chip{padding:9px 16px;background:var(--panel);border:1px solid var(--border);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;color:var(--text-dim);transition:all 0.2s;clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);}
+.tool-chip:hover{border-color:rgba(201,168,76,0.35);color:var(--gold);}
+
+/* Who it is for */
+.who-card{background:var(--panel);border:1px solid var(--border);padding:24px 28px;display:flex;gap:16px;align-items:flex-start;}
+.who-icon{font-size:2rem;line-height:1;flex-shrink:0;}
+.who-text{font-size:0.95rem;line-height:1.7;color:var(--text-dim);font-weight:300;}
+.who-text strong{color:var(--style-color,var(--gold));font-weight:600;}
+
+/* ── COMPARISON TABLE ── */
+.compare-section{padding:0 52px 48px;max-width:940px;}
+.compare-table{width:100%;border-collapse:collapse;}
+.compare-table th{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;padding:10px 14px;border-bottom:2px solid var(--border);text-align:left;}
+.compare-table td{padding:13px 14px;border-bottom:1px solid rgba(201,168,76,0.06);font-size:0.87rem;color:var(--text-dim);vertical-align:top;}
+.compare-table tr:hover td{background:rgba(201,168,76,0.03);}
+.ct-style{font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;color:var(--text);}
+.ct-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;flex-shrink:0;}
+
+/* ── QUIZ ── */
+.quiz-section{background:var(--panel-2);border-top:1px solid var(--border);padding:48px 52px;}
+.quiz-title{font-family:'Cinzel Decorative',serif;font-size:1.45rem;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.quiz-subtitle{font-size:0.93rem;color:var(--text-dim);font-weight:300;margin-bottom:36px;}
+.quiz-q-block{margin-bottom:26px;}
+.qq-num{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:8px;}
+.qq-text{font-size:1.04rem;font-weight:500;color:var(--text);line-height:1.55;margin-bottom:14px;}
+.qq-text em{color:var(--gold);font-style:normal;font-weight:600;}
+.qq-opts{display:flex;flex-direction:column;gap:8px;}
+.qq-opt{background:var(--panel);border:1px solid var(--border);padding:13px 18px;cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:12px;transition:all 0.17s;width:100%;}
+.qq-opt:hover{border-color:rgba(201,168,76,0.38);background:var(--ink-3);transform:translateX(3px);}
+.qq-opt.selected{border-color:var(--gold);background:rgba(201,168,76,0.07);}
+.qq-opt.correct{border-color:var(--teal)!important;background:rgba(76,201,168,0.07)!important;}
+.qq-opt.wrong{border-color:var(--red)!important;background:rgba(201,76,76,0.07)!important;}
+.qq-opt:disabled{cursor:default;transform:none!important;}
+.opt-dot{width:22px;height:22px;border:1px solid var(--border-bright);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-family:'Cinzel',serif;transition:all 0.17s;margin-top:1px;}
+.qq-opt.selected .opt-dot{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+.qq-opt.correct .opt-dot{background:var(--teal);border-color:var(--teal);color:var(--ink);}
+.qq-opt.wrong .opt-dot{background:var(--red);border-color:var(--red);color:#fff;}
+.opt-text{font-size:0.92rem;color:var(--text-dim);line-height:1.45;}
+.qq-opt:hover .opt-text,.qq-opt.selected .opt-text{color:var(--text);}
+.qq-feedback{margin-top:9px;padding:11px 15px;font-size:0.87rem;line-height:1.5;display:none;border-radius:0;}
+.qq-feedback.show{display:block;}
+.qq-feedback.fb-ok{background:rgba(76,201,168,0.07);border:1px solid rgba(76,201,168,0.22);color:var(--teal);}
+.qq-feedback.fb-no{background:rgba(201,76,76,0.07);border:1px solid rgba(201,76,76,0.22);color:#E87878;}
+.quiz-nav-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px;}
+.btn-submit{font-family:'Cinzel',serif;font-size:0.73rem;font-weight:700;letter-spacing:0.18em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 34px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;opacity:0.38;pointer-events:none;}
+.btn-submit.ready{opacity:1;pointer-events:all;}
+.btn-submit.ready:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(201,168,76,0.22);}
+.btn-next-mod{font-family:'Cinzel',serif;font-size:0.73rem;font-weight:700;letter-spacing:0.16em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 34px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;display:none;}
+.btn-next-mod:hover{transform:translateY(-2px);}
+.btn-ghost{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);background:transparent;border:1px solid var(--border-bright);padding:12px 26px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;}
+.btn-ghost:hover{background:rgba(201,168,76,0.06);}
+.score-reveal{display:none;background:var(--panel);border:1px solid var(--border);padding:26px 30px;margin-top:26px;text-align:center;animation:fadeUp 0.38s ease;}
+.score-reveal.show{display:block;}
+.score-big{font-family:'Cinzel Decorative',serif;font-size:2.8rem;font-weight:900;color:var(--gold);line-height:1;}
+.score-label{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.18em;color:var(--text-dim);margin-top:5px;}
+.score-xp{display:inline-block;margin-top:12px;padding:7px 18px;background:rgba(201,168,76,0.09);border:1px solid var(--border-bright);font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.14em;color:var(--gold);}
+.score-msg{margin-top:14px;font-size:0.93rem;color:var(--text-dim);font-weight:300;line-height:1.5;}
+.ornament{display:flex;align-items:center;gap:12px;margin:30px 0;color:var(--text-faint);}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:var(--border);}
+.ornament-sym{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.2em;white-space:nowrap;}
+
+@media(max-width:768px){
+  .sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);}
+  .body-layout{flex-direction:column;}
+  .lesson-hero,.lesson-body,.quiz-section,.compare-section{padding-left:22px;padding-right:22px;}
+  .combat-profile{margin-left:22px;margin-right:22px;}
+}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="logo" onclick="alert('Back to Dashboard')"><div class="logo-mark">⚔</div>The Trading Dojo</div>
+    <div class="topbar-center">Module II · Trading Styles</div>
+    <div class="topbar-right">
+      <div class="xp-chip">⚡ <span id="xp-display">0</span> XP</div>
+    </div>
+  </div>
+
+  <div class="body-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">Module II</div>
+        <div class="sidebar-sub">Trading Styles</div>
+        <div class="sidebar-progress">
+          <div class="sp-label">Progress <span id="sp-text">0 / 6</span></div>
+          <div class="sp-track"><div class="sp-fill" id="sp-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div class="total-xp">Module XP: <span id="sidebar-xp">0</span></div>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="content-area" id="content-area"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+const STYLES = [
+  {
+    id:'daytrading',
+    emoji:'⚡',
+    name:'Day Trading',
+    subtitle:'INTRADAY · NO OVERNIGHT · ALL IN, ALL OUT',
+    color:'#C9A84C',
+    glow:'rgba(201,168,76,0.06)',
+    badges:['Intraday','High Activity','Technical'],
+    tagline:'A <strong>day trader</strong> opens and closes all positions within the same trading session. Zero overnight exposure. Every day starts and ends flat — no positions held while you sleep.',
+    quote:'"The market opens every morning as a new battlefield. Day traders show up ready to fight — and leave before the night."',
+    profile:[
+      {label:'Hold Time',value:'Seconds – Hours',pct:15},
+      {label:'Screen Time',value:'Full Day',pct:95},
+      {label:'Stress Level',value:'Very High',pct:90},
+      {label:'Trade Frequency',value:'5–20 per day',pct:80},
+      {label:'Capital Needed',value:'$25,000+ (PDT)',pct:70},
+      {label:'Skill Barrier',value:'High',pct:78},
+    ],
+    analogy:{icon:'🏟️',text:'Day trading is like being a <strong>professional athlete who competes every single day</strong>. The game starts at 9:30am and ends at 4pm. You train hard, execute your game plan, and then go home. No carrying stress into the next day — but you need to show up sharp every morning or the market will punish you.'},
+    dayInLife:[
+      {time:'Pre-Market 8:00 AM',icon:'📰',title:'Morning Prep',desc:'Review overnight news, check earnings, scan for <strong>gappers</strong> (stocks up or down 5%+), and identify your top 2–3 watchlist candidates for the day. No prep = no trade.',highlight:false},
+      {time:'9:15 AM',icon:'🎯',title:'Mark Key Levels',desc:'Draw your <strong>support, resistance, and VWAP levels</strong> on each watchlist stock. Know exactly where you will enter, where your stop is, and what your target is — before the bell rings.',highlight:false},
+      {time:'9:30 AM — OPEN',icon:'🔔',title:'The Bell Rings — Watch, Don\'t Rush',desc:'The first <strong>15 minutes are often the wildest</strong>. Most experienced day traders wait for the initial volatility to settle before entering. Amateurs chase the first candle — pros wait for confirmation.',highlight:true},
+      {time:'10:00–11:30 AM',icon:'⚔️',title:'Prime Trading Window',desc:'This is where <strong>most of the day\'s real setups form</strong>. Volume is still high, trends are establishing, and breakouts are cleaner. This is when day traders do most of their work.',highlight:true},
+      {time:'12:00–2:00 PM',icon:'😴',title:'The Dead Zone — Lunch Hours',desc:'Volume dries up and price chops sideways. <strong>Most experienced day traders stop trading</strong> or dramatically reduce size during this window. Choppy markets eat accounts.',highlight:false},
+      {time:'2:30–4:00 PM',icon:'🔥',title:'Power Hour',desc:'Volume returns. Institutions make final moves. <strong>Momentum plays and reversals</strong> are common. One of the best windows to trade — but also one of the most volatile.',highlight:false},
+      {time:'4:00 PM — CLOSE',icon:'✅',title:'Flat and Done',desc:'All positions are closed. <strong>Journal every trade</strong>: what worked, what didn\'t, emotional state, execution quality. The journal is how you compound knowledge over time.',highlight:false},
+    ],
+    pros:['No overnight risk — you sleep with zero exposure','High number of opportunities daily','Skill improves fast with high repetition','Can profit in both bull and bear markets'],
+    cons:['Pattern Day Trader rule: $25,000 min for US accounts','Extremely time-intensive — full-day screen time','Emotionally demanding — losses compound fast','Transaction costs add up with high frequency'],
+    tools:['ThinkorSwim (ToS)','WeBull','TradingView','Level 2 / Order Flow','Scanner (Trade Ideas, Finviz)'],
+    whoFor:'Day trading is for people who want to be <strong>fully engaged with the market</strong> every day. It rewards discipline, speed, and emotional control above all else. This style is NOT recommended as a starting point — build your foundation first.',
+    quiz:[
+      {q:'What is the key rule that defines day trading?',opts:['You must trade at least 10 times per day','All positions are opened and closed within the same trading session','You can only trade stocks under $10','Trades must last at least 1 hour'],correct:1,feedback:'Day trading\'s defining rule: no overnight positions. Every trade is opened and closed within the same trading day, eliminating overnight risk.'},
+      {q:'The Pattern Day Trader (PDT) rule requires a minimum account balance of how much?',opts:['$5,000','$10,000','$25,000','$50,000'],correct:2,feedback:'The PDT rule requires US traders to maintain at least $25,000 in their margin account if they make 4+ day trades in a 5-business-day period. This is why many beginners start with swing trading instead.'},
+      {q:'Why do experienced day traders often avoid trading between 12pm–2pm?',opts:['The SEC prohibits trading during lunch hours','Volume dries up and price action becomes choppy and unreliable','Brokers charge higher fees during this window','Options contracts cannot be traded at this time'],correct:1,feedback:'Lunch hours are called "the dead zone" — volume disappears, spreads widen, and price chops in tight ranges. Trading during this window is a common beginner mistake that leads to unnecessary losses.'},
+      {q:'Which time window is typically considered the BEST for day trading?',opts:['8:00 AM – 9:30 AM pre-market','10:00 AM – 11:30 AM','12:00 PM – 2:00 PM','3:00 PM – 4:00 PM only'],correct:1,feedback:'10:00–11:30 AM (after the wild open settles) is prime time for day traders. Clear trends form, volume is strong, and breakout setups are more reliable than at the chaotic open.'},
+      {q:'Why is journaling trades considered essential for day traders?',opts:['It is required by the SEC for regulatory purposes','It helps identify patterns in what works and what doesn\'t, compounding skill over time','Brokers require a journal to open a margin account','It reduces commission costs'],correct:1,feedback:'A trade journal is how good traders become great traders. Reviewing every trade — entries, exits, emotions, mistakes — reveals patterns in your own behavior and helps you systematically improve.'},
+    ],
+  },
+
+  {
+    id:'swingtrading',
+    emoji:'🌊',
+    name:'Swing Trading',
+    subtitle:'MULTI-DAY · TREND RIDING · WORK–LIFE BALANCE',
+    color:'#4CC9A8',
+    glow:'rgba(76,201,168,0.06)',
+    badges:['Multi-Day','Moderate Activity','Technical + Fundamental'],
+    tagline:'<strong>Swing traders</strong> hold positions for days to weeks, capturing the larger "swings" in price within a broader trend. They do not need to watch the screen all day — analysis happens before and after market hours.',
+    quote:'"The swing trader is patient enough to let the setup come to them, then decisive enough to act when it does."',
+    profile:[
+      {label:'Hold Time',value:'2 Days – 6 Weeks',pct:40},
+      {label:'Screen Time',value:'1–2 Hours/Day',pct:20},
+      {label:'Stress Level',value:'Moderate',pct:45},
+      {label:'Trade Frequency',value:'2–10 per month',pct:25},
+      {label:'Capital Needed',value:'$1,000+',pct:20},
+      {label:'Skill Barrier',value:'Moderate',pct:48},
+    ],
+    analogy:{icon:'🏄',text:'Swing trading is like <strong>surfing</strong>. You do not fight the entire ocean — you pick the right wave, paddle into position, ride it for maximum distance, and exit before it crashes. The surfer who wins is not the most frantic one — it is the one who reads the water best and chooses their waves wisely.'},
+    dayInLife:[
+      {time:'Evening — Before Bed',icon:'📊',title:'Scan for Setups',desc:'Review charts of watchlist stocks. Look for <strong>consolidation patterns, pullbacks to support, or breakout setups</strong> forming on the daily chart. Mark key levels and set alerts.',highlight:false},
+      {time:'Pre-Market 8:30 AM',icon:'📰',title:'News Check',desc:'Quick scan for any <strong>earnings, news, or macro events</strong> affecting your open positions or watchlist. Adjust stop losses if necessary before market open.',highlight:false},
+      {time:'Market Open',icon:'👁️',title:'Check In, Not In',desc:'Glance at your positions. Are they behaving as expected? Unless there is a major event or your stop is hit, <strong>no action needed</strong>. Resist the urge to micromanage.',highlight:false},
+      {time:'Midday or After Close',icon:'⚔️',title:'Execute New Entries',desc:'If a setup you marked has triggered (price broke resistance, pulled back to support) and conditions are right, <strong>enter with a clear stop and target</strong>. Set limit orders in advance.',highlight:true},
+      {time:'Daily — End of Day',icon:'📋',title:'Position Review',desc:'Check open positions vs. your original thesis. <strong>Is the trade still valid?</strong> Adjust trailing stops on winning trades. Journal any notes. Full review takes 20–30 minutes.',highlight:true},
+      {time:'Target Hit or Stop Hit',icon:'✅',title:'Exit Cleanly',desc:'When price reaches your target or stops you out, <strong>close the position without hesitation</strong>. Do not move stops lower to avoid a loss. Discipline is the swing trader\'s greatest weapon.',highlight:false},
+    ],
+    pros:['No PDT rule concerns — works with smaller accounts','Much less screen time than day trading','Can hold through minor noise and volatility','Works well with a full-time job or school schedule'],
+    cons:['Overnight and weekend gap risk','Requires holding through drawdowns without panic','Slower feedback loop — setups take days to play out','Need patience to wait for high-quality setups'],
+    tools:['TradingView','Finviz (scanner)','WeBull / Robinhood','Daily Chart Focus','Earnings Calendar'],
+    whoFor:'Swing trading is the <strong>most beginner-friendly active style</strong>. It gives you time to think, does not require constant screen time, and works with virtually any account size. It is the style most Dojo members should start with.',
+    quiz:[
+      {q:'What is the typical hold time for a swing trade?',opts:['Seconds to minutes','Hours — closed same day','Days to weeks','Months to years'],correct:2,feedback:'Swing trades are held for days to weeks — long enough to capture a meaningful price "swing" within a trend, but not long-term like position trading.'},
+      {q:'Why is swing trading considered more accessible than day trading for beginners?',opts:['It requires no technical analysis skills','There is no PDT rule, it needs less screen time, and works with smaller accounts','Swing trading is guaranteed to be profitable','Swing traders do not need stop losses'],correct:1,feedback:'Swing trading doesn\'t trigger the PDT rule (which requires $25K), needs only 1–2 hours of attention per day, and can be done with a small account. This makes it the recommended starting style for most beginners.'},
+      {q:'A swing trader has an open position. Price is moving against them but has not hit their stop loss yet. What should they do?',opts:['Move the stop loss lower to give the trade more room','Add to the position to lower the average','Hold the position and trust the original plan — if stop is not hit, thesis still stands','Close immediately at any sign of weakness'],correct:2,feedback:'If the stop loss hasn\'t been hit, the original thesis is still intact. Moving stops lower (the classic "hope trade") is one of the most destructive habits a trader can develop.'},
+      {q:'Swing traders primarily use which chart timeframe for their main analysis?',opts:['1-minute charts','5-minute charts','Daily charts (with weekly for context)','Monthly charts only'],correct:2,feedback:'Swing traders work primarily on daily charts, using weekly charts for broader trend context. This is very different from day traders who focus on 1, 5, and 15-minute charts.'},
+      {q:'A swing trader is working a full-time job. They notice the market is moving strongly during their workday. What is the correct approach?',opts:['Quit the job to watch the market full time','Check positions during lunch and after close — pre-set alerts and limit orders handle the rest','Trade on their phone during meetings to not miss moves','Day trade on their lunch break to catch intraday moves'],correct:1,feedback:'Swing trading is specifically designed to work around a schedule. Pre-setting alerts, limit orders, and stop losses means the market can move while you are busy — your plan executes automatically.'},
+    ],
+  },
+
+  {
+    id:'scalping',
+    emoji:'⚔️',
+    name:'Scalping',
+    subtitle:'ULTRA-FAST · MICRO PROFITS · MAXIMUM VOLUME',
+    color:'#C94C4C',
+    glow:'rgba(201,76,76,0.06)',
+    badges:['Seconds–Minutes','Extreme Activity','Pure Technical'],
+    tagline:'<strong>Scalpers</strong> make dozens or hundreds of trades per day, each targeting tiny profit increments — often just cents per share. They rely on speed, precision, and extreme discipline to stack small wins into significant daily gains.',
+    quote:'"Scalping is the art of being right quickly, wrong quickly, and never confusing the two."',
+    profile:[
+      {label:'Hold Time',value:'Seconds – 5 Min',pct:5},
+      {label:'Screen Time',value:'Entire Session',pct:100},
+      {label:'Stress Level',value:'Extreme',pct:98},
+      {label:'Trade Frequency',value:'20–100+ per day',pct:100},
+      {label:'Capital Needed',value:'$25,000+ (PDT)',pct:70},
+      {label:'Skill Barrier',value:'Very High',pct:90},
+    ],
+    analogy:{icon:'🎮',text:'Scalping is like playing a <strong>fighting game at the highest difficulty level</strong>. Every input matters, your reaction time must be near-instant, and one mistake costs you the round. The reward is a stream of small victories — but the mental energy required is extraordinary. Only a specific type of trader thrives here.'},
+    dayInLife:[
+      {time:'Pre-Market',icon:'🎯',title:'Find the Stocks with Volume',desc:'Scalpers need <strong>high liquidity and tight spreads</strong>. Scan for the top gappers and highest volume movers. You cannot scalp a stock nobody is trading — the spread will eat your profits.',highlight:false},
+      {time:'9:30 AM Open',icon:'🔴',title:'Watch — Do Not Touch Yet',desc:'The open is filled with noise. Experienced scalpers either <strong>trade the first 5-minute candle\'s range break</strong> with extreme size discipline, or wait 10–15 minutes for the real trend to emerge.',highlight:false},
+      {time:'Active Trading — All Session',icon:'⚡',title:'Entry, Target, Stop — In Seconds',desc:'A scalp trade might last <strong>30 seconds to 3 minutes</strong>. Enter at a key level, target 10–30 cents profit, cut immediately if it moves against you. The stop is sacred. No hoping. No waiting.',highlight:true},
+      {time:'Every Minute',icon:'📊',title:'Level 2 and Time & Sales',desc:'Scalpers read <strong>Level 2 (order book)</strong> and the tape (Time & Sales) to see where orders are stacking, where big buyers and sellers are sitting, and what the short-term price direction will be.',highlight:true},
+      {time:'After Every Loss',icon:'🧘',title:'Reset Emotionally',desc:'Taking 5–10 consecutive losses is normal in scalping. The ability to <strong>reset emotionally and execute the next trade with zero baggage</strong> from the last one separates profitable scalpers from blown accounts.',highlight:false},
+      {time:'End of Day',icon:'✅',title:'Calculate Net P&L',desc:'With 50–100 trades per day, commissions and fees are significant. Scalpers must track <strong>net P&L after all fees</strong>. Many scalpers look profitable on gross but are negative net. This is a critical calculation.',highlight:false},
+    ],
+    pros:['No overnight risk whatsoever','Profit opportunities even in sideways/low-trend markets','Extremely fast skill development through repetition','Small per-trade risk means no single trade kills you'],
+    cons:['Extremely mentally exhausting — unsustainable for most','Commission and fee drag is significant','Requires the fastest execution tools available','PDT rule applies — need $25K+ for US margin accounts'],
+    tools:['Direct Access Broker (Cobra, Lightspeed)','Level 2 / DOM','Hot Keys for instant execution','Tick Charts (1-min / 2-min max)','Time & Sales tape reading'],
+    whoFor:'Scalping is for traders with <strong>extraordinary focus, lightning-fast execution, and ironclad emotional control</strong>. It is the highest-intensity style and burns out most people who try it. Not recommended until you have significant trading experience.',
+    quiz:[
+      {q:'What is the defining characteristic of scalping compared to other trading styles?',opts:['Trades are held for weeks at a time','Scalpers hold positions for seconds to minutes targeting tiny profit increments','Scalpers only trade once per day on major signals','Scalping requires no stop losses since the moves are so small'],correct:1,feedback:'Scalping is defined by ultra-short hold times (seconds to a few minutes) and targeting small, incremental profits. The goal is to stack many small wins throughout the trading session.'},
+      {q:'A scalper loses 8 trades in a row. Each was cut quickly at a small stop loss. What is the correct mindset?',opts:['Double position size on the next trade to recover losses quickly','Stop trading for the week — 8 losses means the strategy is broken','Reset emotionally and execute the next setup exactly as planned — losing streaks are normal','Switch to swing trading to recover'],correct:2,feedback:'Eight consecutive losses is within normal statistical variance for scalping strategies. Emotional reset between trades is one of the most critical skills. Revenge trading after losses is the #1 account killer for scalpers.'},
+      {q:'Why is Level 2 data especially important for scalpers?',opts:['It shows afterhours trading data unavailable to other traders','It displays the order book — where buyers and sellers are stacked — critical for anticipating very short-term price direction','It provides fundamental data about the company being traded','Level 2 is required by the SEC for all scalp trades'],correct:1,feedback:'Level 2 shows the order book in real time — bid/ask depth, order sizes, and where institutional orders sit. For scalpers making decisions in seconds, reading this data is as important as reading a chart.'},
+      {q:'A scalper grosses $500 on the day but paid $350 in commissions and fees. What is their actual result?',opts:['$500 profit — commissions are tax deductible so they do not count','$150 net profit — always calculate after fees','A $350 loss because the day was not profitable enough','Exactly $500 — commissions are built into the spread'],correct:1,feedback:'Net P&L = Gross P&L minus all commissions, fees, and ECN charges. Many scalpers are profitable on paper but negative after costs. This is why choosing the right (low-cost) broker is critical for scalpers.'},
+      {q:'Which tool is most important for scalpers that swing or position traders typically do not need?',opts:['An earnings calendar','A fundamental analysis screener','Direct access broker with hot keys for instant order execution','A weekly chart setup'],correct:2,feedback:'Scalpers need to enter and exit positions in seconds. Direct access brokers with programmable hot keys (one key to buy, one to sell, one to flatten) are essential — a standard brokerage interface is far too slow.'},
+    ],
+  },
+
+  {
+    id:'sniper',
+    emoji:'🥷',
+    name:'Sniper / Position Trading',
+    subtitle:'PRECISION ENTRY · LOW FREQUENCY · HIGH CONVICTION',
+    color:'#8B6FD4',
+    glow:'rgba(139,111,212,0.06)',
+    badges:['Days – Months','Very Low Activity','Technical + Macro'],
+    tagline:'The <strong>sniper trader</strong> waits — sometimes for days or weeks — for one perfect setup. When it appears, they strike with full conviction and hold until the thesis plays out. Quality over quantity, always.',
+    quote:'"The sniper does not fire at every target. One perfect shot beats a hundred missed ones."',
+    profile:[
+      {label:'Hold Time',value:'Days – Months',pct:55},
+      {label:'Screen Time',value:'30 Min – 1 Hr',pct:12},
+      {label:'Stress Level',value:'Low–Moderate',pct:30},
+      {label:'Trade Frequency',value:'1–5 per month',pct:10},
+      {label:'Capital Needed',value:'$500+',pct:12},
+      {label:'Skill Barrier',value:'Moderate–High',pct:60},
+    ],
+    analogy:{icon:'🎯',text:'Imagine a <strong>master archer</strong> at a tournament. While others take shot after shot hoping something hits, the archer breathes, studies the wind, aligns every variable — then releases one perfect arrow. <strong>One shot. One kill.</strong> The sniper trader operates exactly this way: extreme selectivity, extreme precision, maximum confidence when the conditions are perfect.'},
+    dayInLife:[
+      {time:'Weekend / Evening',icon:'🔬',title:'Deep Research & Setup Building',desc:'The sniper\'s real work happens OFF the market. Analyze sectors, macro trends, earnings setups, and technicals to build a <strong>specific watchlist of 3–5 high-conviction setups</strong> with exact entry conditions.',highlight:false},
+      {time:'Daily Pre-Market',icon:'👁️',title:'Check Conditions — Not Charts',desc:'Is the macro environment still supportive? Did any news change the thesis? The sniper checks their setup conditions, not random charts. <strong>If conditions are not met — no trade.</strong>',highlight:false},
+      {time:'The Setup Appears',icon:'🎯',title:'Enter with Full Conviction',desc:'After waiting potentially weeks, the exact trigger condition fires. Price breaks the key level with volume, or pulls back to the exact support zone. <strong>Enter at full size — not a partial testing position.</strong> You waited for this.',highlight:true},
+      {time:'Post-Entry',icon:'🧘',title:'Set It and Trust It',desc:'Stop loss is placed. Target is pre-defined. Now the hardest part: <strong>doing nothing</strong>. Snipers are disciplined enough not to touch a trade once it is entered. The thesis either plays out or the stop hits.',highlight:true},
+      {time:'Days / Weeks Later',icon:'✅',title:'The Target Hits',desc:'When price reaches the predetermined target, <strong>exit cleanly</strong>. Do not get greedy and add more targets. The trade was planned, executed, and completed. Bank the profit. Start scanning for the next setup.',highlight:false},
+    ],
+    pros:['Extremely low time commitment during active trading','Low trade frequency means lower fees','Each trade is deeply researched — high conviction','Works perfectly alongside full-time commitments'],
+    cons:['Long periods of waiting — requires patience most traders do not have','Slow feedback loop — can take months to know if thesis was right','Very easy to over-analyze and miss the entry','Drawdowns can be larger since holds are longer'],
+    tools:['TradingView (daily/weekly charts)','Fundamental research tools','Earnings calendars','Sector rotation trackers','Simple limit order execution'],
+    whoFor:'Sniper trading is for people who are <strong>naturally patient, deeply analytical, and willing to wait for perfection</strong>. This style connects closely with the Trader DNA "Sniper" and "Strategist" archetypes. It is one of the most sustainable styles long-term.',
+    quiz:[
+      {q:'What most defines the sniper/position trading approach?',opts:['Trading every signal as soon as it appears to maximize opportunities','Waiting only for perfect, high-conviction setups and trading very infrequently','Holding positions for only minutes at a time','Using automated algorithms to find and execute trades'],correct:1,feedback:'Sniper trading is defined by extreme selectivity — waiting for the ONE perfect setup rather than trading frequently. Quality and conviction over quantity is the core philosophy.'},
+      {q:'A sniper trader has been watching a setup for two weeks. The trigger condition finally hits, but they are uncertain. What do they do?',opts:['Wait for additional confirmation — even if it means missing the trade','Enter with a very small testing position first','Enter at full planned size with the pre-set stop in place — the research has already been done','Skip the trade and look for a different setup'],correct:2,feedback:'The research and planning phase is complete before the entry — that is the whole point of sniper trading. When the trigger fires, you execute at full size. Hesitating at the entry means the preparation was not thorough enough.'},
+      {q:'How many trades might a sniper trader make in a typical month?',opts:['50–100 trades','10–20 trades','1–5 trades','They trade every day'],correct:2,feedback:'Sniper traders typically make only 1–5 trades per month — sometimes fewer. The low frequency is intentional: every trade is the result of extensive research and waiting for optimal conditions.'},
+      {q:'A sniper trader\'s position is up 15% but has not hit the pre-set target. What should they do?',opts:['Take the 15% profit now — a gain is a gain','Move the target higher since the trade is working','Hold and trust the plan — if thesis is intact and stop is not hit, do nothing','Add more to the position since it is winning'],correct:2,feedback:'This is the hardest part of sniper trading — trusting the plan when the trade is winning. Moving exits early (cutting winners short) is just as destructive as holding losers. The target was set for a reason.'},
+      {q:'Why do sniper traders do most of their work OFF market hours?',opts:['They are not allowed to trade during regular market hours','Research and setup building require calm analysis, not the noise of live market action','All trades must be placed as pre-market limit orders','SEC regulations require trades to be planned 24 hours in advance'],correct:1,feedback:'The best analysis happens away from the chaos of live markets. Sniper traders do their deep research evenings and weekends — then simply execute their pre-built plan when the market provides the trigger.'},
+    ],
+  },
+
+  {
+    id:'momentum',
+    emoji:'🔥',
+    name:'Momentum Trading',
+    subtitle:'RIDE THE WAVE · TREND FOLLOWING · CATALYST DRIVEN',
+    color:'#C9904C',
+    glow:'rgba(201,144,76,0.06)',
+    badges:['Hours – Days','Moderate–High Activity','Catalyst + Technical'],
+    tagline:'<strong>Momentum traders</strong> identify stocks or assets that are moving strongly in one direction — driven by news, earnings, sector rotation, or broad market trends — and ride that momentum until it exhausts.',
+    quote:'"Momentum traders do not ask why the train is moving. They just get on before it leaves the station."',
+    profile:[
+      {label:'Hold Time',value:'Hours – 3 Days',pct:30},
+      {label:'Screen Time',value:'2–5 Hours/Day',pct:45},
+      {label:'Stress Level',value:'Moderate–High',pct:65},
+      {label:'Trade Frequency',value:'3–15 per week',pct:50},
+      {label:'Capital Needed',value:'$2,000+',pct:25},
+      {label:'Skill Barrier',value:'Moderate',pct:55},
+    ],
+    analogy:{icon:'🚂',text:'Momentum trading is like <strong>jumping on a moving train</strong>. You do not build the train, you do not control its destination — you spot it gaining speed, find the right car to board, ride it as long as it is accelerating, and hop off before it slows down. The biggest mistake: jumping on a train that is already decelerating.'},
+    dayInLife:[
+      {time:'Pre-Market',icon:'📰',title:'Find the Catalyst',desc:'Momentum always has a <strong>reason</strong> — earnings beat, FDA approval, analyst upgrade, merger announcement, or sector news. Scan pre-market movers and identify the catalyst driving each move.',highlight:false},
+      {time:'Market Open',icon:'📊',title:'Confirm the Trend',desc:'Is the pre-market move holding? Is volume strong? A true momentum move shows <strong>expanding volume on each push higher</strong>. Weak volume = the move may fade. Wait for confirmation.',highlight:false},
+      {time:'Entry',icon:'⚔️',title:'Buy Strength, Not Weakness',desc:'Counterintuitive to many beginners: momentum traders <strong>buy after a breakout is confirmed</strong>, not before. They pay a bit more but have confirmation that the momentum is real. Never buy anticipating a breakout.',highlight:true},
+      {time:'During the Trade',icon:'🔥',title:'Watch for Exhaustion Signs',desc:'Momentum ends. Watch for <strong>slowing volume, long upper wicks (sellers stepping in), or a break of the short-term trend line</strong>. When the train starts decelerating, be ready to exit.',highlight:true},
+      {time:'Exit',icon:'💰',title:'Exit Into Strength',desc:'The best exits are when the stock is still moving up but showing early exhaustion signs. <strong>Do not wait for the turn to be obvious</strong> — by then you have given back too much profit.',highlight:false},
+      {time:'Post-Trade',icon:'📋',title:'Log the Catalyst and Outcome',desc:'Tracking which catalysts produce the strongest momentum moves is how you build a <strong>playbook</strong>. Earnings beats in tech? FDA approvals in biotech? You will learn which setups work best.',highlight:false},
+    ],
+    pros:['Can produce large gains quickly on strong catalysts','Clear entry signals when the trend confirms','Works in all market conditions — can go short on downside momentum','Relatively short hold time limits overnight exposure'],
+    cons:['Chasing extended moves is a major risk','Momentum can reverse violently on news or sector rotation','Requires ability to make quick decisions under pressure','FOMO (fear of missing out) is the biggest enemy'],
+    tools:['Real-time scanners (Trade Ideas, Benzinga)','News feeds (Benzinga, Market Chameleon)','TradingView','Relative Volume (RVOL) indicator','VWAP'],
+    whoFor:'Momentum trading suits <strong>decisive, action-oriented traders who can process information quickly</strong> and make fast but measured decisions. It connects closely with the "Momentum Rider" Trader DNA archetype.',
+    quiz:[
+      {q:'A momentum trader sees a stock up 12% pre-market on strong earnings. What do they do?',opts:['Buy immediately at market open — do not wait','Wait for the open, confirm volume is strong and the trend is holding, then enter on confirmation','Short the stock since it has already moved 12%','Ignore it — 12% is too large a move to trade'],correct:1,feedback:'Momentum traders confirm the move before entering — they want to see strong volume, the trend holding at the open, and ideally a clean technical trigger. Buying blind on a pre-market gap is a recipe for getting caught in a fade.'},
+      {q:'What is the most dangerous mistake a momentum trader can make?',opts:['Entering too early before a breakout is confirmed','Using a stop loss that is too tight','Buying a stock that is already overextended — jumping on a train that is decelerating','Trading too few positions per week'],correct:2,feedback:'Buying extended momentum (chasing) is the #1 momentum trading mistake. Stocks that have already made large moves are far more likely to reverse than to continue. The best entries are early in the momentum move, not late.'},
+      {q:'Volume is an important confirmation tool for momentum traders. What does "expanding volume" on each push higher indicate?',opts:['The stock is about to reverse','Institutions and large players are selling','Real demand — the move is backed by participation and likely to continue','The stock is being manipulated'],correct:2,feedback:'Expanding volume on each push higher shows real buyer demand — institutions and retail are both participating. Momentum without volume is suspect and often fades. Volume is the fuel that powers momentum.'},
+      {q:'A momentum trader is in a winning trade and notices the last few candles have long upper wicks and decreasing volume. What does this signal?',opts:['The momentum is accelerating — add to the position','Early signs of exhaustion — sellers are stepping in. Prepare to exit.','This is a normal consolidation — hold with conviction','Volume always decreases mid-trend — it is not meaningful'],correct:1,feedback:'Long upper wicks mean buyers are pushing price up but sellers are rejecting those highs. Combined with decreasing volume, this is a classic exhaustion signal. Momentum traders exit into strength — before the reversal becomes obvious.'},
+      {q:'What is a "catalyst" in the context of momentum trading?',opts:['A technical indicator like RSI or MACD','A news event or fundamental development that triggers a strong directional move','A type of limit order used to enter momentum trades','A chart pattern like a cup and handle'],correct:1,feedback:'A catalyst is the "reason" behind a momentum move — earnings surprises, FDA approvals, product launches, analyst upgrades, or macro events. Understanding catalysts helps momentum traders identify which moves are likely to sustain vs. fade quickly.'},
+    ],
+  },
+
+  {
+    id:'algorithmic',
+    emoji:'🤖',
+    name:'Algorithmic / Systematic',
+    subtitle:'RULE-BASED · AUTOMATED · DATA DRIVEN',
+    color:'#4C8BC9',
+    glow:'rgba(76,139,201,0.06)',
+    badges:['Any Timeframe','Minimal Screen Time','Quantitative'],
+    tagline:'<strong>Algorithmic traders</strong> build systems — rules that define exactly when to enter, exit, and manage risk, then let code execute those rules automatically. The human removes emotion from the equation entirely.',
+    quote:'"The best algo trader is the one who trusts the system they built — even when it is uncomfortable."',
+    profile:[
+      {label:'Hold Time',value:'Any (system defined)',pct:50},
+      {label:'Screen Time',value:'Monitoring Only',pct:15},
+      {label:'Stress Level',value:'Low (when live)',pct:25},
+      {label:'Trade Frequency',value:'System Defined',pct:50},
+      {label:'Capital Needed',value:'$500+',pct:15},
+      {label:'Skill Barrier',value:'High (technical)',pct:82},
+    ],
+    analogy:{icon:'🏭',text:'Think of algorithmic trading as building a <strong>vending machine for the market</strong>. You define all the rules upfront: "If A happens and B is true, execute trade C with stop at D and target at E." Once built and tested, the machine runs without you. The hard work is in the <strong>design and testing phase</strong> — not the execution phase.'},
+    dayInLife:[
+      {time:'Strategy Research Phase (Weeks)',icon:'🔬',title:'Hypothesis and Backtesting',desc:'Every algo starts as an idea: "What if I buy every time the 20-day MA crosses above the 50-day MA?" Then you <strong>backtest it on historical data</strong> to see if the edge is real or imagined.',highlight:false},
+      {time:'Development Phase',icon:'💻',title:'Code the System',desc:'The strategy is translated into code — Python (most common), Pine Script for TradingView, or specialized platforms like QuantConnect. The code must handle <strong>entries, exits, position sizing, and risk management</strong>.',highlight:false},
+      {time:'Paper Trading Phase',icon:'📊',title:'Forward Test Before Going Live',desc:'Before risking real money, the algo is run in a paper trading environment. Does it perform as the backtest predicted? <strong>If backtest says +30% and live paper shows -5%, the system is overfit</strong> — do not go live.',highlight:true},
+      {time:'Live Trading',icon:'🤖',title:'The Algorithm Runs, You Monitor',desc:'Once live, the algorithm executes every trade based on its rules. Your job shifts to <strong>monitoring for technical failures, broker connectivity issues, and whether the strategy is degrading</strong> as market conditions change.',highlight:true},
+      {time:'Ongoing',icon:'🔄',title:'Continuous Improvement',desc:'Markets evolve. A strategy that worked in 2020 may not work in 2025. Algo traders constantly <strong>research new edges, evaluate existing strategy performance</strong>, and adapt. The system is never truly "finished."',highlight:false},
+    ],
+    pros:['Completely removes emotional decision-making','Can monitor and trade multiple markets simultaneously','Backtesting enables rigorous strategy validation before risking capital','Can run 24/7 — especially powerful for crypto markets'],
+    cons:['Requires programming knowledge (Python, etc.) or expensive platforms','Over-optimization (curve fitting) is a serious and common pitfall','Technical failures can cause large unexpected losses','Finding genuine, durable market edges is very difficult'],
+    tools:['Python + Pandas / Backtrader','QuantConnect (cloud backtesting)','TradingView Pine Script','Interactive Brokers API / Alpaca API','ThinkorSwim thinkScript'],
+    whoFor:'Algorithmic trading suits people with a <strong>quantitative mindset and technical background</strong> — or a willingness to develop those skills. It pairs naturally with the "Quant" Trader DNA archetype. Start with understanding markets manually before building automations.',
+    quiz:[
+      {q:'What is the primary advantage of algorithmic trading over manual trading?',opts:['Algorithms always make more money than human traders','It completely removes emotional decision-making from trade execution','Algorithms are immune to market losses','Automated trading is tax-free in most countries'],correct:1,feedback:'The biggest edge of algorithmic trading is removing human emotion — no fear, no greed, no revenge trading, no hesitation. The system executes its rules 100% consistently, which is something humans struggle to do.'},
+      {q:'What is "overfitting" (curve fitting) in the context of algorithmic trading?',opts:['Trading too large a position size','Building a strategy so optimized to past data that it fails on new data','Running too many algorithms at the same time','A type of execution error caused by slow internet'],correct:1,feedback:'Overfitting is when you optimize a strategy so specifically to historical data that it "memorizes" the past instead of finding a real edge. The result: impressive backtest, terrible live performance. It is the most common and dangerous mistake in algorithmic trading.'},
+      {q:'Before going live with an algorithm, what is the essential validation step?',opts:['Submit the code to a regulatory body for approval','Run it on paper trading (forward testing) to confirm it performs as the backtest suggested','Show the strategy to 10 other traders for peer review','Trade it at minimum size on your real account immediately'],correct:1,feedback:'Paper trading (forward testing) bridges the gap between backtesting and live trading. If your backtest shows strong results but paper trading shows weakness, the strategy likely has an overfitting problem. Never skip this step.'},
+      {q:'A trader\'s algorithm has been running profitably for 8 months. In month 9, it starts losing consistently. What is the most likely explanation?',opts:['The broker is manipulating trades against the algorithm','Market conditions have changed and the strategy\'s edge has eroded','The algorithm needs to be run for at least 12 months before judging performance','This is normal variance — do not change anything'],correct:1,feedback:'Market regimes change. A strategy that exploited a specific pattern may stop working when the underlying conditions shift. Monitoring strategy performance over time and being willing to retire or adapt systems is a core part of algorithmic trading.'},
+      {q:'Which programming language is most commonly used for building trading algorithms and backtesting?',opts:['Java','C++','Python','Ruby'],correct:2,feedback:'Python dominates algorithmic trading due to its excellent data analysis libraries (Pandas, NumPy), trading-specific frameworks (Backtrader, Zipline), and broker API integrations. It is the language to learn first for aspiring quant traders.'},
+    ],
+  },
+];
+
+// ── COMPARISON TABLE DATA ──
+const COMPARE_ROWS = [
+  ['Day Trading','⚡','#C9A84C','Seconds–Hours','Full day','Very High','$25,000 (PDT)'],
+  ['Swing Trading','🌊','#4CC9A8','Days–Weeks','1–2 hrs/day','Moderate','$1,000+'],
+  ['Scalping','⚔️','#C94C4C','Seconds–5 Min','Full day','Extreme','$25,000 (PDT)'],
+  ['Sniper/Position','🥷','#8B6FD4','Days–Months','30–60 min/day','Low–Moderate','$500+'],
+  ['Momentum','🔥','#C9904C','Hours–3 Days','2–5 hrs/day','Moderate–High','$2,000+'],
+  ['Algorithmic','🤖','#4C8BC9','System Defined','Monitor only','Low (live)','$500+'],
+];
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let state = {
+  current: 0,
+  completed: {},
+  totalXP: 0,
+  answers: {},
+  submitted: {},
+};
+
+function loadState(){
+  try{
+    const s = JSON.parse(localStorage.getItem('dojo_styles')||'{}');
+    if(s.completed) state.completed = s.completed;
+    if(s.totalXP)   state.totalXP   = s.totalXP;
+    if(s.answers)   state.answers   = s.answers;
+    if(s.submitted) state.submitted = s.submitted;
+  }catch(e){}
+}
+function saveState(){
+  try{ localStorage.setItem('dojo_styles', JSON.stringify({
+    completed:state.completed, totalXP:state.totalXP,
+    answers:state.answers, submitted:state.submitted,
+  }));}catch(e){}
+}
+
+// ══════════════════════════════════════
+// SIDEBAR
+// ══════════════════════════════════════
+function buildSidebar(){
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = STYLES.map((s,i)=>{
+    const done  = state.completed[i] !== undefined;
+    const active = i === state.current;
+    let badgeClass = 'nb-idle', badgeContent = (i+1)+'';
+    if(active && !done){ badgeClass='nb-active'; badgeContent='▶'; }
+    if(done){ badgeClass='nb-done'; badgeContent='✓'; }
+    const meta = done ? `${state.completed[i]}/5 correct` : active ? 'In progress' : 'Not started';
+    return `<div class="nav-item${active?' active':''}${done?' completed':''}" onclick="selectStyle(${i})" id="nav-${i}">
+      <div class="nav-color-dot" style="background:${s.color}"></div>
+      <div class="nav-info">
+        <div class="nav-name">${s.emoji} ${s.name}</div>
+        <div class="nav-meta">${meta}</div>
+      </div>
+      <div class="nav-badge ${badgeClass}">${badgeContent}</div>
+    </div>`;
+  }).join('') +
+  `<div class="nav-item" onclick="selectComparison()" id="nav-compare" style="opacity:0.7;">
+    <div class="nav-color-dot" style="background:var(--text-faint)"></div>
+    <div class="nav-info"><div class="nav-name">📋 Style Comparison</div><div class="nav-meta">Side-by-side guide</div></div>
+    <div class="nav-badge nb-idle">→</div>
+  </div>`;
+  updateProgress();
+}
+
+function updateProgress(){
+  const done = Object.keys(state.completed).length;
+  document.getElementById('sp-text').textContent = done + ' / 6';
+  document.getElementById('sp-fill').style.width = (done/6*100) + '%';
+  document.getElementById('xp-display').textContent = state.totalXP;
+  document.getElementById('sidebar-xp').textContent  = state.totalXP;
+}
+
+// ══════════════════════════════════════
+// BUILD LESSON
+// ══════════════════════════════════════
+function buildLesson(idx){
+  if(document.getElementById('lesson-'+idx)) return;
+  const s = STYLES[idx];
+  const area = document.getElementById('content-area');
+  const div = document.createElement('div');
+  div.className = 'lesson';
+  div.id = 'lesson-'+idx;
+  div.style.setProperty('--style-color', s.color);
+  div.style.setProperty('--style-color-glow', s.glow);
+
+  div.innerHTML = `
+    <!-- HERO -->
+    <div class="lesson-hero">
+      <div class="hero-eyebrow">Module II · Style ${idx+1} of ${STYLES.length}</div>
+      <div class="hero-badge-row">
+        <div class="style-badge filled">${s.emoji} ${s.name}</div>
+        ${s.badges.map(b=>`<div class="style-badge">${b}</div>`).join('')}
+      </div>
+      <div class="hero-title">${s.name}</div>
+      <div class="hero-sub">${s.subtitle}</div>
+      <p class="hero-tagline">${s.tagline}</p>
+      <div class="hero-quote">${s.quote}</div>
+    </div>
+
+    <!-- COMBAT PROFILE -->
+    <div class="combat-profile">
+      ${s.profile.map(p=>`
+        <div class="cp-cell">
+          <div class="cp-label">${p.label}</div>
+          <div class="cp-value">${p.value}</div>
+          <div class="cp-meter"><div class="cp-fill" style="width:${p.pct}%"></div></div>
+        </div>`).join('')}
+    </div>
+
+    <!-- BODY -->
+    <div class="lesson-body">
+
+      <!-- ANALOGY -->
+      <div class="section-block">
+        <div class="section-label">The Mental Model</div>
+        <div class="analogy-card">
+          <div class="analogy-icon">${s.analogy.icon}</div>
+          <div class="analogy-text">${s.analogy.text}</div>
+        </div>
+      </div>
+
+      <!-- DAY IN THE LIFE -->
+      <div class="section-block">
+        <div class="section-label">A Day in the Life</div>
+        <div class="timeline">
+          ${s.dayInLife.map(t=>`
+            <div class="tl-item">
+              <div class="tl-dot${t.highlight?' highlight':''}">${t.icon}</div>
+              <div class="tl-content">
+                <div class="tl-time">${t.time}</div>
+                <div class="tl-title">${t.title}</div>
+                <div class="tl-desc">${t.desc}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- PROS / CONS -->
+      <div class="section-block">
+        <div class="section-label">Strengths &amp; Challenges</div>
+        <div class="procon-grid">
+          <div class="procon-card pc-pros">
+            <ul>${s.pros.map(p=>`<li>${p}</li>`).join('')}</ul>
+          </div>
+          <div class="procon-card pc-cons">
+            <ul>${s.cons.map(c=>`<li>${c}</li>`).join('')}</ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOOLS -->
+      <div class="section-block">
+        <div class="section-label">Tools &amp; Platforms</div>
+        <div class="tools-row">
+          ${s.tools.map(t=>`<div class="tool-chip">${t}</div>`).join('')}
+        </div>
+      </div>
+
+      <!-- WHO IS THIS FOR -->
+      <div class="section-block">
+        <div class="section-label">Who Is This Style For?</div>
+        <div class="who-card">
+          <div class="who-icon">${s.emoji}</div>
+          <div class="who-text">${s.whoFor}</div>
+        </div>
+      </div>
+
+    </div><!-- end lesson-body -->
+
+    <!-- QUIZ -->
+    <div class="quiz-section">
+      <div class="quiz-title">Knowledge Check</div>
+      <div class="quiz-subtitle">5 questions · Answer all to submit · Earn up to 250 XP</div>
+
+      ${s.quiz.map((q,qi)=>`
+        <div class="quiz-q-block">
+          <div class="qq-num">Question ${qi+1}</div>
+          <div class="qq-text">${q.q}</div>
+          <div class="qq-opts" id="opts-${idx}-${qi}">
+            ${q.opts.map((o,oi)=>`
+              <button class="qq-opt" id="opt-${idx}-${qi}-${oi}" onclick="pickOpt(${idx},${qi},${oi})">
+                <div class="opt-dot">${String.fromCharCode(65+oi)}</div>
+                <div class="opt-text">${o}</div>
+              </button>`).join('')}
+          </div>
+          <div class="qq-feedback" id="fb-${idx}-${qi}"></div>
+        </div>`).join('')}
+
+      <div class="ornament"><span class="ornament-sym">◆</span></div>
+
+      <div class="quiz-nav-row">
+        <button class="btn-submit" id="btn-sub-${idx}" onclick="submitQuiz(${idx})">Submit Answers</button>
+        <button class="btn-next-mod" id="btn-next-${idx}" onclick="goNext(${idx})">
+          ${idx < STYLES.length-1 ? 'Next: '+STYLES[idx+1].name+' →' : 'View Style Comparison →'}
+        </button>
+        <button class="btn-ghost" onclick="scrollTop()">↑ Review</button>
+      </div>
+
+      <div class="score-reveal" id="score-${idx}">
+        <div class="score-big" id="sbig-${idx}">0/5</div>
+        <div class="score-label">Questions Correct</div>
+        <div class="score-xp" id="sxp-${idx}">+0 XP</div>
+        <div class="score-msg" id="smsg-${idx}"></div>
+      </div>
+    </div>
+  `;
+
+  area.appendChild(div);
+
+  // Restore answers
+  const saved = state.answers[idx] || {};
+  Object.entries(saved).forEach(([qi,oi])=>{
+    document.getElementById(`opt-${idx}-${qi}-${oi}`)?.classList.add('selected');
+  });
+  if(state.submitted[idx]) setTimeout(()=>renderSubmitted(idx), 40);
+  checkReady(idx);
+}
+
+// ── COMPARISON VIEW ──
+function buildComparison(){
+  if(document.getElementById('lesson-compare')) return;
+  const area = document.getElementById('content-area');
+  const div = document.createElement('div');
+  div.className = 'lesson'; div.id = 'lesson-compare';
+  div.innerHTML = `
+    <div class="lesson-hero" style="--style-color:var(--gold);--style-color-glow:rgba(201,168,76,0.05)">
+      <div class="hero-eyebrow">Module II · Quick Reference</div>
+      <div class="hero-title">Style Comparison</div>
+      <div class="hero-sub">ALL 6 STYLES AT A GLANCE</div>
+      <p class="hero-tagline">Use this reference to understand how each style compares on the dimensions that matter most for your decision.</p>
+    </div>
+    <div class="compare-section">
+      <div class="section-label" style="margin-bottom:20px">Side-by-Side Reference</div>
+      <div style="overflow-x:auto">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Style</th><th>Hold Time</th><th>Screen Time</th><th>Stress</th><th>Min Capital</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${COMPARE_ROWS.map(r=>`
+              <tr>
+                <td><span class="ct-dot" style="background:${r[2]}"></span><span class="ct-style">${r[0]}</span></td>
+                <td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:40px">
+        <div class="section-label">Which Style Matches Your Trader DNA?</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:4px">
+          ${[
+            {dna:'The Sniper',match:'Sniper / Position Trading',color:'#8B6FD4',emoji:'🥷'},
+            {dna:'The Momentum Rider',match:'Momentum + Day Trading',color:'#C94C4C',emoji:'🐺'},
+            {dna:'The Strategist',match:'Swing Trading + Sniper',color:'#C9A84C',emoji:'🦉'},
+            {dna:'The Quant',match:'Algorithmic / Systematic',color:'#4C8BC9',emoji:'🤖'},
+            {dna:'The Hodler',match:'Swing + Position Trading',color:'#4CC9A8',emoji:'🐉'},
+            {dna:'The Degen',match:'Day Trading + Momentum*',color:'#C9904C',emoji:'🦊'},
+          ].map(d=>`
+            <div style="background:var(--panel);border:1px solid var(--border);border-left:3px solid ${d.color};padding:16px 18px;">
+              <div style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:${d.color};margin-bottom:5px">${d.emoji} ${d.dna}</div>
+              <div style="font-size:0.9rem;color:var(--text-dim);font-weight:300">${d.match}</div>
+            </div>`).join('')}
+        </div>
+        <div style="margin-top:12px;font-size:0.82rem;color:var(--text-faint);font-family:'Cinzel',serif;letter-spacing:0.08em">* Degen archetype: must master Risk Management first</div>
+      </div>
+    </div>
+  `;
+  area.appendChild(div);
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function selectStyle(idx){
+  state.current = idx;
+  document.querySelectorAll('.lesson').forEach(l=>l.classList.remove('active'));
+  buildLesson(idx);
+  document.getElementById('lesson-'+idx).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('nav-'+idx)?.classList.add('active');
+  document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'});
+}
+
+function selectComparison(){
+  document.querySelectorAll('.lesson').forEach(l=>l.classList.remove('active'));
+  buildComparison();
+  document.getElementById('lesson-compare').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('nav-compare')?.classList.add('active');
+  document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'});
+}
+
+function goNext(idx){
+  if(idx < STYLES.length-1) selectStyle(idx+1);
+  else selectComparison();
+}
+
+function scrollTop(){
+  document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════
+function pickOpt(li,qi,oi){
+  if(state.submitted[li]) return;
+  STYLES[li].quiz[qi].opts.forEach((_,o)=>document.getElementById(`opt-${li}-${qi}-${o}`)?.classList.remove('selected'));
+  document.getElementById(`opt-${li}-${qi}-${oi}`)?.classList.add('selected');
+  if(!state.answers[li]) state.answers[li]={};
+  state.answers[li][qi]=oi;
+  saveState();
+  checkReady(li);
+}
+
+function checkReady(li){
+  if(state.submitted[li]) return;
+  const ans = state.answers[li]||{};
+  const all = STYLES[li].quiz.every((_,qi)=>ans[qi]!==undefined);
+  document.getElementById('btn-sub-'+li)?.classList.toggle('ready', all);
+}
+
+function submitQuiz(li){
+  const ans = state.answers[li]||{};
+  const all = STYLES[li].quiz.every((_,qi)=>ans[qi]!==undefined);
+  if(!all) return;
+  state.submitted[li] = true;
+  renderSubmitted(li);
+  let correct = 0;
+  STYLES[li].quiz.forEach((q,qi)=>{ if(ans[qi]===q.correct) correct++; });
+  const xp = correct*50;
+  state.completed[li] = correct;
+  state.totalXP += xp;
+  saveState();
+  const msgs=['Keep studying — review the lesson and try again.','Good start! Review the questions you missed.','Solid work — real knowledge building here.','Strong performance — you understand this style well.','Perfect! You have mastered this trading style! 🏆'];
+  document.getElementById('sbig-'+li).textContent = correct+'/5';
+  document.getElementById('sxp-'+li).textContent = '+'+xp+' XP Earned';
+  document.getElementById('smsg-'+li).textContent = msgs[correct]||msgs[2];
+  document.getElementById('score-'+li).classList.add('show');
+  document.getElementById('btn-sub-'+li).style.display='none';
+  document.getElementById('btn-next-'+li).style.display='inline-block';
+  buildSidebar();
+  setTimeout(()=>document.getElementById('score-'+li)?.scrollIntoView({behavior:'smooth',block:'center'}),200);
+}
+
+function renderSubmitted(li){
+  const ans = state.answers[li]||{};
+  STYLES[li].quiz.forEach((q,qi)=>{
+    q.opts.forEach((_,oi)=>{
+      const btn = document.getElementById(`opt-${li}-${qi}-${oi}`);
+      if(!btn) return;
+      btn.classList.remove('selected','correct','wrong');
+      if(oi===q.correct) btn.classList.add('correct');
+      else if(ans[qi]===oi) btn.classList.add('wrong');
+      btn.disabled=true;
+    });
+    const fb = document.getElementById(`fb-${li}-${qi}`);
+    if(fb){
+      const ok = ans[qi]===q.correct;
+      fb.className = 'qq-feedback show '+(ok?'fb-ok':'fb-no');
+      fb.textContent = (ok?'✓ ':'✗ Correct: '+q.opts[q.correct]+'. ')+q.feedback;
+    }
+  });
+  document.getElementById('btn-sub-'+li).style.display='none';
+  document.getElementById('btn-next-'+li).style.display='inline-block';
+  if(state.completed[li]!==undefined){
+    const c=state.completed[li];
+    const msgs=['Keep studying — review the lesson and try again.','Good start! Review the questions you missed.','Solid work — real knowledge building here.','Strong performance — you understand this style well.','Perfect! You have mastered this trading style! 🏆'];
+    document.getElementById('sbig-'+li).textContent=c+'/5';
+    document.getElementById('sxp-'+li).textContent='+'+(c*50)+' XP Earned';
+    document.getElementById('smsg-'+li).textContent=msgs[c]||msgs[2];
+    document.getElementById('score-'+li)?.classList.add('show');
+  }
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+loadState();
+buildSidebar();
+buildLesson(state.current);
+document.getElementById('lesson-'+state.current).classList.add('active');
+updateProgress();
+</script>
+</body>
+</html>
