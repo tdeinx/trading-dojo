@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Risk Management · The Trading Dojo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;
+  --ink:#0A0A0F;--ink-3:#1A1A24;--ink-4:#22222E;
+  --panel:#13131C;--panel-2:#0F0F18;
+  --border:rgba(201,168,76,0.15);--border-b:rgba(201,168,76,0.5);
+  --text:#E8E0CC;--text-dim:#8A8070;--text-faint:#3A3630;
+  --green:#3DBA72;--red:#E05252;--red-b:rgba(224,82,82,0.15);
+  --warn:#C9904C;--warn-b:rgba(201,144,76,0.12);
+  --teal:#4CC9A8;--purple:#8B6FD4;
+  --mono:'Share Tech Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.92);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;}
+.logo{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);display:flex;align-items:center;gap:9px;cursor:pointer;text-decoration:none;}
+.logo-mark{width:28px;height:28px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.85rem;position:relative;flex-shrink:0;}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.22);}
+.topbar-center{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
+.xp-chip{background:var(--panel);border:1px solid var(--border);padding:6px 14px;font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--gold);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+
+/* LAYOUT */
+.body-layout{display:flex;flex:1;min-height:0;}
+
+/* SIDEBAR */
+.sidebar{width:268px;flex-shrink:0;border-right:1px solid var(--border);background:var(--panel-2);display:flex;flex-direction:column;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.sb-header{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
+.sb-title{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;}
+.sb-sub{font-size:0.85rem;color:var(--text-dim);font-weight:300;}
+.sb-progress{margin-top:14px;}
+.sp-row{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:5px;}
+.sp-row span{color:var(--gold);}
+.sp-track{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.6s ease;}
+.sb-nav{padding:10px 0;flex:1;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:12px 18px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
+.nav-item:hover{background:rgba(201,168,76,0.04);border-left-color:rgba(201,168,76,0.25);}
+.nav-item.active{background:rgba(201,168,76,0.07);border-left-color:var(--gold);}
+.nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.nav-info{flex:1;min-width:0;}
+.nav-name{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--text);}
+.nav-item.active .nav-name{color:var(--gold);}
+.nav-meta{font-size:0.63rem;color:var(--text-dim);margin-top:2px;}
+.nav-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.52rem;flex-shrink:0;}
+.nb-idle{background:var(--ink-4);color:var(--text-faint);}
+.nb-act{background:var(--gold);color:var(--ink);font-weight:700;font-family:'Cinzel',serif;animation:pb 2s ease-in-out infinite;}
+.nb-done{background:rgba(76,201,168,0.18);color:var(--teal);border:1px solid rgba(76,201,168,0.35);}
+@keyframes pb{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{box-shadow:0 0 0 5px rgba(201,168,76,0)}}
+.sb-footer{padding:14px 18px;border-top:1px solid var(--border);}
+.sb-xp{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.14em;color:var(--text-faint);}
+.sb-xp span{color:var(--gold);font-size:0.82rem;}
+
+/* CONTENT */
+.content-area{flex:1;overflow-y:auto;}
+.lesson{display:none;animation:fu 0.38s ease forwards;}
+.lesson.active{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ── */
+.lesson-hero{padding:44px 48px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.lesson-hero::after{content:'';position:absolute;top:0;right:0;width:300px;height:100%;background:radial-gradient(ellipse at right,var(--lc-glow,rgba(224,82,82,0.05)) 0%,transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:12px;}
+.hero-emoji{font-size:2.8rem;line-height:1;display:block;margin-bottom:12px;}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:var(--lc-color,var(--red));line-height:1.1;margin-bottom:5px;}
+.hero-sub{font-family:'Cinzel',serif;font-size:0.78rem;letter-spacing:0.18em;color:var(--text-dim);margin-bottom:14px;}
+.hero-desc{font-size:1rem;font-weight:300;color:var(--text-dim);line-height:1.65;max-width:580px;}
+.hero-desc strong{color:var(--text);font-weight:500;}
+
+/* MANTRA BANNER */
+.mantra{background:rgba(224,82,82,0.06);border:1px solid rgba(224,82,82,0.2);border-left:4px solid var(--red);padding:16px 22px;margin:0 48px;display:flex;align-items:center;gap:14px;}
+.mantra-icon{font-size:1.4rem;flex-shrink:0;}
+.mantra-text{font-family:'Cinzel',serif;font-size:0.82rem;letter-spacing:0.06em;color:var(--text);line-height:1.5;}
+.mantra-text strong{color:var(--red);}
+
+/* LESSON BODY */
+.lesson-body{padding:40px 48px;max-width:900px;}
+.section-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.28em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.section-block{margin-bottom:40px;}
+
+/* CONCEPT CARDS — short punchy */
+.concept-list{display:flex;flex-direction:column;gap:12px;}
+.concept-item{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--lc-color,var(--red));padding:18px 22px;}
+.ci-title{font-family:'Cinzel',serif;font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:5px;letter-spacing:0.04em;}
+.ci-body{font-size:0.95rem;color:var(--text-dim);line-height:1.6;font-weight:300;}
+.ci-body strong{color:var(--text);font-weight:500;}
+
+/* ROOKIE MISTAKE CALLOUT */
+.rookie-mistake{background:var(--warn-b);border:1px solid rgba(201,144,76,0.25);padding:16px 20px;display:flex;gap:14px;align-items:flex-start;margin-top:12px;}
+.rm-icon{font-size:1.2rem;flex-shrink:0;line-height:1.3;}
+.rm-content{}
+.rm-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--warn);text-transform:uppercase;margin-bottom:4px;}
+.rm-text{font-size:0.9rem;color:var(--text-dim);line-height:1.5;font-weight:300;}
+.rm-text strong{color:var(--warn);font-weight:600;}
+
+/* ACCOUNT DAMAGE VISUALIZER */
+.adv{background:var(--panel);border:1px solid var(--border);padding:24px;}
+.adv-title{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:18px;}
+.adv-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.adv-label{font-family:var(--mono);font-size:0.75rem;color:var(--text-dim);width:110px;flex-shrink:0;}
+.adv-bar{flex:1;height:8px;background:var(--ink-4);border-radius:4px;overflow:hidden;}
+.adv-fill{height:100%;border-radius:4px;transition:width 1s ease;}
+.adv-val{font-family:var(--mono);font-size:0.78rem;color:var(--text);width:70px;text-align:right;flex-shrink:0;}
+
+/* ── DECISION MOMENT ── */
+.decision-block{background:var(--panel);border:2px solid rgba(201,168,76,0.2);padding:28px 32px;position:relative;}
+.decision-block::before{content:'⚔ DECISION MOMENT';position:absolute;top:-10px;left:20px;background:var(--panel);padding:0 10px;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.2em;color:var(--gold);}
+.decision-scenario{font-size:1.05rem;font-weight:500;color:var(--text);line-height:1.6;margin-bottom:20px;}
+.decision-scenario em{color:var(--gold);font-style:normal;font-weight:600;}
+.decision-opts{display:flex;flex-direction:column;gap:10px;}
+.d-opt{background:var(--ink-3);border:1px solid var(--border);padding:16px 20px;cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:14px;transition:all 0.2s;width:100%;position:relative;overflow:hidden;}
+.d-opt::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold-dim);transform:scaleY(0);transform-origin:center;transition:transform 0.2s;}
+.d-opt:hover::before{transform:scaleY(1);}
+.d-opt:hover{border-color:rgba(201,168,76,0.35);transform:translateX(3px);}
+.d-opt.chosen-correct{border-color:var(--green);background:rgba(61,186,114,0.07);}
+.d-opt.chosen-correct::before{transform:scaleY(1);background:var(--green);}
+.d-opt.chosen-wrong{border-color:var(--red);background:var(--red-b);}
+.d-opt.chosen-wrong::before{transform:scaleY(1);background:var(--red);}
+.d-opt.reveal-correct{border-color:rgba(61,186,114,0.4);background:rgba(61,186,114,0.04);}
+.d-opt:disabled{cursor:default;transform:none!important;}
+.d-letter{width:30px;height:30px;border:1px solid var(--border-b);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;color:var(--gold);flex-shrink:0;transition:all 0.2s;}
+.d-opt.chosen-correct .d-letter{background:var(--green);border-color:var(--green);color:var(--ink);}
+.d-opt.chosen-wrong .d-letter{background:var(--red);border-color:var(--red);color:#fff;}
+.d-opt-text{font-size:0.97rem;color:var(--text-dim);line-height:1.45;padding-top:2px;}
+.d-opt:hover .d-opt-text{color:var(--text);}
+
+/* consequence feedback */
+.consequence{display:none;margin-top:16px;padding:18px 20px;animation:fu 0.35s ease;}
+.consequence.show{display:block;}
+.consequence.survive{background:rgba(61,186,114,0.07);border:1px solid rgba(61,186,114,0.25);}
+.consequence.damage{background:var(--red-b);border:1px solid rgba(224,82,82,0.25);}
+.consequence.dead{background:rgba(224,82,82,0.12);border:2px solid var(--red);}
+.csq-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.csq-icon{font-size:1.5rem;line-height:1;}
+.csq-title{font-family:'Cinzel',serif;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;}
+.consequence.survive .csq-title{color:var(--green);}
+.consequence.damage .csq-title{color:var(--red);}
+.consequence.dead .csq-title{color:var(--red);}
+.csq-body{font-size:0.92rem;color:var(--text-dim);line-height:1.6;font-weight:300;}
+.csq-body strong{color:var(--text);font-weight:500;}
+.csq-xp{display:inline-block;margin-top:10px;padding:5px 14px;background:rgba(61,186,114,0.1);border:1px solid rgba(61,186,114,0.25);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--green);}
+.csq-next{display:inline-block;margin-top:10px;margin-left:8px;padding:5px 14px;background:rgba(201,168,76,0.08);border:1px solid var(--border-b);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--gold);cursor:pointer;transition:all 0.2s;}
+.csq-next:hover{background:rgba(201,168,76,0.15);}
+
+/* ── RISK CALCULATOR ── */
+.calc-wrap{background:var(--panel);border:1px solid var(--border);overflow:hidden;}
+.calc-header{padding:18px 24px;border-bottom:1px solid var(--border);background:rgba(224,82,82,0.04);}
+.calc-title{font-family:'Cinzel Decorative',serif;font-size:1.1rem;font-weight:700;color:var(--red);}
+.calc-sub{font-size:0.85rem;color:var(--text-dim);margin-top:3px;}
+.calc-body{padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+@media(max-width:600px){.calc-body{grid-template-columns:1fr;}}
+.calc-inputs{}
+.calc-field{margin-bottom:18px;}
+.calc-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--text-dim);text-transform:uppercase;margin-bottom:7px;display:block;}
+.calc-input{background:var(--ink-4);border:1px solid var(--border);border-bottom:2px solid var(--gold-dim);color:var(--text);font-family:var(--mono);font-size:1rem;padding:10px 14px;width:100%;outline:none;transition:border-color 0.2s;}
+.calc-input:focus{border-bottom-color:var(--gold);}
+.calc-slider{width:100%;margin-top:8px;accent-color:var(--red);}
+.calc-slider-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.62rem;color:var(--text-faint);margin-top:4px;}
+.calc-results{background:var(--ink-3);padding:20px;display:flex;flex-direction:column;gap:14px;}
+.calc-result-item{background:var(--panel);border:1px solid var(--border);padding:14px 18px;}
+.cri-label{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;margin-bottom:5px;}
+.cri-val{font-family:var(--mono);font-size:1.4rem;font-weight:700;color:var(--text);line-height:1;}
+.cri-val.danger{color:var(--red);}
+.cri-val.safe{color:var(--green);}
+.cri-sub{font-size:0.75rem;color:var(--text-dim);margin-top:3px;}
+.calc-warning{padding:12px 16px;background:var(--red-b);border:1px solid rgba(224,82,82,0.2);display:none;}
+.calc-warning.show{display:block;}
+.calc-warning-text{font-size:0.82rem;color:var(--red);font-family:'Cinzel',serif;letter-spacing:0.06em;}
+
+/* ── BLOWUP SCENARIO ── */
+.blowup-wrap{background:var(--panel);border:2px solid rgba(224,82,82,0.25);overflow:hidden;}
+.blowup-header{background:rgba(224,82,82,0.08);padding:18px 24px;border-bottom:1px solid rgba(224,82,82,0.15);}
+.blowup-title{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--red);}
+.blowup-sub{font-size:0.85rem;color:var(--text-dim);margin-top:3px;}
+.blowup-body{padding:24px;}
+.blowup-account{text-align:center;margin-bottom:24px;}
+.ba-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:6px;}
+.ba-value{font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--text);transition:color 0.5s,transform 0.3s;}
+.ba-value.hit{color:var(--red);transform:scale(1.05);}
+.ba-value.dead{color:var(--red);opacity:0.5;}
+.ba-bar{height:12px;background:var(--ink-4);border-radius:6px;overflow:hidden;margin:10px auto;max-width:300px;}
+.ba-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:6px;transition:width 0.8s ease,background 0.5s;}
+.ba-fill.low{background:linear-gradient(90deg,var(--red),var(--warn));}
+.blowup-steps{display:flex;flex-direction:column;gap:10px;}
+.blowup-step{background:var(--ink-3);border:1px solid var(--border);padding:16px 20px;display:flex;align-items:flex-start;gap:14px;opacity:0.35;transition:opacity 0.4s;}
+.blowup-step.active{opacity:1;border-color:rgba(224,82,82,0.3);}
+.blowup-step.done{opacity:0.6;}
+.bs-num{width:28px;height:28px;border:1px solid rgba(224,82,82,0.3);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.72rem;color:var(--red);flex-shrink:0;}
+.bs-content{}
+.bs-action{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;color:var(--text);margin-bottom:3px;}
+.bs-result{font-size:0.88rem;color:var(--text-dim);font-weight:300;}
+.bs-result strong{color:var(--red);}
+.blowup-btn{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;color:var(--ink);background:linear-gradient(135deg,var(--red),#E87878);border:none;padding:12px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.22s;margin-top:20px;}
+.blowup-btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.blowup-btn:disabled{opacity:0.4;cursor:default;transform:none;}
+.blowup-dead{display:none;text-align:center;padding:24px;animation:fu 0.4s ease;}
+.blowup-dead.show{display:block;}
+.bd-skull{font-size:4rem;display:block;margin-bottom:12px;animation:shake 0.5s ease;}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+.bd-title{font-family:'Cinzel Decorative',serif;font-size:1.4rem;color:var(--red);margin-bottom:8px;}
+.bd-msg{font-size:0.95rem;color:var(--text-dim);line-height:1.6;max-width:400px;margin:0 auto 16px;}
+.bd-restart{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);background:transparent;border:1px solid var(--border-b);padding:10px 24px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.2s;}
+.bd-restart:hover{background:rgba(201,168,76,0.07);}
+
+/* PROP FIRM CALLOUT */
+.prop-callout{background:rgba(139,111,212,0.07);border:1px solid rgba(139,111,212,0.25);border-left:3px solid var(--purple);padding:20px 24px;display:flex;gap:14px;align-items:flex-start;}
+.pc-icon{font-size:1.4rem;flex-shrink:0;line-height:1.3;}
+.pc-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--purple);text-transform:uppercase;margin-bottom:5px;}
+.pc-text{font-size:0.92rem;color:var(--text-dim);line-height:1.6;font-weight:300;}
+.pc-text strong{color:var(--text);font-weight:500;}
+
+/* RR TABLE */
+.rr-table{width:100%;border-collapse:collapse;}
+.rr-table th{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--gold-dim);padding:10px 14px;border-bottom:2px solid var(--border);text-align:left;text-transform:uppercase;}
+.rr-table td{padding:12px 14px;border-bottom:1px solid rgba(201,168,76,0.05);font-size:0.9rem;font-family:var(--mono);}
+.rr-table tr:hover td{background:rgba(201,168,76,0.03);}
+.rr-good{color:var(--green);}
+.rr-bad{color:var(--red);}
+.rr-ok{color:var(--gold);}
+
+/* QUIZ */
+.quiz-section{background:var(--panel-2);border-top:1px solid var(--border);padding:44px 48px;}
+.quiz-title{font-family:'Cinzel Decorative',serif;font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.quiz-sub{font-size:0.92rem;color:var(--text-dim);font-weight:300;margin-bottom:32px;}
+.qz-block{margin-bottom:24px;}
+.qz-num{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:8px;}
+.qz-q{font-size:1.02rem;font-weight:500;color:var(--text);line-height:1.55;margin-bottom:13px;}
+.qz-q em{color:var(--gold);font-style:normal;font-weight:600;}
+.qz-opts{display:flex;flex-direction:column;gap:7px;}
+.qz-opt{background:var(--panel);border:1px solid var(--border);padding:12px 17px;cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:12px;transition:all 0.17s;width:100%;}
+.qz-opt:hover{border-color:rgba(201,168,76,0.38);background:var(--ink-3);transform:translateX(3px);}
+.qz-opt.sel{border-color:var(--gold);background:rgba(201,168,76,0.07);}
+.qz-opt.ok{border-color:var(--teal)!important;background:rgba(76,201,168,0.07)!important;}
+.qz-opt.no{border-color:var(--red)!important;background:rgba(224,82,82,0.07)!important;}
+.qz-opt:disabled{cursor:default;transform:none!important;}
+.qz-dot{width:22px;height:22px;border:1px solid var(--border-b);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.54rem;font-family:'Cinzel',serif;transition:all 0.17s;margin-top:1px;}
+.qz-opt.sel .qz-dot{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+.qz-opt.ok .qz-dot{background:var(--teal);border-color:var(--teal);color:var(--ink);}
+.qz-opt.no .qz-dot{background:var(--red);border-color:var(--red);color:#fff;}
+.qz-opt-text{font-size:0.9rem;color:var(--text-dim);line-height:1.45;}
+.qz-opt:hover .qz-opt-text,.qz-opt.sel .qz-opt-text{color:var(--text);}
+.qz-fb{margin-top:8px;padding:10px 14px;font-size:0.86rem;line-height:1.5;display:none;}
+.qz-fb.show{display:block;}
+.qz-fb.ok{background:rgba(76,201,168,0.07);border:1px solid rgba(76,201,168,0.2);color:var(--teal);}
+.qz-fb.no{background:rgba(224,82,82,0.07);border:1px solid rgba(224,82,82,0.2);color:#E87878;}
+.qz-nav{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:6px;}
+.btn-sub{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.17em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:12px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;opacity:0.38;pointer-events:none;}
+.btn-sub.rdy{opacity:1;pointer-events:all;}
+.btn-sub.rdy:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(201,168,76,0.22);}
+.btn-next-l{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:12px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;display:none;}
+.btn-next-l:hover{transform:translateY(-2px);}
+.btn-ghost{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);background:transparent;border:1px solid var(--border-b);padding:11px 24px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;}
+.btn-ghost:hover{background:rgba(201,168,76,0.06);}
+.score-box{display:none;background:var(--panel);border:1px solid var(--border);padding:24px 28px;margin-top:24px;text-align:center;animation:fu 0.38s ease;}
+.score-box.show{display:block;}
+.score-big{font-family:'Cinzel Decorative',serif;font-size:2.6rem;font-weight:900;color:var(--gold);line-height:1;}
+.score-lbl{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.17em;color:var(--text-dim);margin-top:5px;}
+.score-xp{display:inline-block;margin-top:11px;padding:6px 16px;background:rgba(201,168,76,0.09);border:1px solid var(--border-b);font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);}
+.score-msg{margin-top:12px;font-size:0.91rem;color:var(--text-dim);font-weight:300;line-height:1.5;}
+.ornament{display:flex;align-items:center;gap:12px;margin:28px 0;}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:var(--border);}
+.ornament span{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.2em;color:var(--text-faint);}
+
+/* XP flash */
+.xp-flash{position:fixed;top:80px;right:24px;background:var(--panel);border:1px solid rgba(61,186,114,0.4);padding:10px 18px;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.1em;color:var(--green);z-index:999;transform:translateY(-20px);opacity:0;transition:all 0.3s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
+.xp-flash.show{transform:translateY(0);opacity:1;}
+
+@media(max-width:768px){
+  .sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);}
+  .body-layout{flex-direction:column;}
+  .lesson-hero,.lesson-body,.quiz-section{padding-left:22px;padding-right:22px;}
+  .mantra{margin:0 22px;}
+}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <a class="logo" href="index.html"><div class="logo-mark">⚔</div>The Trading Dojo</a>
+    <div class="topbar-center">Module VI · Risk Management</div>
+    <div class="topbar-right"><div class="xp-chip">⚡ <span id="xp-disp">0</span> XP</div></div>
+  </div>
+
+  <div class="body-layout">
+    <aside class="sidebar">
+      <div class="sb-header">
+        <div class="sb-title">Module VI</div>
+        <div class="sb-sub">Risk Management</div>
+        <div class="sb-progress">
+          <div class="sp-row">Progress <span id="sp-txt">0 / 5</span></div>
+          <div class="sp-track"><div class="sp-fill" id="sp-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="sb-nav" id="sb-nav"></div>
+      <div class="sb-footer"><div class="sb-xp">Module XP: <span id="sb-xp">0</span></div></div>
+    </aside>
+    <div class="content-area" id="content-area"></div>
+  </div>
+</div>
+
+<div class="xp-flash" id="xp-flash"></div>
+
+<script>
+// ═══════════════════════════════════════
+// LESSON DATA
+// ═══════════════════════════════════════
+const LESSONS = [
+
+  // ── LESSON 1: THE 1% RULE ──
+  {
+    id:'one-percent',
+    emoji:'🛡️',
+    name:'The 1% Rule',
+    color:'#E05252',
+    glow:'rgba(224,82,82,0.06)',
+    subtitle:'THE RULE THAT KEEPS YOU ALIVE',
+    desc:'One rule. Memorize it. Live by it. <strong>Never risk more than 1% of your account on a single trade.</strong> This is not a suggestion. This is the difference between traders who survive and traders who blow up.',
+    buildContent: function(idx) {
+      return `
+        <div class="mantra" style="margin:0 0 32px 0">
+          <div class="mantra-icon">⚔</div>
+          <div class="mantra-text"><strong>"If you don't manage risk, nothing else matters."</strong><br/>No strategy, no indicator, no setup beats a blown account.</div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">The Core Rule</div>
+          <div class="concept-list">
+            <div class="concept-item" style="--lc-color:#E05252">
+              <div class="ci-title">What the 1% Rule means</div>
+              <div class="ci-body">If your account is <strong>$1,000</strong> — your max loss on any single trade is <strong>$10</strong>.<br/>If your account is <strong>$10,000</strong> — max loss is <strong>$100</strong>.<br/>That's it. Non-negotiable.</div>
+            </div>
+            <div class="concept-item" style="--lc-color:#E05252">
+              <div class="ci-title">Why 1% and not more?</div>
+              <div class="ci-body">Even the best traders lose <strong>40–50% of their trades</strong>. At 1% risk, you can lose 10 in a row and still have <strong>90% of your account</strong>. At 10% risk, 10 losses = account gone.</div>
+            </div>
+            <div class="concept-item" style="--lc-color:#E05252">
+              <div class="ci-title">The survival math</div>
+              <div class="ci-body">To recover from a <strong>50% loss</strong> you need a <strong>100% gain</strong>. To recover from a <strong>25% loss</strong> you need a 33% gain. Small losses are easy to recover. Big losses are not.</div>
+            </div>
+          </div>
+          <div class="rookie-mistake">
+            <div class="rm-icon">⚠️</div>
+            <div class="rm-content">
+              <div class="rm-label">Rookie Mistake · What blows accounts</div>
+              <div class="rm-text"><strong>"I'll only do it this one time."</strong> Every blown account started with "just this once." The rule only works if it is never broken.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">Account Damage Visualizer</div>
+          <div class="adv">
+            <div class="adv-title">What happens at different risk percentages after 5 losses in a row</div>
+            <div class="adv-row"><div class="adv-label">1% risk</div><div class="adv-bar"><div class="adv-fill" style="width:95%;background:var(--green)"></div></div><div class="adv-val" style="color:var(--green)">$951 left</div></div>
+            <div class="adv-row"><div class="adv-label">2% risk</div><div class="adv-bar"><div class="adv-fill" style="width:90%;background:var(--gold)"></div></div><div class="adv-val" style="color:var(--gold)">$904 left</div></div>
+            <div class="adv-row"><div class="adv-label">5% risk</div><div class="adv-bar"><div class="adv-fill" style="width:77%;background:var(--warn)"></div></div><div class="adv-val" style="color:var(--warn)">$774 left</div></div>
+            <div class="adv-row"><div class="adv-label">10% risk</div><div class="adv-bar"><div class="adv-fill" style="width:59%;background:var(--red)"></div></div><div class="adv-val" style="color:var(--red)">$590 left</div></div>
+            <div class="adv-row"><div class="adv-label">25% risk</div><div class="adv-bar"><div class="adv-fill" style="width:24%;background:var(--red)"></div></div><div class="adv-val" style="color:var(--red)">$237 left</div></div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">Decision Moment</div>
+          <div class="decision-block" id="dm-${idx}-0">
+            <div class="decision-scenario">You have <em>$1,000</em> in your paper trading account. You found a great setup. <em>How much do you risk on this trade?</em></div>
+            <div class="decision-opts">
+              <button class="d-opt" id="dm-${idx}-0-0" onclick="decide(${idx},0,0,false,'❌ $100 is 10% of your account. Five losses like this wipes you out. This is how accounts blow up — not in one trade, but in a streak of bad ones.')">
+                <div class="d-letter">A</div><div class="d-opt-text">$100 — it's only 10%, not that bad</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-1" onclick="decide(${idx},0,1,true,'✅ $10 is exactly 1% of $1,000. You can lose this trade 90 times in a row and still have $400 left to keep trading. This is how you survive.')">
+                <div class="d-letter">B</div><div class="d-opt-text">$10 — 1% of my account</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-2" onclick="decide(${idx},0,2,false,'❌ $300 is 30% of your account. Three losses and you have $100 left. You would need a 200% gain just to get back to even. Never.')">
+                <div class="d-letter">C</div><div class="d-opt-text">$300 — I'm confident in this setup</div>
+              </button>
+            </div>
+            <div class="consequence" id="csq-${idx}-0"></div>
+          </div>
+        </div>`;
+    },
+    quiz:[
+      {q:'Your account is $5,000. Using the 1% rule, what is your maximum loss on any single trade?',opts:['$500','$50','$250','$5'],correct:1,feedback:'1% of $5,000 = $50. That is your max loss per trade. It feels small — that is the point. Small losses are survivable. Large ones are not.'},
+      {q:'A trader risks 10% per trade and loses 5 in a row. What percentage of their original account remains?',opts:['50%','59%','90%','40%'],correct:1,feedback:'After 5 losses at 10% each: $10,000 → $9,000 → $8,100 → $7,290 → $6,561 → $5,905. About 59% remains — nearly half the account gone in 5 trades.'},
+      {q:'Why is recovering from a 50% loss harder than it seems?',opts:['Because trading commissions add up','You need a 100% gain to return to breakeven — double what you lost','The market never recovers from 50% drops','Stop losses prevent recovery'],correct:1,feedback:'If you lose 50%, you need a 100% gain to get back to where you started. Losses and gains are not symmetrical. This is why protecting capital is more important than chasing gains.'},
+      {q:'The 1% rule applies:',opts:['Only to large accounts over $50,000','Only when you are losing — on winning streaks you can size up','On every single trade, no exceptions','Only to stock trades, not crypto or forex'],correct:2,feedback:'The 1% rule applies to every trade, every time. "Just this once" is how accounts get blown. The rule only protects you if you never break it.'},
+      {q:'A trader has $2,000 and wants to risk 2% per trade. They lose 10 trades in a row. Approximately how much is left?',opts:['$0 — completely blown','About $1,200 — still very much alive','About $600 — severely damaged','Exactly $1,800'],correct:1,feedback:'At 2% risk per trade over 10 losses: $2,000 × 0.98^10 ≈ $1,634. Still alive and tradeable. This is the power of small risk — 10 consecutive losses and you still have most of your capital.'},
+    ],
+  },
+
+  // ── LESSON 2: STOP LOSSES ──
+  {
+    id:'stop-losses',
+    emoji:'🛑',
+    name:'Stop Losses',
+    color:'#C94C4C',
+    glow:'rgba(201,76,76,0.06)',
+    subtitle:'YOUR AUTOMATIC EJECT BUTTON',
+    desc:'A <strong>stop loss</strong> is an order that automatically closes your trade if price moves against you by a set amount. It is your most important tool. <strong>No stop loss = unlimited risk.</strong>',
+    buildContent: function(idx) {
+      return `
+        <div class="mantra" style="margin:0 0 32px 0">
+          <div class="mantra-icon">⚔</div>
+          <div class="mantra-text"><strong>"A stop loss is not admitting defeat. It is proof you have a plan."</strong><br/>Every professional trader uses them. Every blown account ignored them.</div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">How Stop Losses Work</div>
+          <div class="concept-list">
+            <div class="concept-item" style="--lc-color:#C94C4C">
+              <div class="ci-title">What a stop loss does</div>
+              <div class="ci-body">You buy a stock at <strong>$50</strong>. You set a stop at <strong>$48</strong>. If price drops to $48, your position is automatically sold. You lose $2 per share — and nothing more.</div>
+            </div>
+            <div class="concept-item" style="--lc-color:#C94C4C">
+              <div class="ci-title">Where to place your stop</div>
+              <div class="ci-body">Place stops at <strong>logical price levels</strong> — below support, below a key moving average, or below the low of the setup candle. Not at a random dollar amount. The market should not be able to hit your stop without the trade being clearly wrong.</div>
+            </div>
+            <div class="concept-item" style="--lc-color:#C94C4C">
+              <div class="ci-title">Never move your stop against yourself</div>
+              <div class="ci-body">If you move your stop <strong>lower to avoid a loss</strong>, you are no longer managing risk — you are hoping. Hope is not a strategy. If the stop was right when you placed it, it is still right now.</div>
+            </div>
+          </div>
+          <div class="rookie-mistake">
+            <div class="rm-icon">⚠️</div>
+            <div class="rm-content">
+              <div class="rm-label">Rookie Mistake · What blows accounts</div>
+              <div class="rm-text"><strong>"I'll just watch it — I don't need a stop."</strong> One distraction, one news event, one fall asleep and your trade goes from -$50 to -$800. Stop losses are not optional.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">Decision Moment</div>
+          <div class="decision-block" id="dm-${idx}-0">
+            <div class="decision-scenario">You bought a stock at <em>$100</em>. It drops to <em>$96</em> — 4% against you. Your original stop was at <em>$97</em>. It has already been hit. What do you do?</div>
+            <div class="decision-opts">
+              <button class="d-opt" id="dm-${idx}-0-0" onclick="decide(${idx},0,0,false,'❌ Moving the stop lower is called "giving it room" — a common rationalization. You are now hoping instead of trading. This is how a $300 loss becomes a $3,000 loss.')">
+                <div class="d-letter">A</div><div class="d-opt-text">Move my stop to $93 and give it more room to bounce</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-1" onclick="decide(${idx},0,1,true,'✅ The stop was hit — the trade is done. You followed your plan. The loss is small and survivable. Your next trade can recover this. This is professional trading.')">
+                <div class="d-letter">B</div><div class="d-opt-text">Close the trade — my stop was hit, the plan said exit</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-2" onclick="decide(${idx},0,2,false,'❌ Adding to a losing position without a new plan is called averaging down without a thesis. Now you have more size in a losing trade. If it keeps falling, the damage doubles.')">
+                <div class="d-letter">C</div><div class="d-opt-text">Buy more — it's cheaper now, this lowers my average cost</div>
+              </button>
+            </div>
+            <div class="consequence" id="csq-${idx}-0"></div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">The Prop Firm Connection</div>
+          <div class="prop-callout">
+            <div class="pc-icon">🏦</div>
+            <div>
+              <div class="pc-label">Why Prop Firm Traders Fail Evaluations</div>
+              <div class="pc-text">Prop firms give traders capital — but set <strong>strict daily loss limits</strong> (usually 4–5%). The #1 reason traders fail evaluations is <strong>not using stop losses</strong>. One bad trade without a stop turns a passing evaluation into a failed one. The firms are not testing your strategy — they are testing your risk discipline. <strong>Stop losses are the first requirement, not the last.</strong></div>
+            </div>
+          </div>
+        </div>`;
+    },
+    quiz:[
+      {q:'What does a stop loss order do?',opts:['Guarantees you will not lose money','Automatically closes your position if price moves against you to a set level','Stops you from opening new trades','Locks in your profit at a specific price'],correct:1,feedback:'A stop loss automatically exits your position when price reaches your defined risk level. It removes emotion from the exit — you set the rule in advance and the market executes it for you.'},
+      {q:'You are in a trade and price is falling toward your stop loss. You think it might bounce. What should you do?',opts:['Move the stop lower to give it more room','Close the trade before the stop hits to save a few dollars','Let the stop execute exactly as planned — that is what it is there for','Cancel the stop and watch it manually'],correct:2,feedback:'Let the stop execute. You set it at that level for a reason — because below that price, the trade thesis is wrong. Moving stops is one of the most dangerous habits in trading and is how small losses become catastrophic ones.'},
+      {q:'Where should a stop loss be placed?',opts:['Always exactly 5% below your entry','At a random round number below the entry price','At a logical technical level — below support, below a key MA, or below the setup low','As tight as possible to minimize any loss'],correct:2,feedback:'Stop losses should be placed at logical technical levels where the trade thesis would be invalidated. Too tight and normal volatility stops you out. Too loose and you risk too much. The stop tells the market: "below here, I am wrong."'},
+      {q:'A trader buys at $200 with a stop at $190. Before they can set the stop, a news event crashes the stock to $160. What happened?',opts:['The stop loss protected them — it sold at $190','The stock gapped below the stop — they sold around $160 (slippage/gap risk)','Stop losses always execute at the exact price set','This cannot happen with a stop loss'],correct:1,feedback:'This is called "gap risk" — when price jumps past your stop level overnight or on news. The stop sells at the next available price, which may be much lower. This is why position sizing matters — even with a stop, catastrophic gaps can occur.'},
+      {q:'Why do prop firms care so much about traders using stop losses?',opts:['They require them by law','Stops protect the firm\'s capital — traders without stops can cause unlimited losses in funded accounts','Stops help traders be more profitable','Prop firms prefer manual exits'],correct:1,feedback:'Prop firms fund traders with real capital. A trader without stop losses can theoretically lose an unlimited amount of the firm\'s money. Daily loss limits and mandatory stops are how firms protect themselves — and why breaking these rules immediately disqualifies you.'},
+    ],
+  },
+
+  // ── LESSON 3: POSITION SIZING ──
+  {
+    id:'position-sizing',
+    emoji:'📐',
+    name:'Position Sizing',
+    color:'#C9A84C',
+    glow:'rgba(201,168,76,0.06)',
+    subtitle:'HOW MANY SHARES DO I BUY?',
+    desc:'Position sizing answers one question: <strong>how many shares do I buy?</strong> The answer is never a gut feeling. It is a calculation based on your account size, your risk tolerance, and your stop loss distance.',
+    buildContent: function(idx) {
+      return `
+        <div class="mantra" style="margin:0 0 32px 0">
+          <div class="mantra-icon">⚔</div>
+          <div class="mantra-text"><strong>"If you don't manage risk, nothing else matters."</strong><br/>Position sizing is how you control exactly how much of your account is at risk on every trade.</div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">The Formula</div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--gold);padding:22px 26px;margin-bottom:16px;">
+            <div style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:12px">Position Size Formula</div>
+            <div style="font-family:var(--mono);font-size:1.05rem;color:var(--text);line-height:2">
+              $ Risk = Account × Risk %<br/>
+              Shares = $ Risk ÷ (Entry − Stop)
+            </div>
+          </div>
+          <div class="concept-list">
+            <div class="concept-item" style="--lc-color:var(--gold)">
+              <div class="ci-title">Example — step by step</div>
+              <div class="ci-body">
+                Account: <strong>$5,000</strong> · Risk: <strong>1%</strong> → Dollar risk = $50<br/>
+                Entry: <strong>$100</strong> · Stop: <strong>$97</strong> → Risk per share = $3<br/>
+                Shares = $50 ÷ $3 = <strong>16 shares</strong><br/>
+                Total position value: $1,600 (not your risk — just the size)
+              </div>
+            </div>
+          </div>
+          <div class="rookie-mistake">
+            <div class="rm-icon">⚠️</div>
+            <div class="rm-content">
+              <div class="rm-label">Rookie Mistake</div>
+              <div class="rm-text"><strong>Buying "round numbers" without calculation.</strong> "I'll buy 100 shares" is not a position size — it is a guess. The number of shares you buy must come from the formula, not a feeling.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">Interactive Risk Calculator</div>
+          <div class="calc-wrap">
+            <div class="calc-header">
+              <div class="calc-title">Position Size Calculator</div>
+              <div class="calc-sub">Enter your trade details — see your exact position size in real time</div>
+            </div>
+            <div class="calc-body">
+              <div class="calc-inputs">
+                <div class="calc-field">
+                  <label class="calc-label">Account Size ($)</label>
+                  <input class="calc-input" id="calc-account" type="number" value="5000" min="100" oninput="calcPosition()"/>
+                </div>
+                <div class="calc-field">
+                  <label class="calc-label">Risk Per Trade: <span id="calc-risk-pct-label">1%</span></label>
+                  <input class="calc-slider" id="calc-risk-pct" type="range" min="0.5" max="5" step="0.5" value="1" oninput="calcPosition()"/>
+                  <div class="calc-slider-labels"><span>0.5%</span><span>1%</span><span>2%</span><span>3%</span><span>5%</span></div>
+                </div>
+                <div class="calc-field">
+                  <label class="calc-label">Entry Price ($)</label>
+                  <input class="calc-input" id="calc-entry" type="number" value="100" min="0.01" step="0.01" oninput="calcPosition()"/>
+                </div>
+                <div class="calc-field">
+                  <label class="calc-label">Stop Loss Price ($)</label>
+                  <input class="calc-input" id="calc-stop" type="number" value="97" min="0.01" step="0.01" oninput="calcPosition()"/>
+                </div>
+              </div>
+              <div class="calc-results">
+                <div class="calc-result-item">
+                  <div class="cri-label">Max $ Risk</div>
+                  <div class="cri-val" id="calc-dollar-risk">$50.00</div>
+                  <div class="cri-sub">1% of account</div>
+                </div>
+                <div class="calc-result-item">
+                  <div class="cri-label">Risk Per Share</div>
+                  <div class="cri-val" id="calc-risk-per-share">$3.00</div>
+                  <div class="cri-sub">Entry minus stop</div>
+                </div>
+                <div class="calc-result-item">
+                  <div class="cri-label">Shares to Buy</div>
+                  <div class="cri-val safe" id="calc-shares">16</div>
+                  <div class="cri-sub">Based on your risk rules</div>
+                </div>
+                <div class="calc-result-item">
+                  <div class="cri-label">Total Position Value</div>
+                  <div class="cri-val" id="calc-position-val">$1,600</div>
+                  <div class="cri-sub">Shares × Entry price</div>
+                </div>
+              </div>
+            </div>
+            <div class="calc-warning" id="calc-warning">
+              <div class="calc-warning-text" id="calc-warning-text">⚠️ Warning</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">Decision Moment</div>
+          <div class="decision-block" id="dm-${idx}-0">
+            <div class="decision-scenario">Account: <em>$2,000</em>. You want to risk <em>1%</em>. Entry: <em>$50</em>. Stop: <em>$48</em>. How many shares do you buy?</div>
+            <div class="decision-opts">
+              <button class="d-opt" id="dm-${idx}-0-0" onclick="decide(${idx},0,0,false,'❌ 100 shares × $2 risk = $200 at risk. That is 10% of your account on one trade. This is 10x the 1% rule.')">
+                <div class="d-letter">A</div><div class="d-opt-text">100 shares — it feels like a good round number</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-1" onclick="decide(${idx},0,1,false,'❌ Close — but 1% of $2,000 is $20. Risk per share is $2. So $20 ÷ $2 = 10 shares. Always run the formula.')">
+                <div class="d-letter">B</div><div class="d-opt-text">50 shares</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-2" onclick="decide(${idx},0,2,true,'✅ Correct. 1% of $2,000 = $20 at risk. Entry $50 − Stop $48 = $2 risk per share. $20 ÷ $2 = 10 shares. Max loss: $20. The formula works every time.')">
+                <div class="d-letter">C</div><div class="d-opt-text">10 shares — I ran the formula</div>
+              </button>
+            </div>
+            <div class="consequence" id="csq-${idx}-0"></div>
+          </div>
+        </div>`;
+    },
+    quiz:[
+      {q:'Account: $10,000. Risk: 1%. Entry: $200. Stop: $195. How many shares do you buy?',opts:['50 shares','10 shares','20 shares','5 shares'],correct:2,feedback:'Dollar risk = 1% × $10,000 = $100. Risk per share = $200 − $195 = $5. Shares = $100 ÷ $5 = 20 shares. Position value = $4,000 — but your risk is only $100.'},
+      {q:'Why should you NEVER choose a position size based on a round number like "I\'ll buy 100 shares"?',opts:['Round numbers are fine — they are easier to track','Round numbers ignore your stop loss distance — your actual risk could be enormous or tiny compared to your 1% rule','Brokers charge more for round numbers','Round numbers only work for stocks over $100'],correct:1,feedback:'Position size must come from the formula: (Dollar Risk) ÷ (Risk per Share). Choosing 100 shares without calculating your actual dollar risk means you have no idea how much you are truly risking.'},
+      {q:'Your stop loss is very far from your entry. Using the 1% rule, what happens to your position size?',opts:['Position size stays the same regardless','Position size increases — you need more shares to hit 1%','Position size decreases — fewer shares to keep dollar risk at 1%','Position size is not affected by stop distance'],correct:2,feedback:'The wider your stop, the fewer shares you can buy to keep dollar risk at 1%. A wide stop forces a smaller position. This is a built-in check — if the stop needs to be very far away, maybe the setup is not ideal.'},
+      {q:'A trader skips position sizing and just buys $5,000 worth of a stock with a stop 20% away. How much are they risking?',opts:['1% — because they used a stop loss','$100','$1,000 — 20% of $5,000','$5,000 — the whole position'],correct:2,feedback:'20% of $5,000 = $1,000 at risk. That is potentially 10–20% of a typical account on one trade. This is how you blow up — buying based on dollar value instead of calculating shares from your risk rules.'},
+      {q:'After calculating position size, a trader finds they can only buy 3 shares. They feel this is "too small." What should they do?',opts:['Buy more shares — 3 is embarrassingly small','Size up to at least 10 shares','Buy exactly 3 shares — the formula is correct regardless of how it feels','Skip the trade — it\'s not worth it'],correct:2,feedback:'Buy 3 shares. The formula does not care about your ego — it cares about protecting your capital. Many beginners overtrade because small sizes feel unimpressive. The goal is not to look impressive. The goal is to still be trading next month.'},
+    ],
+  },
+
+  // ── LESSON 4: RISK/REWARD RATIOS ──
+  {
+    id:'risk-reward',
+    emoji:'⚖️',
+    name:'Risk / Reward',
+    color:'#4CC9A8',
+    glow:'rgba(76,201,168,0.06)',
+    subtitle:'ONLY TAKE TRADES WORTH TAKING',
+    desc:'<strong>Risk/Reward ratio</strong> compares how much you could lose vs. how much you could gain. A 1:2 ratio means risking $1 to potentially make $2. This single concept separates traders who profit long-term from those who do not.',
+    buildContent: function(idx) {
+      return `
+        <div class="mantra" style="margin:0 0 32px 0">
+          <div class="mantra-icon">⚔</div>
+          <div class="mantra-text"><strong>"If you don't manage risk, nothing else matters."</strong><br/>A good R:R means you can be wrong 60% of the time and still be profitable.</div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">The Math That Changes Everything</div>
+          <div class="concept-list">
+            <div class="concept-item" style="--lc-color:#4CC9A8">
+              <div class="ci-title">What 1:2 R:R means</div>
+              <div class="ci-body">You risk <strong>$50</strong> to make <strong>$100</strong>. If you win 50% of your trades with a 1:2 R:R, you are <strong>profitable</strong>. 5 wins × $100 + 5 losses × $50 = +$250 net.</div>
+            </div>
+            <div class="concept-item" style="--lc-color:#4CC9A8">
+              <div class="ci-title">Minimum acceptable R:R</div>
+              <div class="ci-body">Most professional traders will not take a trade with less than <strong>1:2 R:R</strong>. Many require 1:3. If the reward does not justify the risk — skip the trade. There will be another one.</div>
+            </div>
+          </div>
+          <div class="rookie-mistake">
+            <div class="rm-icon">⚠️</div>
+            <div class="rm-content">
+              <div class="rm-label">Rookie Mistake</div>
+              <div class="rm-text"><strong>Taking 1:0.5 trades.</strong> Risking $100 to make $50. Even with a 70% win rate, you LOSE money. Bad R:R kills accounts quietly — one "small" loss at a time.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">Win Rate vs R:R — The Survival Table</div>
+          <div style="overflow-x:auto">
+            <table class="rr-table">
+              <thead><tr><th>R:R Ratio</th><th>Win Rate Needed to Break Even</th><th>Reality Check</th></tr></thead>
+              <tbody>
+                <tr><td class="rr-bad">1:0.5</td><td class="rr-bad">67%+ wins needed</td><td style="color:var(--text-dim)">Nearly impossible long-term</td></tr>
+                <tr><td class="rr-ok">1:1</td><td class="rr-ok">50% wins needed</td><td style="color:var(--text-dim)">Breakeven — fees eat profit</td></tr>
+                <tr><td class="rr-good">1:2</td><td class="rr-good">34% wins needed</td><td style="color:var(--text-dim)">Profitable even losing 2/3 of trades</td></tr>
+                <tr><td class="rr-good">1:3</td><td class="rr-good">25% wins needed</td><td style="color:var(--text-dim)">Win 1 in 4 and still profit</td></tr>
+                <tr><td class="rr-good">1:5</td><td class="rr-good">17% wins needed</td><td style="color:var(--text-dim)">Sniper-level — rare but powerful</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">Decision Moment</div>
+          <div class="decision-block" id="dm-${idx}-0">
+            <div class="decision-scenario">You find a setup. Entry: <em>$100</em>. Stop loss: <em>$98</em> (risking $2). Your target: <em>$103</em> (gaining $3). <em>Do you take this trade?</em></div>
+            <div class="decision-opts">
+              <button class="d-opt" id="dm-${idx}-0-0" onclick="decide(${idx},0,0,true,'✅ Correct. Risk $2 to make $3 = 1:1.5 R:R. Not perfect but acceptable for a high-probability setup. Always calculate R:R before entering.')">
+                <div class="d-letter">A</div><div class="d-opt-text">Yes — 1:1.5 R:R is acceptable for a strong setup</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-1" onclick="decide(${idx},0,1,false,'❌ Moving the target higher without chart justification is called "wishful thinking." Set your target based on the next resistance level, not on what R:R you want.')">
+                <div class="d-letter">B</div><div class="d-opt-text">Take it but move my target to $110 for a better R:R</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-2" onclick="decide(${idx},0,2,false,'❌ A 1:1.5 R:R is acceptable, especially with a high-probability setup. Skipping every trade under 1:3 means missing many good opportunities. Know when to be flexible.')">
+                <div class="d-letter">C</div><div class="d-opt-text">Skip it — I only take 1:3 R:R trades minimum</div>
+              </button>
+            </div>
+            <div class="consequence" id="csq-${idx}-0"></div>
+          </div>
+        </div>`;
+    },
+    quiz:[
+      {q:'A trade has a $50 stop loss and a $150 profit target. What is the Risk:Reward ratio?',opts:['1:1','1:2','1:3','3:1'],correct:2,feedback:'R:R = Reward ÷ Risk = $150 ÷ $50 = 3. This is a 1:3 Risk/Reward ratio — one of the best you can find. Risk $50 to potentially make $150.'},
+      {q:'A trader has a 40% win rate. What is the MINIMUM R:R they need to be profitable?',opts:['1:1 — breaking even is fine','1:0.5 — wins cover losses','Better than 1:1.5 — rewards must outweigh losses at a 40% win rate','Win rate does not affect profitability'],correct:2,feedback:'At 40% win rate, you lose 60% of trades. To profit, each win must more than make up for 1.5 losses. A 1:2 R:R means at 40% wins: (4 × $200) - (6 × $100) = $800 - $600 = $200 profit. The math works.'},
+      {q:'Which R:R ratio requires the highest win rate just to break even?',opts:['1:3','1:2','1:1','1:0.5'],correct:3,feedback:'A 1:0.5 R:R (risking $2 to make $1) requires winning 67%+ of your trades just to break even. This is nearly impossible to sustain. Never take trades where the potential loss is larger than the potential gain.'},
+      {q:'You have a 1:3 R:R setup. You win 25% of your trades. Are you profitable?',opts:['No — 25% is too low a win rate','Yes — at 1:3, you only need to win 25% to break even, and any wins above that are profit','Only if you trade more than 20 times per month','Only in bull markets'],correct:1,feedback:'At 1:3 R:R, you break even at a 25% win rate. Above 25% = profitable. This is the power of asymmetric R:R — you can be "wrong" 75% of the time and still make money.'},
+      {q:'Before entering a trade, a trader should:',opts:['Enter immediately to not miss the move','Calculate the R:R ratio first — if it does not meet your minimum, skip the trade','Only calculate R:R after the trade closes','R:R is only for advanced traders'],correct:1,feedback:'Always calculate R:R before entering. If the math does not work, the trade is not worth taking — regardless of how good the setup looks. Discipline means skipping trades that do not meet your criteria, even when you really want to take them.'},
+    ],
+  },
+
+  // ── LESSON 5: THE BLOWUP SCENARIO + DRAWDOWN ──
+  {
+    id:'blowup',
+    emoji:'💀',
+    name:'The Blowup Scenario',
+    color:'#E05252',
+    glow:'rgba(224,82,82,0.08)',
+    subtitle:'WHAT HAPPENS WHEN YOU IGNORE EVERYTHING',
+    desc:'This is not a hypothetical. This happens to real traders every day. Watch what happens when someone ignores every rule we have covered — one decision at a time.',
+    buildContent: function(idx) {
+      return `
+        <div class="mantra" style="margin:0 0 32px 0">
+          <div class="mantra-icon">💀</div>
+          <div class="mantra-text"><strong>"If you don't manage risk, nothing else matters."</strong><br/>This lesson shows exactly what "nothing else matters" looks like in real time.</div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">The Anatomy of a Blown Account</div>
+          <div class="blowup-wrap" id="blowup-wrap">
+            <div class="blowup-header">
+              <div class="blowup-title">Account Blowup Simulator</div>
+              <div class="blowup-sub">Starting balance: $1,000 · Watch it disappear in 6 decisions</div>
+            </div>
+            <div class="blowup-body">
+              <div class="blowup-account">
+                <div class="ba-label">Account Balance</div>
+                <div class="ba-value" id="bu-balance">$1,000.00</div>
+                <div class="ba-bar"><div class="ba-fill" id="bu-bar" style="width:100%"></div></div>
+              </div>
+
+              <div class="blowup-steps" id="blowup-steps">
+                <div class="blowup-step active" id="bstep-0">
+                  <div class="bs-num">1</div>
+                  <div class="bs-content">
+                    <div class="bs-action">Ignore the 1% rule — risk $200 (20%)</div>
+                    <div class="bs-result">Trade loses. <strong>Account: $800</strong></div>
+                  </div>
+                </div>
+                <div class="blowup-step" id="bstep-1">
+                  <div class="bs-num">2</div>
+                  <div class="bs-content">
+                    <div class="bs-action">No stop loss — "I'll watch it"</div>
+                    <div class="bs-result">News drops. Stock falls 30%. <strong>Account: $440</strong></div>
+                  </div>
+                </div>
+                <div class="blowup-step" id="bstep-2">
+                  <div class="bs-num">3</div>
+                  <div class="bs-content">
+                    <div class="bs-action">Revenge trade — risk entire remaining balance</div>
+                    <div class="bs-result">"I can make it all back in one trade." Loses. <strong>Account: $220</strong></div>
+                  </div>
+                </div>
+                <div class="blowup-step" id="bstep-3">
+                  <div class="bs-num">4</div>
+                  <div class="bs-content">
+                    <div class="bs-action">Ignore R:R — takes 1:0.3 trade to "at least make something"</div>
+                    <div class="bs-result">Loses again. <strong>Account: $154</strong></div>
+                  </div>
+                </div>
+                <div class="blowup-step" id="bstep-4">
+                  <div class="bs-num">5</div>
+                  <div class="bs-content">
+                    <div class="bs-action">All-in on a meme stock — "nothing left to lose"</div>
+                    <div class="bs-result">Down 60% on the position. <strong>Account: $62</strong></div>
+                  </div>
+                </div>
+                <div class="blowup-step" id="bstep-5">
+                  <div class="bs-num">6</div>
+                  <div class="bs-content">
+                    <div class="bs-action">One last trade — leveraged, no stop, full balance</div>
+                    <div class="bs-result">Account wiped. <strong>Account: $0</strong></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="blowup-dead" id="blowup-dead">
+                <span class="bd-skull">💀</span>
+                <div class="bd-title">Account Blown</div>
+                <div class="bd-msg">Every single rule was broken. Every single time it cost money. None of these were inevitable — every step had a better choice. <strong>This is why risk management exists.</strong></div>
+                <button class="bd-restart" onclick="restartBlowup()">See It Again ↺</button>
+              </div>
+
+              <button class="blowup-btn" id="blowup-btn" onclick="nextBlowupStep()">Next Decision →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">Drawdown — How to Think About Losses</div>
+          <div class="concept-list">
+            <div class="concept-item" style="--lc-color:#E05252">
+              <div class="ci-title">What is drawdown?</div>
+              <div class="ci-body">Drawdown is the <strong>peak-to-trough decline</strong> in your account. If you go from $10,000 to $8,500, your drawdown is 15%. Every trader has drawdowns — even the best in the world.</div>
+            </div>
+            <div class="concept-item" style="--lc-color:#E05252">
+              <div class="ci-title">Max drawdown limits</div>
+              <div class="ci-body">Set a <strong>daily max loss limit</strong> — most prop firms use 4–5%. If you hit it, you stop trading for the day. No exceptions. This prevents one bad morning from destroying a month of work.</div>
+            </div>
+            <div class="concept-item" style="--lc-color:#E05252">
+              <div class="ci-title">The recovery problem</div>
+              <div class="ci-body">A <strong>10% drawdown</strong> needs 11% to recover. A <strong>25% drawdown</strong> needs 33%. A <strong>50% drawdown</strong> needs 100%. Keep drawdowns small. The math compounds against you the deeper it goes.</div>
+            </div>
+          </div>
+          <div class="rookie-mistake">
+            <div class="rm-icon">⚠️</div>
+            <div class="rm-content">
+              <div class="rm-label">What blows accounts</div>
+              <div class="rm-text"><strong>Trading through a losing streak without stopping.</strong> Three losses in a row? Stop for the day. Review tomorrow. The market will be open again. Your account might not recover if you keep going.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">Decision Moment</div>
+          <div class="decision-block" id="dm-${idx}-0">
+            <div class="decision-scenario">You have lost <em>3 trades in a row</em> this morning. Your account is down <em>3%</em> on the day. You see a setup you like. <em>What do you do?</em></div>
+            <div class="decision-opts">
+              <button class="d-opt" id="dm-${idx}-0-0" onclick="decide(${idx},0,0,false,'❌ Doubling size to "make it back faster" is revenge trading in disguise. You are emotionally compromised after 3 losses. A 4th loss at double size will do serious damage.')">
+                <div class="d-letter">A</div><div class="d-opt-text">Take it with double size — I need to make back my losses faster</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-1" onclick="decide(${idx},0,1,false,'❌ Forcing more trades when you are already down is emotional trading. The setups you "see" after losses are often not there — your brain is looking for reasons to recover, not reasons to trade.')">
+                <div class="d-letter">B</div><div class="d-opt-text">Take it — I need to find more setups to average out my losses today</div>
+              </button>
+              <button class="d-opt" id="dm-${idx}-0-2" onclick="decide(${idx},0,2,true,'✅ Stop for the day. Three losses in a row is a signal. You may be off, the market may be choppy, or conditions changed. Protecting the remaining 97% of your account is more important than recovering 3%. Fight another day.')">
+                <div class="d-letter">C</div><div class="d-opt-text">Stop trading for the day — 3 losses is my daily limit. Review tomorrow.</div>
+              </button>
+            </div>
+            <div class="consequence" id="csq-${idx}-0"></div>
+          </div>
+        </div>`;
+    },
+    quiz:[
+      {q:'A trader loses 3 trades in a row. To recover faster, they double their position size on the next trade. This is called:',opts:['Smart risk management — bigger size = faster recovery','Revenge trading — an emotional response that increases risk at the worst time','Averaging down — a professional technique','Position scaling — a normal part of trading'],correct:1,feedback:'Doubling size after losses is revenge trading — one of the most dangerous behaviors in trading. You are already emotionally compromised from losses, and now you are increasing your risk. This is how 3% drawdowns become 20% blowups.'},
+      {q:'Your account drops from $10,000 to $5,000 (50% drawdown). What percentage gain do you need to return to $10,000?',opts:['50%','75%','100%','25%'],correct:2,feedback:'From $5,000 to $10,000 = 100% gain needed. This is the brutal math of drawdowns — they are not symmetrical. Losing 50% requires a 100% gain to recover. Keeping drawdowns small is far easier than recovering from large ones.'},
+      {q:'What is a "daily max loss limit" and why do prop firms require it?',opts:['The maximum number of trades allowed per day','A pre-set percentage loss that triggers a stop to trading for the day — protects against emotional spiraling','The maximum position size allowed','The daily fee charged by prop firms'],correct:1,feedback:'A daily max loss limit (typically 4–5% for prop firms) forces traders to stop if they hit it. It prevents one bad morning from destroying a month of work. It also protects the firm\'s capital and forces traders to maintain discipline.'},
+      {q:'What happens when a trader removes their stop loss mid-trade because "it looks like it might bounce"?',opts:['This is a smart adjustment based on new information','Their maximum loss is now unlimited — price can continue falling with no exit','The trade automatically becomes profitable','Nothing changes — stops are optional'],correct:1,feedback:'Removing a stop loss mid-trade converts a defined-risk trade into an unlimited-risk trade. Price can continue falling 10%, 30%, 70% — with no automatic exit. This single habit is responsible for more blown accounts than any other mistake.'},
+      {q:'Three rules that ALWAYS apply — no matter how confident you are:',opts:['Use stop losses · Size positions correctly · Never revenge trade','Trade as large as possible · Skip stop losses on high-confidence setups · Average down on losses','Only trade on Mondays · Never use leverage · Always buy at open','Take profits early · Never use stop losses · Only trade one stock'],correct:0,feedback:'These three rules apply on every trade, every day, regardless of confidence: stop losses protect you from catastrophic losses, correct position sizing keeps any loss manageable, and avoiding revenge trading prevents emotional decisions from compounding bad days into blown accounts.'},
+    ],
+  },
+];
+
+// ═══════════════════════════════════════
+// BLOWUP SIMULATOR STATE
+// ═══════════════════════════════════════
+const BLOWUP_STEPS = [
+  {balance: 800,  pct: 80},
+  {balance: 440,  pct: 44},
+  {balance: 220,  pct: 22},
+  {balance: 154,  pct: 15},
+  {balance: 62,   pct: 6},
+  {balance: 0,    pct: 0},
+];
+let blowupStep = 0;
+
+function nextBlowupStep(){
+  if(blowupStep >= BLOWUP_STEPS.length) return;
+  const step = BLOWUP_STEPS[blowupStep];
+  // Update balance
+  const balEl = document.getElementById('bu-balance');
+  const barEl = document.getElementById('bu-bar');
+  if(balEl) balEl.textContent = '$'+step.balance.toFixed(2);
+  if(balEl){ balEl.classList.add('hit'); setTimeout(()=>balEl.classList.remove('hit'),600); }
+  if(barEl){
+    barEl.style.width = step.pct+'%';
+    if(step.pct < 30) barEl.classList.add('low');
+  }
+  // Activate step
+  const stepEl = document.getElementById('bstep-'+blowupStep);
+  if(stepEl){ stepEl.classList.remove('active'); stepEl.classList.add('done'); }
+  blowupStep++;
+  // Activate next step
+  const nextEl = document.getElementById('bstep-'+blowupStep);
+  if(nextEl) nextEl.classList.add('active');
+  // Check end
+  if(blowupStep >= BLOWUP_STEPS.length){
+    const btn = document.getElementById('blowup-btn');
+    if(btn) btn.disabled = true;
+    setTimeout(()=>{
+      const dead = document.getElementById('blowup-dead');
+      if(dead) dead.classList.add('show');
+      if(balEl){ balEl.classList.add('dead'); }
+    }, 800);
+    flashXP('+50 XP — Lesson Learned',true);
+  }
+}
+
+function restartBlowup(){
+  blowupStep = 0;
+  const balEl = document.getElementById('bu-balance');
+  const barEl = document.getElementById('bu-bar');
+  const dead  = document.getElementById('blowup-dead');
+  const btn   = document.getElementById('blowup-btn');
+  if(balEl){ balEl.textContent = '$1,000.00'; balEl.classList.remove('dead','hit'); }
+  if(barEl){ barEl.style.width='100%'; barEl.classList.remove('low'); }
+  if(dead) dead.classList.remove('show');
+  if(btn) btn.disabled = false;
+  for(let i=0;i<6;i++){
+    const s = document.getElementById('bstep-'+i);
+    if(s){ s.classList.remove('active','done'); if(i===0) s.classList.add('active'); }
+  }
+}
+
+// ═══════════════════════════════════════
+// RISK CALCULATOR
+// ═══════════════════════════════════════
+function calcPosition(){
+  const account = parseFloat(document.getElementById('calc-account')?.value)||0;
+  const riskPct = parseFloat(document.getElementById('calc-risk-pct')?.value)||1;
+  const entry   = parseFloat(document.getElementById('calc-entry')?.value)||0;
+  const stop    = parseFloat(document.getElementById('calc-stop')?.value)||0;
+
+  document.getElementById('calc-risk-pct-label').textContent = riskPct+'%';
+
+  const dollarRisk = account * (riskPct/100);
+  const riskPerShare = entry - stop;
+  const shares = riskPerShare > 0 ? Math.floor(dollarRisk / riskPerShare) : 0;
+  const posVal = shares * entry;
+
+  document.getElementById('calc-dollar-risk').textContent = '$'+dollarRisk.toFixed(2);
+  document.getElementById('calc-risk-per-share').textContent = riskPerShare > 0 ? '$'+riskPerShare.toFixed(2) : '—';
+  document.getElementById('calc-shares').textContent = shares > 0 ? shares : '—';
+  document.getElementById('calc-position-val').textContent = posVal > 0 ? '$'+posVal.toLocaleString() : '—';
+
+  // Danger class
+  const sharesEl = document.getElementById('calc-shares');
+  if(sharesEl){ sharesEl.className = 'cri-val '+(riskPct <= 1 ? 'safe' : riskPct <= 2 ? '' : 'danger'); }
+
+  // Warning
+  const warn = document.getElementById('calc-warning');
+  const warnText = document.getElementById('calc-warning-text');
+  if(warn && warnText){
+    if(stop >= entry){
+      warn.classList.add('show');
+      warnText.textContent = '⚠️ Stop must be BELOW entry price for a long trade.';
+    } else if(riskPct > 2){
+      warn.classList.add('show');
+      warnText.textContent = '⚠️ Risk above 2% — this exceeds most professional risk guidelines.';
+    } else {
+      warn.classList.remove('show');
+    }
+  }
+}
+
+// ═══════════════════════════════════════
+// DECISION MOMENTS
+// ═══════════════════════════════════════
+function decide(lessonIdx, dmIdx, optIdx, isCorrect, feedback){
+  // Disable all buttons for this decision
+  let i=0;
+  while(document.getElementById(`dm-${lessonIdx}-${dmIdx}-${i}`)){
+    const btn = document.getElementById(`dm-${lessonIdx}-${dmIdx}-${i}`);
+    btn.disabled = true;
+    if(i === optIdx){
+      btn.classList.add(isCorrect ? 'chosen-correct' : 'chosen-wrong');
+    } else if(!isCorrect && document.getElementById(`dm-${lessonIdx}-${dmIdx}-${i}`)?.textContent.includes('1% of my account') ||
+              !isCorrect && document.getElementById(`dm-${lessonIdx}-${dmIdx}-${i}`)?.textContent.includes('The plan is the plan') ||
+              !isCorrect && document.getElementById(`dm-${lessonIdx}-${dmIdx}-${i}`)?.textContent.includes('ran the formula') ||
+              !isCorrect && document.getElementById(`dm-${lessonIdx}-${dmIdx}-${i}`)?.textContent.includes('acceptable for a strong') ||
+              !isCorrect && document.getElementById(`dm-${lessonIdx}-${dmIdx}-${i}`)?.textContent.includes('daily limit')){
+      btn.classList.add('reveal-correct');
+    }
+    i++;
+  }
+
+  // Show consequence
+  const csqEl = document.getElementById(`csq-${lessonIdx}-${dmIdx}`);
+  if(csqEl){
+    const type = isCorrect ? 'survive' : 'damage';
+    csqEl.className = 'consequence show '+type;
+    csqEl.innerHTML = `
+      <div class="csq-header">
+        <div class="csq-icon">${isCorrect ? '✅' : '❌'}</div>
+        <div class="csq-title">${isCorrect ? 'You Survive to Trade Again' : 'Account Damaged'}</div>
+      </div>
+      <div class="csq-body">${feedback}</div>
+      ${isCorrect ? '<div class="csq-xp">+25 XP</div>' : ''}`;
+    if(isCorrect){
+      flashXP('+25 XP');
+      awardXP(25);
+    }
+  }
+}
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let state={current:0,completed:{},totalXP:0,answers:{},submitted:{}};
+function loadState(){try{const s=JSON.parse(localStorage.getItem('dojo_risk')||'{}');Object.assign(state,s);}catch(e){}}
+function saveState(){try{localStorage.setItem('dojo_risk',JSON.stringify(state));}catch(e){}}
+
+function awardXP(amt){
+  state.totalXP += amt;
+  saveState();
+  document.getElementById('xp-disp').textContent = state.totalXP;
+  document.getElementById('sb-xp').textContent = state.totalXP;
+}
+
+function flashXP(msg, big=false){
+  const el = document.getElementById('xp-flash');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════
+function buildSidebar(){
+  const nav=document.getElementById('sb-nav');
+  nav.innerHTML=LESSONS.map((l,i)=>{
+    const done=state.completed[i]!==undefined,active=i===state.current;
+    let bc='nb-idle',bt=(i+1)+'';
+    if(active&&!done){bc='nb-act';bt='▶';}
+    if(done){bc='nb-done';bt='✓';}
+    const meta=done?`${state.completed[i]}/5 correct`:active?'In progress':'Not started';
+    return `<div class="nav-item${active?' active':''}${done?' completed':''}" onclick="selectLesson(${i})" id="nav-${i}">
+      <div class="nav-dot" style="background:${l.color}"></div>
+      <div class="nav-info"><div class="nav-name">${l.emoji} ${l.name}</div><div class="nav-meta">${meta}</div></div>
+      <div class="nav-badge ${bc}">${bt}</div>
+    </div>`;
+  }).join('');
+  updateProgress();
+}
+
+function updateProgress(){
+  const done=Object.keys(state.completed).length;
+  document.getElementById('sp-txt').textContent=done+' / '+LESSONS.length;
+  document.getElementById('sp-fill').style.width=(done/LESSONS.length*100)+'%';
+  document.getElementById('xp-disp').textContent=state.totalXP;
+  document.getElementById('sb-xp').textContent=state.totalXP;
+}
+
+// ═══════════════════════════════════════
+// BUILD LESSON
+// ═══════════════════════════════════════
+function buildLesson(idx){
+  if(document.getElementById('lesson-'+idx)) return;
+  const l=LESSONS[idx];
+  const area=document.getElementById('content-area');
+  const div=document.createElement('div');
+  div.className='lesson';div.id='lesson-'+idx;
+  div.style.setProperty('--lc-color',l.color);
+  div.style.setProperty('--lc-glow',l.glow);
+
+  div.innerHTML=`
+    <div class="lesson-hero">
+      <div class="hero-eyebrow">Module VI · Lesson ${idx+1} of ${LESSONS.length}</div>
+      <span class="hero-emoji">${l.emoji}</span>
+      <div class="hero-title">${l.name}</div>
+      <div class="hero-sub">${l.subtitle}</div>
+      <p class="hero-desc">${l.desc}</p>
+    </div>
+    <div class="lesson-body">${l.buildContent(idx)}</div>
+    <div class="quiz-section">
+      <div class="quiz-title">Knowledge Check</div>
+      <div class="quiz-sub">5 questions · 50 XP each · 250 XP available</div>
+      ${l.quiz.map((q,qi)=>`
+        <div class="qz-block">
+          <div class="qz-num">Question ${qi+1}</div>
+          <div class="qz-q">${q.q}</div>
+          <div class="qz-opts" id="opts-${idx}-${qi}">
+            ${q.opts.map((o,oi)=>`
+              <button class="qz-opt" id="opt-${idx}-${qi}-${oi}" onclick="pickOpt(${idx},${qi},${oi})">
+                <div class="qz-dot">${String.fromCharCode(65+oi)}</div>
+                <div class="qz-opt-text">${o}</div>
+              </button>`).join('')}
+          </div>
+          <div class="qz-fb" id="fb-${idx}-${qi}"></div>
+        </div>`).join('')}
+      <div class="ornament"><span>◆</span></div>
+      <div class="qz-nav">
+        <button class="btn-sub" id="btn-sub-${idx}" onclick="submitQuiz(${idx})">Submit Answers</button>
+        <button class="btn-next-l" id="btn-next-${idx}" onclick="goNext(${idx})">
+          ${idx<LESSONS.length-1?'Next: '+LESSONS[idx+1].name+' →':'Complete Module ✓'}
+        </button>
+        <button class="btn-ghost" onclick="document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'})">↑ Review</button>
+      </div>
+      <div class="score-box" id="score-${idx}">
+        <div class="score-big" id="sbig-${idx}">0/5</div>
+        <div class="score-lbl">Questions Correct</div>
+        <div class="score-xp" id="sxp-${idx}">+0 XP</div>
+        <div class="score-msg" id="smsg-${idx}"></div>
+      </div>
+    </div>`;
+
+  area.appendChild(div);
+  // Init calculator if this lesson has it
+  if(l.id==='position-sizing') setTimeout(calcPosition, 100);
+  const saved=state.answers[idx]||{};
+  Object.entries(saved).forEach(([qi,oi])=>{document.getElementById(`opt-${idx}-${qi}-${oi}`)?.classList.add('sel');});
+  if(state.submitted[idx]) setTimeout(()=>renderSubmitted(idx),40);
+  checkReady(idx);
+}
+
+function selectLesson(idx){
+  state.current=idx;
+  document.querySelectorAll('.lesson').forEach(l=>l.classList.remove('active'));
+  buildLesson(idx);
+  document.getElementById('lesson-'+idx).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach((n,i)=>n.classList.toggle('active',i===idx));
+  document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'});
+}
+
+function goNext(idx){
+  if(idx<LESSONS.length-1) selectLesson(idx+1);
+  else alert('🛡️ Risk Management complete. You now have the foundation to survive in the markets. Next: Trader DNA Quiz — you are ready for it now.');
+}
+
+// ═══════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════
+function pickOpt(li,qi,oi){
+  if(state.submitted[li]) return;
+  LESSONS[li].quiz[qi].opts.forEach((_,o)=>document.getElementById(`opt-${li}-${qi}-${o}`)?.classList.remove('sel'));
+  document.getElementById(`opt-${li}-${qi}-${oi}`)?.classList.add('sel');
+  if(!state.answers[li]) state.answers[li]={};
+  state.answers[li][qi]=oi;
+  saveState();
+  checkReady(li);
+}
+function checkReady(li){
+  if(state.submitted[li]) return;
+  const all=LESSONS[li].quiz.every((_,qi)=>state.answers[li]?.[qi]!==undefined);
+  document.getElementById('btn-sub-'+li)?.classList.toggle('rdy',all);
+}
+function submitQuiz(li){
+  if(!LESSONS[li].quiz.every((_,qi)=>state.answers[li]?.[qi]!==undefined)) return;
+  state.submitted[li]=true;
+  renderSubmitted(li);
+  let correct=0;
+  LESSONS[li].quiz.forEach((q,qi)=>{if(state.answers[li][qi]===q.correct)correct++;});
+  const xp=correct*50;
+  state.completed[li]=correct;
+  awardXP(xp);
+  saveState();
+  const msgs=['Review the lesson — these rules save accounts.','Getting there — review the ones you missed.','Solid foundation building here.','Strong risk awareness — this will save you money.','Perfect — you understand risk management. 🛡️'];
+  document.getElementById('sbig-'+li).textContent=correct+'/5';
+  document.getElementById('sxp-'+li).textContent='+'+xp+' XP Earned';
+  document.getElementById('smsg-'+li).textContent=msgs[correct]||msgs[2];
+  document.getElementById('score-'+li).classList.add('show');
+  document.getElementById('btn-sub-'+li).style.display='none';
+  document.getElementById('btn-next-'+li).style.display='inline-block';
+  buildSidebar();
+  flashXP('+'+xp+' XP Earned');
+  setTimeout(()=>document.getElementById('score-'+li)?.scrollIntoView({behavior:'smooth',block:'center'}),200);
+}
+function renderSubmitted(li){
+  const ans=state.answers[li]||{};
+  LESSONS[li].quiz.forEach((q,qi)=>{
+    q.opts.forEach((_,oi)=>{
+      const btn=document.getElementById(`opt-${li}-${qi}-${oi}`);
+      if(!btn) return;
+      btn.classList.remove('sel','ok','no');
+      if(oi===q.correct) btn.classList.add('ok');
+      else if(ans[qi]===oi) btn.classList.add('no');
+      btn.disabled=true;
+    });
+    const fb=document.getElementById(`fb-${li}-${qi}`);
+    if(fb){const ok=ans[qi]===q.correct;fb.className='qz-fb show '+(ok?'ok':'no');fb.textContent=(ok?'✓ ':'✗ Correct: '+q.opts[q.correct]+'. ')+q.feedback;}
+  });
+  document.getElementById('btn-sub-'+li).style.display='none';
+  document.getElementById('btn-next-'+li).style.display='inline-block';
+  if(state.completed[li]!==undefined){
+    const c=state.completed[li];
+    const msgs=['Review the lesson.','Getting there.','Solid foundation.','Strong awareness.','Perfect 🛡️'];
+    document.getElementById('sbig-'+li).textContent=c+'/5';
+    document.getElementById('sxp-'+li).textContent='+'+(c*50)+' XP Earned';
+    document.getElementById('smsg-'+li).textContent=msgs[c]||msgs[2];
+    document.getElementById('score-'+li)?.classList.add('show');
+  }
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+loadState();
+buildSidebar();
+buildLesson(state.current);
+document.getElementById('lesson-'+state.current).classList.add('active');
+updateProgress();
+</script>
+</body>
+</html>
