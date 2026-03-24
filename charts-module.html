@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chart Reading · The Trading Dojo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;
+  --ink:#0A0A0F;--ink-3:#1A1A24;--ink-4:#22222E;
+  --panel:#13131C;--panel-2:#0F0F18;--panel-3:#111119;
+  --border:rgba(201,168,76,0.15);--border-b:rgba(201,168,76,0.5);
+  --text:#E8E0CC;--text-dim:#8A8070;--text-faint:#3A3630;
+  --green:#3DBA72;--red:#E05252;--teal:#4CC9A8;--purple:#8B6FD4;--blue:#4C8BC9;
+  --mono:'Share Tech Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.92);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;}
+.logo{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);display:flex;align-items:center;gap:9px;cursor:pointer;text-decoration:none;}
+.logo-mark{width:28px;height:28px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.85rem;position:relative;flex-shrink:0;}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.22);}
+.topbar-center{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
+.xp-chip{background:var(--panel);border:1px solid var(--border);padding:6px 14px;font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--gold);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+
+/* LAYOUT */
+.body-layout{display:flex;flex:1;min-height:0;}
+
+/* SIDEBAR */
+.sidebar{width:268px;flex-shrink:0;border-right:1px solid var(--border);background:var(--panel-2);display:flex;flex-direction:column;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.sb-header{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
+.sb-title{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;}
+.sb-sub{font-size:0.85rem;color:var(--text-dim);font-weight:300;}
+.sb-progress{margin-top:14px;}
+.sp-row{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:5px;}
+.sp-row span{color:var(--gold);}
+.sp-track{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.6s ease;}
+.sb-nav{padding:10px 0;flex:1;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:12px 18px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
+.nav-item:hover{background:rgba(201,168,76,0.04);border-left-color:rgba(201,168,76,0.25);}
+.nav-item.active{background:rgba(201,168,76,0.07);border-left-color:var(--gold);}
+.nav-color-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.nav-info{flex:1;min-width:0;}
+.nav-name{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--text);}
+.nav-item.active .nav-name{color:var(--gold);}
+.nav-meta{font-size:0.63rem;color:var(--text-dim);margin-top:2px;}
+.nav-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.52rem;flex-shrink:0;font-family:'Cinzel',serif;}
+.nb-idle{background:var(--ink-4);color:var(--text-faint);}
+.nb-active{background:var(--gold);color:var(--ink);font-weight:700;animation:pb 2s ease-in-out infinite;}
+.nb-done{background:rgba(76,201,168,0.18);color:var(--teal);border:1px solid rgba(76,201,168,0.35);}
+@keyframes pb{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{box-shadow:0 0 0 5px rgba(201,168,76,0)}}
+.sb-footer{padding:14px 18px;border-top:1px solid var(--border);}
+.sb-xp{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.14em;color:var(--text-faint);}
+.sb-xp span{color:var(--gold);font-size:0.82rem;}
+
+/* CONTENT */
+.content-area{flex:1;overflow-y:auto;}
+.lesson{display:none;animation:fu 0.38s ease forwards;}
+.lesson.active{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.lesson-hero{padding:44px 52px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.lesson-hero::after{content:'';position:absolute;top:0;right:0;width:320px;height:100%;background:radial-gradient(ellipse at right,var(--lc-glow,rgba(201,168,76,0.05)) 0%,transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:14px;}
+.hero-emoji{font-size:3rem;line-height:1;display:block;margin-bottom:14px;filter:drop-shadow(0 0 18px var(--lc-glow,rgba(201,168,76,0.3)));}
+.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:900;color:var(--lc-color,var(--gold));line-height:1.1;margin-bottom:6px;}
+.hero-sub{font-family:'Cinzel',serif;font-size:0.8rem;letter-spacing:0.18em;color:var(--text-dim);margin-bottom:16px;}
+.hero-desc{font-size:1.05rem;font-weight:300;color:var(--text-dim);line-height:1.68;max-width:580px;}
+.hero-desc strong{color:var(--text);font-weight:500;}
+.hero-quote{margin-top:18px;padding:13px 18px;border-left:2px solid var(--lc-color,var(--gold));font-family:'Cinzel',serif;font-size:0.8rem;font-style:italic;color:var(--text-dim);}
+
+/* LESSON BODY */
+.lesson-body{padding:44px 52px;max-width:940px;}
+.section-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.28em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.section-block{margin-bottom:44px;}
+
+/* INTERACTIVE DIAGRAM */
+.diagram-wrap{background:var(--panel-3);border:1px solid var(--border);overflow:hidden;}
+.diagram-header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.dh-title{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;}
+.dh-controls{display:flex;gap:6px;}
+.dh-btn{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;padding:5px 12px;background:transparent;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;transition:all 0.18s;}
+.dh-btn:hover,.dh-btn.active{border-color:rgba(201,168,76,0.4);color:var(--gold);background:rgba(201,168,76,0.06);}
+.diagram-svg-wrap{padding:24px;overflow-x:auto;}
+.diagram-svg-wrap svg{display:block;margin:0 auto;}
+.diagram-caption{padding:12px 20px;border-top:1px solid var(--border);font-size:0.82rem;color:var(--text-dim);font-weight:300;line-height:1.5;}
+.diagram-caption strong{color:var(--gold);}
+
+/* PATTERN GRID */
+.pattern-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.pattern-card{background:var(--panel);border:1px solid var(--border);padding:18px;transition:border-color 0.2s;}
+.pattern-card:hover{border-color:rgba(201,168,76,0.3);}
+.pc-svg{margin-bottom:12px;}
+.pc-name{font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.pc-signal{font-size:0.7rem;font-family:'Cinzel',serif;letter-spacing:0.1em;margin-bottom:6px;}
+.pc-signal.bull{color:var(--green);}
+.pc-signal.bear{color:var(--red);}
+.pc-signal.neutral{color:var(--gold-dim);}
+.pc-desc{font-size:0.85rem;color:var(--text-dim);line-height:1.5;font-weight:300;}
+
+/* EXAMPLE BOX */
+.example-box{background:var(--panel);border:1px solid var(--border);padding:28px 32px;position:relative;}
+.example-box::before{content:'REAL EXAMPLE';position:absolute;top:-9px;left:20px;background:var(--panel);padding:0 8px;font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold-dim);}
+.ex-scenario{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;color:var(--lc-color,var(--gold));margin-bottom:12px;letter-spacing:0.06em;}
+.ex-text{font-size:0.97rem;line-height:1.7;color:var(--text-dim);font-weight:300;}
+.ex-text strong{color:var(--text);font-weight:500;}
+.ex-callout{margin-top:14px;background:rgba(201,168,76,0.04);border:1px solid var(--border);padding:13px 16px;display:flex;gap:10px;}
+.ec-icon{font-size:1rem;line-height:1.4;flex-shrink:0;}
+.ec-text{font-size:0.87rem;color:var(--text-dim);line-height:1.5;}
+.ec-text strong{color:var(--gold);font-weight:600;}
+
+/* GLOSSARY */
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:11px;}
+.glossary-item{background:var(--panel);border:1px solid var(--border);padding:14px 16px;transition:border-color 0.2s;}
+.glossary-item:hover{border-color:rgba(201,168,76,0.3);}
+.gi-term{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;color:var(--lc-color,var(--gold));margin-bottom:4px;}
+.gi-def{font-size:0.86rem;color:var(--text-dim);line-height:1.5;font-weight:300;}
+
+/* QUIZ */
+.quiz-section{background:var(--panel-2);border-top:1px solid var(--border);padding:44px 52px;}
+.quiz-title{font-family:'Cinzel Decorative',serif;font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.quiz-sub{font-size:0.92rem;color:var(--text-dim);font-weight:300;margin-bottom:32px;}
+.qz-block{margin-bottom:24px;}
+.qz-num{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:8px;}
+.qz-q{font-size:1.02rem;font-weight:500;color:var(--text);line-height:1.55;margin-bottom:13px;}
+.qz-q em{color:var(--gold);font-style:normal;font-weight:600;}
+.qz-opts{display:flex;flex-direction:column;gap:7px;}
+.qz-opt{background:var(--panel);border:1px solid var(--border);padding:12px 17px;cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:12px;transition:all 0.17s;width:100%;}
+.qz-opt:hover{border-color:rgba(201,168,76,0.38);background:var(--ink-3);transform:translateX(3px);}
+.qz-opt.sel{border-color:var(--gold);background:rgba(201,168,76,0.07);}
+.qz-opt.ok{border-color:var(--teal)!important;background:rgba(76,201,168,0.07)!important;}
+.qz-opt.no{border-color:var(--red)!important;background:rgba(224,82,82,0.07)!important;}
+.qz-opt:disabled{cursor:default;transform:none!important;}
+.qz-dot{width:22px;height:22px;border:1px solid var(--border-b);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.54rem;font-family:'Cinzel',serif;transition:all 0.17s;margin-top:1px;}
+.qz-opt.sel .qz-dot{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+.qz-opt.ok .qz-dot{background:var(--teal);border-color:var(--teal);color:var(--ink);}
+.qz-opt.no .qz-dot{background:var(--red);border-color:var(--red);color:#fff;}
+.qz-opt-text{font-size:0.9rem;color:var(--text-dim);line-height:1.45;}
+.qz-opt:hover .qz-opt-text,.qz-opt.sel .qz-opt-text{color:var(--text);}
+.qz-fb{margin-top:8px;padding:10px 14px;font-size:0.86rem;line-height:1.5;display:none;}
+.qz-fb.show{display:block;}
+.qz-fb.ok{background:rgba(76,201,168,0.07);border:1px solid rgba(76,201,168,0.2);color:var(--teal);}
+.qz-fb.no{background:rgba(224,82,82,0.07);border:1px solid rgba(224,82,82,0.2);color:#E87878;}
+.qz-nav{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:6px;}
+.btn-sub{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.17em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:12px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;opacity:0.38;pointer-events:none;}
+.btn-sub.rdy{opacity:1;pointer-events:all;}
+.btn-sub.rdy:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(201,168,76,0.22);}
+.btn-next-l{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:12px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;display:none;}
+.btn-next-l:hover{transform:translateY(-2px);}
+.btn-ghost{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);background:transparent;border:1px solid var(--border-b);padding:11px 24px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;}
+.btn-ghost:hover{background:rgba(201,168,76,0.06);}
+.score-box{display:none;background:var(--panel);border:1px solid var(--border);padding:24px 28px;margin-top:24px;text-align:center;animation:fu 0.38s ease;}
+.score-box.show{display:block;}
+.score-big{font-family:'Cinzel Decorative',serif;font-size:2.6rem;font-weight:900;color:var(--gold);line-height:1;}
+.score-lbl{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.17em;color:var(--text-dim);margin-top:5px;}
+.score-xp{display:inline-block;margin-top:11px;padding:6px 16px;background:rgba(201,168,76,0.09);border:1px solid var(--border-b);font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);}
+.score-msg{margin-top:12px;font-size:0.91rem;color:var(--text-dim);font-weight:300;line-height:1.5;}
+.ornament{display:flex;align-items:center;gap:12px;margin:28px 0;}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;background:var(--border);}
+.ornament span{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.2em;color:var(--text-faint);}
+
+@media(max-width:768px){
+  .sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);}
+  .body-layout{flex-direction:column;}
+  .lesson-hero,.lesson-body,.quiz-section{padding-left:22px;padding-right:22px;}
+}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <a class="logo" href="index.html"><div class="logo-mark">⚔</div>The Trading Dojo</a>
+    <div class="topbar-center">Module V · Chart Reading</div>
+    <div class="topbar-right"><div class="xp-chip">⚡ <span id="xp-disp">0</span> XP</div></div>
+  </div>
+
+  <div class="body-layout">
+    <aside class="sidebar">
+      <div class="sb-header">
+        <div class="sb-title">Module V</div>
+        <div class="sb-sub">Chart Reading</div>
+        <div class="sb-progress">
+          <div class="sp-row">Progress <span id="sp-txt">0 / 6</span></div>
+          <div class="sp-track"><div class="sp-fill" id="sp-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="sb-nav" id="sb-nav"></div>
+      <div class="sb-footer"><div class="sb-xp">Module XP: <span id="sb-xp">0</span></div></div>
+    </aside>
+    <div class="content-area" id="content-area"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+// SVG DIAGRAM BUILDERS
+// ═══════════════════════════════════
+
+function buildCandlestickDiagram(type='both'){
+  const W=560,H=300;
+  // Bullish candle (green) - price went UP
+  // Bearish candle (red) - price went DOWN
+  const candles=[
+    {x:80, o:200,c:120,h:100,l:230, bull:true,  label:'Bullish'},
+    {x:240,o:120,c:200,h:100,l:220, bull:false, label:'Bearish'},
+  ];
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  // Grid
+  for(let i=0;i<5;i++){
+    const y=40+i*50;
+    svg+=`<line x1="40" y1="${y}" x2="${W-40}" y2="${y}" stroke="rgba(201,168,76,0.06)" stroke-width="1"/>`;
+  }
+  candles.forEach(c=>{
+    const col=c.bull?'#3DBA72':'#E05252';
+    const bx=c.x, bw=80;
+    const by=Math.min(c.o,c.c), bh=Math.abs(c.o-c.c)||4;
+    // Wick
+    svg+=`<line x1="${bx+bw/2}" y1="${c.h}" x2="${bx+bw/2}" y2="${c.l}" stroke="${col}" stroke-width="2.5"/>`;
+    // Body
+    svg+=`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" fill="${col}" rx="2" opacity="0.9"/>`;
+    // Label
+    svg+=`<text x="${bx+bw/2}" y="${H-18}" text-anchor="middle" fill="${col}" font-size="13" font-family="Cinzel,serif" font-weight="700">${c.label}</text>`;
+  });
+  // Annotations for bullish
+  const bc=candles[0];
+  svg+=`<line x1="${bc.x+bc.label.length}" y1="${bc.h+4}" x2="${bc.x-24}" y2="${bc.h-10}" stroke="rgba(201,168,76,0.4)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  svg+=`<text x="${bc.x-28}" y="${bc.h-14}" text-anchor="end" fill="rgba(201,168,76,0.7)" font-size="11">High (wick top)</text>`;
+  svg+=`<line x1="${bc.x+bc.label.length}" y1="${bc.l-4}" x2="${bc.x-24}" y2="${bc.l+10}" stroke="rgba(201,168,76,0.4)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  svg+=`<text x="${bc.x-28}" y="${bc.l+14}" text-anchor="end" fill="rgba(201,168,76,0.7)" font-size="11">Low (wick bottom)</text>`;
+  svg+=`<line x1="${bc.x+2}" y1="${Math.min(bc.o,bc.c)+Math.abs(bc.o-bc.c)/2}" x2="${bc.x-24}" y2="${Math.min(bc.o,bc.c)+Math.abs(bc.o-bc.c)/2}" stroke="rgba(61,186,114,0.5)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  svg+=`<text x="${bc.x-28}" y="${Math.min(bc.o,bc.c)+Math.abs(bc.o-bc.c)/2+4}" text-anchor="end" fill="rgba(61,186,114,0.8)" font-size="11">Body (open→close)</text>`;
+  // Annotations for bearish
+  const rc=candles[1];
+  svg+=`<text x="${rc.x+110}" y="${rc.h-14}" fill="rgba(224,82,82,0.7)" font-size="11">High</text>`;
+  svg+=`<line x1="${rc.x+82}" y1="${rc.h+4}" x2="${rc.x+108}" y2="${rc.h-10}" stroke="rgba(224,82,82,0.4)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  svg+=`<text x="${rc.x+110}" y="${Math.min(rc.o,rc.c)+Math.abs(rc.o-rc.c)/2+4}" fill="rgba(224,82,82,0.8)" font-size="11">Body</text>`;
+  svg+=`<text x="${rc.x+110}" y="${rc.l+14}" fill="rgba(224,82,82,0.7)" font-size="11">Low</text>`;
+  svg+='</svg>';
+  return svg;
+}
+
+function buildSupportResistanceDiagram(){
+  const W=560,H=280;
+  const prices=[180,160,175,145,162,140,158,138,155,170,155,175,160,178,162,180];
+  const minP=130,maxP=200,pad={l:50,r:30,t:20,b:20};
+  const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  const px=(i)=>pad.l+(i/(prices.length-1))*iW;
+  const py=(v)=>pad.t+((maxP-v)/(maxP-minP))*iH;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  // Grid
+  [140,155,170].forEach(v=>{
+    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>`;
+    svg+=`<text x="${pad.l-6}" y="${py(v)+4}" text-anchor="end" fill="rgba(201,168,76,0.3)" font-size="10" font-family="Share Tech Mono,monospace">$${v}</text>`;
+  });
+  // Support line at 140
+  const sy=py(140);
+  svg+=`<line x1="${pad.l}" y1="${sy}" x2="${W-pad.r}" y2="${sy}" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.7"/>`;
+  svg+=`<text x="${W-pad.r+4}" y="${sy+4}" fill="#3DBA72" font-size="11" font-family="Cinzel,serif">Support</text>`;
+  // Resistance line at 178
+  const ry=py(178);
+  svg+=`<line x1="${pad.l}" y1="${ry}" x2="${W-pad.r}" y2="${ry}" stroke="#E05252" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.7"/>`;
+  svg+=`<text x="${W-pad.r+4}" y="${ry+4}" fill="#E05252" font-size="11" font-family="Cinzel,serif">Resistance</text>`;
+  // Price line
+  const pts=prices.map((v,i)=>`${px(i)},${py(v)}`).join(' ');
+  svg+=`<polyline points="${pts}" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  // Bounce dots at support
+  [3,7].forEach(i=>{
+    svg+=`<circle cx="${px(i)}" cy="${py(prices[i])}" r="5" fill="none" stroke="#3DBA72" stroke-width="2"/>`;
+  });
+  // Rejection dots at resistance
+  [0,13].forEach(i=>{
+    svg+=`<circle cx="${px(i)}" cy="${py(prices[i])}" r="5" fill="none" stroke="#E05252" stroke-width="2"/>`;
+  });
+  // Price dots
+  prices.forEach((v,i)=>{
+    svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="#C9A84C"/>`;
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+function buildTrendlineDiagram(){
+  const W=560,H=280;
+  const pad={l:50,r:40,t:20,b:30};
+  const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  // Uptrend prices (higher highs, higher lows)
+  const upPrices=[100,115,108,128,120,140,132,155,145,162,152,170];
+  const minP=90,maxP=180;
+  const px=(i,len)=>pad.l+(i/(len-1))*iW;
+  const py=(v)=>pad.t+((maxP-v)/(maxP-minP))*iH;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  // Grid
+  [100,130,160].forEach(v=>{
+    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>`;
+    svg+=`<text x="${pad.l-6}" y="${py(v)+4}" text-anchor="end" fill="rgba(201,168,76,0.3)" font-size="10" font-family="Share Tech Mono,monospace">$${v}</text>`;
+  });
+  // Trendline (support line connecting lows)
+  const lows=[[0,100],[2,108],[4,120],[6,132],[8,145],[10,152]];
+  const tl1x=px(lows[0][0],upPrices.length),tl1y=py(lows[0][1]);
+  const tl2x=px(lows[lows.length-1][0],upPrices.length),tl2y=py(lows[lows.length-1][1]);
+  svg+=`<line x1="${tl1x}" y1="${tl1y}" x2="${tl2x+40}" y2="${tl2y-18}" stroke="#3DBA72" stroke-width="2" stroke-dasharray="7 3" opacity="0.8"/>`;
+  svg+=`<text x="${tl2x+44}" y="${tl2y-14}" fill="#3DBA72" font-size="11" font-family="Cinzel,serif">Uptrend line</text>`;
+  // Price line
+  const pts=upPrices.map((v,i)=>`${px(i,upPrices.length)},${py(v)}`).join(' ');
+  svg+=`<polyline points="${pts}" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  // Higher highs annotation
+  [[1,115],[3,128],[5,140],[7,155],[9,162],[11,170]].forEach(([i,v],idx)=>{
+    if(idx>0){
+      svg+=`<circle cx="${px(i,upPrices.length)}" cy="${py(v)}" r="4" fill="#C9A84C" opacity="0.6"/>`;
+    }
+  });
+  // HH / HL labels
+  svg+=`<text x="${px(1,upPrices.length)}" y="${py(115)-8}" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-size="10">HH</text>`;
+  svg+=`<text x="${px(3,upPrices.length)}" y="${py(128)-8}" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-size="10">HH</text>`;
+  svg+=`<text x="${px(2,upPrices.length)}" y="${py(108)+16}" text-anchor="middle" fill="rgba(61,186,114,0.6)" font-size="10">HL</text>`;
+  svg+=`<text x="${px(4,upPrices.length)}" y="${py(120)+16}" text-anchor="middle" fill="rgba(61,186,114,0.6)" font-size="10">HL</text>`;
+  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-size="11" font-family="Cinzel,serif">UPTREND: Higher Highs (HH) + Higher Lows (HL)</text>`;
+  // Price dots
+  upPrices.forEach((v,i)=>{
+    svg+=`<circle cx="${px(i,upPrices.length)}" cy="${py(v)}" r="2.5" fill="#C9A84C"/>`;
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+function buildVolumeDiagram(){
+  const W=560,H=300;
+  const bars=[
+    {v:40,bull:true},{v:55,bull:true},{v:35,bull:false},{v:80,bull:true},{v:90,bull:true},
+    {v:30,bull:false},{v:25,bull:false},{v:70,bull:false},{v:85,bull:false},{v:45,bull:true},
+    {v:50,bull:true},{v:65,bull:true},
+  ];
+  const maxV=100,chartH=140,volH=80;
+  const pad={l:50,r:30,t:20};
+  const bw=32,gap=10;
+  const totalW=bars.length*(bw+gap);
+  const startX=(W-totalW)/2;
+  // Price sim
+  let price=150;
+  const prices=bars.map(b=>{price+=b.bull?(Math.random()*8+2):-(Math.random()*6+1);return Math.round(price);});
+  const minP=Math.min(...prices)-5,maxP=Math.max(...prices)+5;
+  const px=(i)=>startX+i*(bw+gap)+bw/2;
+  const py=(v)=>pad.t+((maxP-v)/(maxP-minP))*chartH;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  // Divider
+  svg+=`<line x1="${pad.l}" y1="${pad.t+chartH+16}" x2="${W-pad.r}" y2="${pad.t+chartH+16}" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>`;
+  svg+=`<text x="${pad.l-6}" y="${pad.t+chartH+28}" text-anchor="end" fill="rgba(201,168,76,0.4)" font-size="10" font-family="Cinzel,serif">VOL</text>`;
+  // Volume bars
+  bars.forEach((b,i)=>{
+    const bh=(b.v/maxV)*volH;
+    const by=H-20-bh;
+    const col=b.bull?'rgba(61,186,114,0.5)':'rgba(224,82,82,0.5)';
+    svg+=`<rect x="${startX+i*(bw+gap)}" y="${by}" width="${bw}" height="${bh}" fill="${col}" rx="1"/>`;
+  });
+  // Highlight high volume bars
+  [3,4,7,8].forEach(i=>{
+    svg+=`<rect x="${startX+i*(bw+gap)-2}" y="${H-20-(bars[i].v/maxV)*volH-4}" width="${bw+4}" height="4" fill="${bars[i].bull?'#3DBA72':'#E05252'}" rx="1" opacity="0.8"/>`;
+  });
+  // Price line
+  const pts=prices.map((v,i)=>`${px(i)},${py(v)}`).join(' ');
+  svg+=`<polyline points="${pts}" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  prices.forEach((v,i)=>{svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="#C9A84C"/>`;});
+  // Label
+  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-size="11" font-family="Cinzel,serif">High volume confirms price moves · Low volume = weak signal</text>`;
+  svg+='</svg>';
+  return svg;
+}
+
+function buildMovingAvgDiagram(){
+  const W=560,H=280;
+  const prices=[150,153,148,156,152,159,155,162,158,165,161,168,164,171,167,174,170,177,173,180];
+  const sma20=prices.map((_,i)=>i>=4?prices.slice(i-4,i+1).reduce((a,b)=>a+b,0)/5:null);
+  const sma50=prices.map((_,i)=>i>=9?prices.slice(i-9,i+1).reduce((a,b)=>a+b,0)/10:null);
+  const minP=140,maxP=188;
+  const pad={l:50,r:50,t:20,b:30};
+  const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  const px=(i)=>pad.l+(i/(prices.length-1))*iW;
+  const py=(v)=>pad.t+((maxP-v)/(maxP-minP))*iH;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  // Grid
+  [150,160,170,180].forEach(v=>{
+    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>`;
+    svg+=`<text x="${pad.l-6}" y="${py(v)+4}" text-anchor="end" fill="rgba(201,168,76,0.3)" font-size="10" font-family="Share Tech Mono,monospace">$${v}</text>`;
+  });
+  // Price line
+  const pts=prices.map((v,i)=>`${px(i)},${py(v)}`).join(' ');
+  svg+=`<polyline points="${pts}" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 2"/>`;
+  // SMA 20 (fast - teal)
+  const sma20pts=sma20.map((v,i)=>v?`${px(i)},${py(v)}`:null).filter(Boolean).join(' ');
+  svg+=`<polyline points="${sma20pts}" fill="none" stroke="${'#4CC9A8'}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  svg+=`<text x="${W-pad.r+4}" y="${py(sma20[sma20.length-1])+4}" fill="#4CC9A8" font-size="11" font-family="Cinzel,serif">SMA 20</text>`;
+  // SMA 50 (purple)
+  const sma50pts=sma50.map((v,i)=>v?`${px(i)},${py(v)}`:null).filter(Boolean).join(' ');
+  svg+=`<polyline points="${sma50pts}" fill="none" stroke="${'#8B6FD4'}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  svg+=`<text x="${W-pad.r+4}" y="${py(sma50[sma50.length-1])+4}" fill="#8B6FD4" font-size="11" font-family="Cinzel,serif">SMA 50</text>`;
+  // Price dots
+  prices.forEach((v,i)=>{svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2" fill="rgba(201,168,76,0.7)"/>`;});
+  // Golden cross annotation (where fast crosses above slow)
+  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-size="11" font-family="Cinzel,serif">Dashed = price · Teal = SMA 20 (fast) · Purple = SMA 50 (slow)</text>`;
+  svg+='</svg>';
+  return svg;
+}
+
+function buildRSIDiagram(){
+  const W=560,H=300;
+  const rsiv=[45,52,58,65,70,75,78,72,68,62,55,48,42,38,32,28,35,42,50,55];
+  const pad={l:50,r:30,t:20,b:20};
+  const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  const px=(i)=>pad.l+(i/(rsiv.length-1))*iW;
+  const py=(v)=>pad.t+((100-v)/100)*iH;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  // Overbought zone (70+)
+  const oy=py(70),obh=py(0)-py(70);
+  svg+=`<rect x="${pad.l}" y="${pad.t}" width="${iW}" height="${oy-pad.t}" fill="rgba(224,82,82,0.06)" rx="0"/>`;
+  // Oversold zone (0-30)
+  const osY=py(30);
+  svg+=`<rect x="${pad.l}" y="${osY}" width="${iW}" height="${H-pad.b-osY}" fill="rgba(61,186,114,0.06)" rx="0"/>`;
+  // Level lines
+  [[70,'rgba(224,82,82,0.5)','Overbought (70)'],[50,'rgba(201,168,76,0.25)','Midline (50)'],[30,'rgba(61,186,114,0.5)','Oversold (30)']].forEach(([v,col,lbl])=>{
+    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="${col}" stroke-width="1.2" stroke-dasharray="5 3"/>`;
+    svg+=`<text x="${W-pad.r+4}" y="${py(v)+4}" fill="${col}" font-size="11" font-family="Cinzel,serif">${lbl}</text>`;
+  });
+  // RSI line
+  const pts=rsiv.map((v,i)=>`${px(i)},${py(v)}`).join(' ');
+  svg+=`<polyline points="${pts}" fill="none" stroke="#C9A84C" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  // Overbought highlight
+  rsiv.forEach((v,i)=>{
+    if(v>=70) svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="4" fill="rgba(224,82,82,0.5)" stroke="#E05252" stroke-width="1.5"/>`;
+    else if(v<=30) svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="4" fill="rgba(61,186,114,0.5)" stroke="#3DBA72" stroke-width="1.5"/>`;
+    else svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="#C9A84C"/>`;
+  });
+  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-size="11" font-family="Cinzel,serif">RSI 0–100 · Red zone = overbought · Green zone = oversold</text>`;
+  svg+='</svg>';
+  return svg;
+}
+
+// ═══════════════════════════════════
+// CANDLESTICK PATTERN SVGs
+// ═══════════════════════════════════
+function doji(){
+  return `<svg viewBox="0 0 60 80" width="60" height="80"><line x1="30" y1="5" x2="30" y2="75" stroke="#C9A84C" stroke-width="2"/><rect x="10" y="35" width="40" height="4" fill="#C9A84C" rx="1"/></svg>`;
+}
+function hammer(){
+  return `<svg viewBox="0 0 60 90" width="60" height="90"><line x1="30" y1="5" x2="30" y2="20" stroke="#3DBA72" stroke-width="2"/><rect x="15" y="20" width="30" height="20" fill="#3DBA72" rx="2"/><line x1="30" y1="40" x2="30" y2="85" stroke="#3DBA72" stroke-width="2"/></svg>`;
+}
+function shootingStar(){
+  return `<svg viewBox="0 0 60 90" width="60" height="90"><line x1="30" y1="5" x2="30" y2="50" stroke="#E05252" stroke-width="2"/><rect x="15" y="50" width="30" height="20" fill="#E05252" rx="2"/><line x1="30" y1="70" x2="30" y2="80" stroke="#E05252" stroke-width="2"/></svg>`;
+}
+function engulfingBull(){
+  return `<svg viewBox="0 0 80 90" width="80" height="90"><rect x="10" y="30" width="24" height="30" fill="#E05252" rx="2"/><line x1="22" y1="15" x2="22" y2="30" stroke="#E05252" stroke-width="2"/><line x1="22" y1="60" x2="22" y2="75" stroke="#E05252" stroke-width="2"/><rect x="46" y="20" width="24" height="50" fill="#3DBA72" rx="2"/><line x1="58" y1="10" x2="58" y2="20" stroke="#3DBA72" stroke-width="2"/><line x1="58" y1="70" x2="58" y2="80" stroke="#3DBA72" stroke-width="2"/></svg>`;
+}
+function insideBar(){
+  return `<svg viewBox="0 0 80 90" width="80" height="90"><rect x="5" y="15" width="30" height="60" fill="rgba(201,168,76,0.4)" stroke="#C9A84C" stroke-width="1.5" rx="2"/><rect x="46" y="28" width="22" height="35" fill="rgba(201,168,76,0.2)" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="3 2" rx="2"/></svg>`;
+}
+function marubozu(){
+  return `<svg viewBox="0 0 60 80" width="60" height="80"><rect x="12" y="10" width="36" height="60" fill="#3DBA72" rx="2"/></svg>`;
+}
+
+// ═══════════════════════════════════
+// DATA
+// ═══════════════════════════════════
+const LESSONS = [
+  {
+    id:'candlesticks', emoji:'🕯️', name:'Candlesticks',
+    color:'#C9A84C', glow:'rgba(201,168,76,0.06)',
+    subtitle:'THE LANGUAGE OF PRICE',
+    desc:'A <strong>candlestick</strong> is the most fundamental unit of a price chart. Every single candle tells a complete story about what happened in a given time period — who was in control, how hard they fought, and who won.',
+    quote:'"Learn to read one candle and you can read the whole story of a stock."',
+    diagramFn: buildCandlestickDiagram,
+    diagramCaption:'<strong>Bullish candle (green):</strong> Close was HIGHER than open — buyers won. <strong>Bearish candle (red):</strong> Close was LOWER than open — sellers won. The <strong>wicks</strong> show the highest and lowest prices reached during that period.',
+    concept:[
+      {title:'The body',desc:'The wide rectangular part of the candle. It shows the range between the <strong>open price</strong> and the <strong>close price</strong>. A tall body means a strong move. A tiny body means indecision.'},
+      {title:'The wicks (shadows)',desc:'The thin lines extending above and below the body. The top wick shows the highest price reached. The bottom wick shows the lowest. Long wicks mean price tried to go there but got rejected.'},
+      {title:'Timeframes',desc:'One candle = one time period. On a <strong>daily chart</strong>, each candle is one day. On a <strong>1-minute chart</strong>, each candle is one minute. Same rules, different zoom level.'},
+      {title:'Color coding',desc:'<strong>Green (or white):</strong> Close > Open = buyers in control. <strong>Red (or black):</strong> Close < Open = sellers in control. Some traders flip these — always check the platform settings.'},
+    ],
+    patterns:[
+      {svg:doji(),   name:'Doji',            signal:'neutral', signalText:'INDECISION', desc:'Open and close are nearly equal. Neither buyers nor sellers won. Often signals a potential reversal.'},
+      {svg:hammer(), name:'Hammer',           signal:'bull',    signalText:'BULLISH',    desc:'Small body at top, long lower wick. Sellers pushed price way down but buyers fought back. Bullish reversal signal.'},
+      {svg:shootingStar(), name:'Shooting Star', signal:'bear', signalText:'BEARISH',   desc:'Small body at bottom, long upper wick. Buyers pushed price up but sellers rejected it hard. Bearish reversal signal.'},
+      {svg:engulfingBull(), name:'Bullish Engulfing', signal:'bull', signalText:'STRONG BULLISH', desc:'Large green candle completely engulfs the previous red candle. Strong signal that buyers have taken control.'},
+      {svg:insideBar(), name:'Inside Bar', signal:'neutral', signalText:'CONSOLIDATION', desc:'Second candle fits entirely inside the first. The market is coiling — a big breakout often follows.'},
+      {svg:marubozu(), name:'Marubozu', signal:'bull', signalText:'VERY BULLISH', desc:'No wicks at all. Pure green body. Buyers were in complete control for the entire period. Very strong signal.'},
+    ],
+    example:{
+      scenario:'Apple (AAPL) — Reading a Single Candle',
+      text:'It is 4:00pm on an earnings day. Apple\'s daily candle closes as a large <strong>green marubozu</strong> — open at $182, close at $196, essentially no wicks. This single candle tells you everything: buyers dominated from the moment the market opened to the moment it closed. No seller could push it back down at any point. The lack of wicks means there was zero meaningful resistance.',
+      callout:{icon:'💡',text:'<strong>Key insight:</strong> Before you look at any indicator, read the candles first. They are the raw truth of what happened — everything else is just a calculation derived from them.'},
+    },
+    glossary:[
+      {term:'Open',def:'The price at which a period began trading.'},
+      {term:'Close',def:'The price at which a period ended trading.'},
+      {term:'High',def:'The highest price reached during the period (top of wick).'},
+      {term:'Low',def:'The lowest price reached during the period (bottom of wick).'},
+      {term:'OHLC',def:'Open, High, Low, Close — the four data points every candle contains.'},
+      {term:'Wick / Shadow',def:'The thin line extending above or below the candle body.'},
+      {term:'Bullish',def:'Price is expected to go up — buyers are in control.'},
+      {term:'Bearish',def:'Price is expected to go down — sellers are in control.'},
+    ],
+    quiz:[
+      {q:'A candlestick closes <em>higher than it opened</em>. What color is it and what does it mean?',opts:['Red — sellers were in control','Green — buyers were in control and price went up during this period','Yellow — price was unchanged','Blue — this is an after-hours candle'],correct:1,feedback:'A green (bullish) candle means the close was higher than the open — buyers won that battle. The taller the body, the stronger the buying pressure.'},
+      {q:'What does the TOP WICK of a candlestick represent?',opts:['The closing price','The opening price','The highest price reached during that period, even though price pulled back','The average price'],correct:2,feedback:'The top wick shows the highest price reached during the period. If price went all the way up there but the candle closed lower, sellers rejected that price and pushed it back down.'},
+      {q:'A candle has almost no body — the open and close are nearly equal. What is this pattern called?',opts:['Marubozu','Hammer','Doji','Engulfing'],correct:2,feedback:'A Doji forms when open and close are virtually equal. Neither buyers nor sellers could gain control. It often signals indecision and a potential reversal, especially after a strong trend.'},
+      {q:'You see a candle with a tiny body at the TOP and a very long wick pointing DOWN. What pattern is this and what does it signal?',opts:['Shooting Star — bearish reversal signal','Hammer — bullish reversal signal','Doji — indecision','Marubozu — strong trend continuation'],correct:1,feedback:'That\'s a Hammer — tiny body at the top, long lower wick. Sellers pushed price far down but buyers aggressively fought back. It signals a potential bullish reversal, especially after a downtrend.'},
+      {q:'On a daily chart, how much time does each candlestick represent?',opts:['One hour','One week','One trading day','One minute'],correct:2,feedback:'On a daily chart, each candle represents one full trading day. The same candlestick rules apply on any timeframe — 1 minute, 5 minutes, hourly, weekly. Just the time period changes.'},
+    ],
+  },
+  {
+    id:'supportresistance', emoji:'🏗️', name:'Support & Resistance',
+    color:'#4CC9A8', glow:'rgba(76,201,168,0.06)',
+    subtitle:'THE FLOOR AND THE CEILING',
+    desc:'<strong>Support</strong> is a price level where buyers consistently step in and stop price from falling further — like a floor. <strong>Resistance</strong> is a price level where sellers consistently appear and stop price from rising — like a ceiling. These are the two most important concepts in technical analysis.',
+    quote:'"The market has memory. Price remembers where it turned before — and often turns again."',
+    diagramFn: buildSupportResistanceDiagram,
+    diagramCaption:'<strong>Green circles</strong> show price bouncing off support — buyers step in at that level every time. <strong>Red circles</strong> show price getting rejected at resistance — sellers appear and push it back down. The dashed lines mark these key price levels.',
+    concept:[
+      {title:'Why support and resistance form',desc:'They form because of <strong>human psychology and memory</strong>. If a stock bounced at $140 three times, traders remember that. Next time price approaches $140, buyers pre-load orders there expecting another bounce. This self-fulfilling belief creates the level.'},
+      {title:'The flip: support becomes resistance',desc:'One of the most powerful concepts in technical analysis — when price <strong>breaks through support</strong>, that old support level often becomes new resistance. And when price breaks through resistance, it often becomes new support. The level switches roles.'},
+      {title:'How to draw levels',desc:'Look for <strong>price zones where the market turned multiple times</strong>. More touches = stronger level. Draw horizontal lines at obvious turning points on your chart. Focus on daily and weekly charts for the most significant levels.'},
+      {title:'Strong vs weak levels',desc:'A level that has been tested and held 3+ times is very strong. A level that held once is weak. The <strong>more tests a level survives</strong>, the bigger the eventual breakout tends to be when price finally breaks through.'},
+    ],
+    patterns:[
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="60" x2="90" y2="60" stroke="#3DBA72" stroke-width="2" stroke-dasharray="5 3"/><path d="M15,40 Q25,20 35,40 Q45,55 55,40 Q65,20 75,40 Q85,55 90,45" fill="none" stroke="#C9A84C" stroke-width="2"/><circle cx="35" cy="59" r="4" fill="none" stroke="#3DBA72" stroke-width="2"/><circle cx="55" cy="59" r="4" fill="none" stroke="#3DBA72" stroke-width="2"/></svg>`,
+       name:'Double Bottom', signal:'bull', signalText:'BULLISH', desc:'Price touches support twice and bounces both times. A classic buy signal when the second bounce holds.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="20" x2="90" y2="20" stroke="#E05252" stroke-width="2" stroke-dasharray="5 3"/><path d="M15,45 Q25,60 35,45 Q45,25 55,45 Q65,60 75,45 Q85,25 90,38" fill="none" stroke="#C9A84C" stroke-width="2"/><circle cx="35" cy="21" r="4" fill="none" stroke="#E05252" stroke-width="2"/><circle cx="55" cy="21" r="4" fill="none" stroke="#E05252" stroke-width="2"/></svg>`,
+       name:'Double Top', signal:'bear', signalText:'BEARISH', desc:'Price hits resistance twice and gets rejected both times. A classic sell signal — the second rejection confirms sellers are strong.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="50" x2="50" y2="50" stroke="#E05252" stroke-width="2" stroke-dasharray="4 3"/><line x1="50" y1="50" x2="90" y2="50" stroke="#3DBA72" stroke-width="2" stroke-dasharray="4 3"/><path d="M10,65 L30,65 L50,30 L70,50 L90,35" fill="none" stroke="#C9A84C" stroke-width="2"/><circle cx="50" cy="50" r="5" fill="rgba(201,168,76,0.3)" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'Breakout + Retest', signal:'bull', signalText:'BULLISH SETUP', desc:'Price breaks above resistance, then pulls back to retest that level (now support). This retest is a high-probability entry.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="25" y="25" width="50" height="30" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.3)" stroke-width="1" stroke-dasharray="3 2"/><line x1="25" y1="25" x2="75" y2="25" stroke="#E05252" stroke-width="1.5" stroke-dasharray="5 3"/><line x1="25" y1="55" x2="75" y2="55" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="5 3"/><path d="M10,40 Q20,38 30,42 Q40,38 50,40 Q60,42 70,39 L90,40" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'Trading Range', signal:'neutral', signalText:'CONSOLIDATION', desc:'Price bounces between support and resistance in a defined range. Buy at support, sell at resistance — until price breaks out.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="60" x2="50" y2="60" stroke="#3DBA72" stroke-width="2" stroke-dasharray="4 3"/><line x1="50" y1="60" x2="90" y2="60" stroke="#E05252" stroke-width="2" stroke-dasharray="4 3"/><path d="M10,45 L40,45 L50,75 L65,55 L80,65 L90,50" fill="none" stroke="#C9A84C" stroke-width="2"/><text x="50" y="18" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-size="10" font-family="Cinzel,serif">FLIP</text><path d="M50,20 L50,58" stroke="rgba(201,168,76,0.4)" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arrow)"/></svg>`,
+       name:'Support → Resistance Flip', signal:'bear', signalText:'FLIP ZONE', desc:'Old support breaks and becomes new resistance. A critical concept — the level did not disappear, it switched sides.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="40" x2="90" y2="40" stroke="rgba(201,168,76,0.4)" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,55 L20,45 L30,50 L40,42 L50,38 L55,42" fill="none" stroke="#C9A84C" stroke-width="2"/><path d="M55,42 L60,28 L65,30 L75,25 L85,20 L90,18" fill="none" stroke="#3DBA72" stroke-width="2.5"/><circle cx="55" cy="40" r="5" fill="rgba(201,168,76,0.4)" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'Clean Breakout', signal:'bull', signalText:'STRONG BULLISH', desc:'Price pushes cleanly through resistance with strong volume. The break is clear and decisive — no hesitation.'},
+    ],
+    example:{
+      scenario:'Tesla (TSLA) — The $200 Level',
+      text:'Tesla\'s $200 price level acted as a critical zone throughout 2023–2024. It was rejected multiple times as <strong>resistance</strong> when approached from below. When Tesla finally broke and closed above $200 with strong volume, traders watched for a retest. Price pulled back to $200, held perfectly, and rallied hard from there — because the old resistance had <strong>flipped to support</strong>.',
+      callout:{icon:'💡',text:'<strong>Key lesson:</strong> Round numbers ($100, $150, $200, $500) are almost always significant support/resistance levels. Human psychology gravitates to round numbers for placing orders.'},
+    },
+    glossary:[
+      {term:'Support',def:'A price level where buying interest is strong enough to prevent further decline.'},
+      {term:'Resistance',def:'A price level where selling pressure is strong enough to prevent further advance.'},
+      {term:'Breakout',def:'When price moves decisively above resistance or below support.'},
+      {term:'Retest',def:'After a breakout, price returns to the broken level to confirm the new role.'},
+      {term:'Flip',def:'When broken support becomes resistance, or broken resistance becomes support.'},
+      {term:'Level',def:'A specific price zone that the market has repeatedly reacted to.'},
+      {term:'Zone',def:'A price range (not a single price) where support or resistance is found.'},
+      {term:'Round Number',def:'Psychologically significant levels like $100, $200, $500 that often act as support/resistance.'},
+    ],
+    quiz:[
+      {q:'A stock\'s price has bounced off $50 three times over the past month. What is $50 in this context?',opts:['A resistance level — sellers are at $50','A support level — buyers consistently appear at $50','A breakout level — price is about to shoot through $50','A random price with no significance'],correct:1,feedback:'$50 is a support level. Buyers have stepped in three times at that price, preventing further decline. The more times a level holds, the stronger and more significant it becomes.'},
+      {q:'A stock breaks below a strong support level at $80 and then rallies back to $80 from below. What would traders expect $80 to act as now?',opts:['Still support — it has not changed','A new resistance level — the old support has flipped','The new target price for the stock','An irrelevant level now that it has been broken'],correct:1,feedback:'This is the classic "flip" — old support becomes new resistance after a breakdown. Traders who bought at $80 as support are now underwater and will sell to break even when price returns, creating selling pressure at that level.'},
+      {q:'Price breaks above a key resistance level with <em>very high volume</em>. What does the high volume indicate?',opts:['It is a false breakout — ignore it','High volume is suspicious and dangerous','The breakout is likely real and significant — many participants are confirming the move','Volume does not matter at breakout levels'],correct:2,feedback:'High volume at a breakout is confirmation that the move is genuine. Many buyers participated, which validates the break. Low-volume breakouts are more likely to be false — they fail and reverse quickly.'},
+      {q:'What is a "trading range"?',opts:['A range of different stocks you can trade','When price repeatedly bounces between support and resistance without breaking out','The daily high-to-low price movement','The maximum allowed position size for one trade'],correct:1,feedback:'A trading range (or consolidation) is when price moves horizontally between defined support and resistance levels. Traders can buy near support and sell near resistance within the range — until price breaks out in one direction.'},
+      {q:'Which price levels are psychologically significant and tend to act as strong support or resistance?',opts:['Odd numbers like $73.50 or $127.83','Round numbers like $100, $150, $200, $500','Only levels from earnings reports','Yesterday\'s closing price always'],correct:1,feedback:'Round numbers hold enormous psychological weight. Traders place limit orders, stop losses, and profit targets at round numbers. This concentration of orders makes round numbers self-reinforcing support and resistance levels.'},
+    ],
+  },
+  {
+    id:'trendlines', emoji:'📐', name:'Trend Lines',
+    color:'#8B6FD4', glow:'rgba(139,111,212,0.06)',
+    subtitle:'DIRECTION IS EVERYTHING',
+    desc:'A <strong>trend line</strong> is a straight line connecting a series of price points that reveals the overall direction a market is moving. Trading <strong>with the trend</strong> is one of the highest-probability approaches in trading. "The trend is your friend" is one of the oldest rules in the game.',
+    quote:'"Do not fight the trend. Until it ends, it is simply the market telling you where it wants to go."',
+    diagramFn: buildTrendlineDiagram,
+    diagramCaption:'An <strong>uptrend</strong> is defined by Higher Highs (HH) and Higher Lows (HL). The trend line connects the lows, acting as dynamic support. As long as price makes higher highs and higher lows, the trend is intact.',
+    concept:[
+      {title:'Three types of trends',desc:'<strong>Uptrend:</strong> Higher highs and higher lows — buyers are progressively stronger. <strong>Downtrend:</strong> Lower highs and lower lows — sellers dominate. <strong>Sideways:</strong> Roughly equal highs and lows — neither side winning, market is consolidating.'},
+      {title:'How to draw a trend line',desc:'For an <strong>uptrend</strong>: connect at least two significant lows with a straight line. The more lows it connects, the stronger the line. For a <strong>downtrend</strong>: connect at least two significant highs. Always draw from left to right.'},
+      {title:'Dynamic support and resistance',desc:'A trend line acts as <strong>moving</strong> support (in an uptrend) or resistance (in a downtrend). Unlike horizontal S/R levels, it changes with each new candle. Traders use trend line touches as potential entry points.'},
+      {title:'Trend line breaks',desc:'When price closes <strong>convincingly below an uptrend line</strong> — the trend may be changing. This is one of the earliest warning signals that the market is shifting direction. Confirmation with volume and follow-through makes the signal stronger.'},
+    ],
+    patterns:[
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="70" x2="90" y2="20" stroke="#3DBA72" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,65 L25,50 L40,55 L55,40 L70,45 L85,28" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'Uptrend', signal:'bull', signalText:'BULLISH', desc:'Series of higher highs and higher lows. Trend line connects the lows as dynamic support. Trade in the direction of the trend.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="15" x2="90" y2="65" stroke="#E05252" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,20 L25,35 L40,28 L55,45 L70,38 L85,60" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'Downtrend', signal:'bear', signalText:'BEARISH', desc:'Series of lower highs and lower lows. Trend line connects the highs as dynamic resistance. Short-selling or staying out.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="60" x2="90" y2="20" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2"/><line x1="10" y1="72" x2="90" y2="32" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2"/><path d="M10,65 L20,55 L35,62 L50,50 L65,57 L80,44 L90,48" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'Channel', signal:'neutral', signalText:'RANGING', desc:'Price bounces between two parallel trend lines. Buy at the lower channel line, sell at the upper — until a breakout.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="65" x2="60" y2="25" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/><path d="M10,60 L25,45 L40,50 L55,32 L58,40 L65,58 L75,65 L85,62 L90,55" fill="none" stroke="#C9A84C" stroke-width="2"/><circle cx="62" cy="35" r="5" fill="rgba(224,82,82,0.3)" stroke="#E05252" stroke-width="2"/></svg>`,
+       name:'Trend Break', signal:'bear', signalText:'WARNING', desc:'Price closes below the uptrend line. Not always a reversal — but it is a warning sign. Watch for follow-through.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="20" y1="65" x2="55" y2="30" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/><line x1="55" y1="30" x2="90" y2="55" stroke="#E05252" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/><path d="M10,65 L25,50 L40,55 L55,28 L70,42 L85,52" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'V-Reversal', signal:'bear', signalText:'REVERSAL', desc:'Sharp uptrend suddenly reverses. The trend line break is steep and fast — one of the more violent trend changes.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="70" x2="50" y2="30" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2"/><line x1="50" y1="30" x2="90" y2="30" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" stroke-dasharray="4 2"/><path d="M10,65 L25,50 L40,55 L55,30 L70,32 L85,28" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'Trend to Range', signal:'neutral', signalText:'TRANSITION', desc:'A strong uptrend flattens into consolidation. The market is pausing to decide its next direction.'},
+    ],
+    example:{
+      scenario:'NVIDIA (NVDA) — The 2023 AI Uptrend',
+      text:'From January to June 2023, NVIDIA drew one of the cleanest uptrend lines in modern market history. Every dip touched the rising trend line connecting the lows and bounced — three times with precision. Each touch was a textbook <strong>buy-the-dip opportunity</strong>. The trend line connected lows at roughly $150, $230, and $320 before the parabolic move through $400 and beyond.',
+      callout:{icon:'💡',text:'<strong>Key lesson:</strong> The best trades often come from buying the <em>pullback to the trend line</em> rather than chasing price at the highs. Wait for price to come to you — patience is rewarded in trending markets.'},
+    },
+    glossary:[
+      {term:'Uptrend',def:'A series of higher highs and higher lows — price is generally rising.'},
+      {term:'Downtrend',def:'A series of lower highs and lower lows — price is generally falling.'},
+      {term:'Trend Line',def:'A straight line connecting a series of lows (uptrend) or highs (downtrend).'},
+      {term:'Higher High (HH)',def:'Each successive peak is higher than the previous one.'},
+      {term:'Higher Low (HL)',def:'Each successive trough is higher than the previous one — key uptrend signal.'},
+      {term:'Channel',def:'Two parallel trend lines containing price movement.'},
+      {term:'Trend Break',def:'When price closes through a trend line, potentially signaling a change.'},
+      {term:'Pullback',def:'A temporary move against the trend before continuation.'},
+    ],
+    quiz:[
+      {q:'An uptrend is defined by which price pattern?',opts:['Lower highs and lower lows','Random price movement with no pattern','Higher highs and higher lows','Equal highs and equal lows'],correct:2,feedback:'An uptrend = Higher Highs (HH) and Higher Lows (HL). Each peak is higher than the last, and each dip is higher than the last. This shows buyers are consistently stronger than sellers.'},
+      {q:'To draw a valid uptrend line, you connect:',opts:['The highest highs on the chart','At least two significant LOWS with a straight line','The opening prices of each day','Random points that look like they form a line'],correct:1,feedback:'An uptrend line connects the LOWS (the pullback points). It acts as dynamic support — price bounces off it as it rises. You need at least two lows to draw it, three or more to confirm it is significant.'},
+      {q:'Price has been in a strong uptrend for 3 months. It then closes decisively BELOW the uptrend line. What does this signal?',opts:['A great buying opportunity — buy the dip','A warning that the trend may be weakening or reversing','Nothing significant — trend lines do not matter','The stock is about to gap up tomorrow'],correct:1,feedback:'A break below the uptrend line is a warning signal that momentum may be shifting. It does not guarantee a reversal — but it means the pattern of higher lows has been violated. Wait for confirmation before acting.'},
+      {q:'What is a "channel" in technical analysis?',opts:['A financial news channel like CNBC','Two parallel trend lines that contain price, creating a range it bounces between','A single horizontal support level','The volume indicator below the price chart'],correct:1,feedback:'A channel is formed by two parallel trend lines — one connecting the highs and one connecting the lows. Price bounces between them. Traders buy at the lower channel line and sell at the upper one until a breakout.'},
+      {q:'The phrase "the trend is your friend" means:',opts:['Be friendly to other traders in the market','Trading in the direction of the existing trend gives you higher probability trades','You should only trade with people you know','The trend indicator is the best tool available'],correct:1,feedback:'"The trend is your friend" is one of the most important rules in trading. Buying in an uptrend and selling in a downtrend puts probability on your side. Fighting the trend is one of the most common and costly beginner mistakes.'},
+    ],
+  },
+  {
+    id:'volume', emoji:'📊', name:'Volume',
+    color:'#C9904C', glow:'rgba(201,144,76,0.06)',
+    subtitle:'THE FUEL BEHIND THE MOVE',
+    desc:'<strong>Volume</strong> is the number of shares (or contracts) traded during a specific time period. Price tells you WHAT happened. Volume tells you <strong>HOW MUCH conviction</strong> was behind it. A move with high volume is real. A move with low volume is suspect.',
+    quote:'"Price is what you pay. Volume is what confirms you are right."',
+    diagramFn: buildVolumeDiagram,
+    diagramCaption:'<strong>Green bars</strong> = buying volume (price closed up that period). <strong>Red bars</strong> = selling volume. <strong>Highlighted bars</strong> show unusually high volume — those are the candles that matter most. Notice how the biggest price moves align with the tallest volume bars.',
+    concept:[
+      {title:'Volume confirms price',desc:'When price breaks out of a key level with <strong>high volume</strong>, the breakout is more likely to be real and sustained. When price moves on <strong>low volume</strong>, it is more likely to be a false move that reverses quickly.'},
+      {title:'Relative volume (RVOL)',desc:'Raw volume numbers mean nothing without context. <strong>Relative volume</strong> compares today\'s volume to the average volume for that time of day. An RVOL of 3.0 means the stock is trading 3x its normal volume — significant. This is one of the most useful scanning criteria.'},
+      {title:'Volume at key levels',desc:'When price approaches a support or resistance level, watch the volume. If price tests support with <strong>low volume</strong>, buyers are not defending it strongly — a break is more likely. If price tests resistance with <strong>high volume</strong> and fails, sellers are very strong.'},
+      {title:'Climax volume',desc:'An extremely high spike in volume after a long trend often signals a <strong>trend exhaustion</strong>. All the buyers (or sellers) have entered at once — there is nobody left to continue the move. These volume climaxes often mark turning points.'},
+    ],
+    patterns:[
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="55" width="14" height="15" fill="rgba(61,186,114,0.5)"/><rect x="35" y="50" width="14" height="20" fill="rgba(61,186,114,0.5)"/><rect x="55" y="30" width="14" height="40" fill="rgba(61,186,114,0.8)" stroke="#3DBA72" stroke-width="1.5"/><rect x="75" y="45" width="14" height="25" fill="rgba(61,186,114,0.5)"/><line x1="10" y1="20" x2="90" y2="20" stroke="rgba(61,186,114,0.3)" stroke-width="1" stroke-dasharray="3 2"/><text x="62" y="17" text-anchor="middle" fill="#3DBA72" font-size="9">High Vol</text></svg>`,
+       name:'Breakout Volume', signal:'bull', signalText:'CONFIRMED', desc:'Price breaks above resistance on the highest volume in the recent range. High conviction — buyers are serious.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="40" width="14" height="30" fill="rgba(61,186,114,0.5)"/><rect x="35" y="50" width="14" height="20" fill="rgba(61,186,114,0.5)"/><rect x="55" y="60" width="14" height="10" fill="rgba(61,186,114,0.3)"/><path d="M20,35 L40,25 L60,28 L80,30" fill="none" stroke="#C9A84C" stroke-width="2"/><text x="50" y="15" text-anchor="middle" fill="rgba(224,82,82,0.7)" font-size="9">Divergence</text></svg>`,
+       name:'Volume Divergence', signal:'bear', signalText:'WARNING', desc:'Price rising but volume declining. The move is losing conviction — fewer participants. Often precedes a reversal.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="10" y="20" width="14" height="50" fill="rgba(224,82,82,0.8)" stroke="#E05252" stroke-width="1.5"/><rect x="30" y="40" width="14" height="30" fill="rgba(224,82,82,0.5)"/><rect x="50" y="50" width="14" height="20" fill="rgba(224,82,82,0.3)"/><rect x="70" y="55" width="14" height="15" fill="rgba(61,186,114,0.4)"/><text x="17" y="16" text-anchor="middle" fill="#E05252" font-size="9">Climax</text></svg>`,
+       name:'Volume Climax', signal:'bull', signalText:'EXHAUSTION', desc:'Massive selling spike — all sellers entered at once. Nothing left to sell. Often marks the bottom of a decline.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="50" width="14" height="20" fill="rgba(61,186,114,0.3)"/><rect x="35" y="55" width="14" height="15" fill="rgba(61,186,114,0.3)"/><rect x="55" y="52" width="14" height="18" fill="rgba(61,186,114,0.3)"/><rect x="75" y="50" width="14" height="20" fill="rgba(61,186,114,0.3)"/><path d="M20,40 L40,42 L60,38 L80,40" fill="none" stroke="#C9A84C" stroke-width="2" stroke-dasharray="4 2"/><text x="50" y="25" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="9">Low vol range</text></svg>`,
+       name:'Low Volume Range', signal:'neutral', signalText:'CAUTION', desc:'Price moving sideways on low volume. No conviction either way. Avoid trading until volume returns.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="10" y="50" width="12" height="20" fill="rgba(61,186,114,0.3)"/><rect x="26" y="45" width="12" height="25" fill="rgba(61,186,114,0.4)"/><rect x="42" y="35" width="12" height="35" fill="rgba(61,186,114,0.6)"/><rect x="58" y="20" width="12" height="50" fill="rgba(61,186,114,0.85)" stroke="#3DBA72" stroke-width="1.5"/><rect x="74" y="30" width="12" height="40" fill="rgba(61,186,114,0.6)"/><path d="M16,45 L32,38 L48,28 L64,15 L80,22" fill="none" stroke="#C9A84C" stroke-width="2.2"/></svg>`,
+       name:'Accumulation Volume', signal:'bull', signalText:'BUILDING', desc:'Gradually rising volume during an uptrend. Institutional buyers are systematically building positions.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="45" width="14" height="25" fill="rgba(61,186,114,0.4)"/><rect x="35" y="40" width="14" height="30" fill="rgba(224,82,82,0.4)"/><rect x="55" y="35" width="14" height="35" fill="rgba(61,186,114,0.4)"/><rect x="75" y="30" width="14" height="40" fill="rgba(61,186,114,0.7)" stroke="#3DBA72" stroke-width="1.5"/><path d="M20,38 L40,42 L60,30 L82,20" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'Buying on Dips', signal:'bull', signalText:'HEALTHY TREND', desc:'Volume highest on up days, lower on down days. Smart money is buying every pullback — healthy uptrend.'},
+    ],
+    example:{
+      scenario:'GameStop (GME) — January 2021 Short Squeeze',
+      text:'GameStop\'s historic short squeeze in January 2021 is the ultimate volume lesson. For months the stock traded 5–10 million shares daily — unremarkable. Then volume exploded to <strong>over 197 million shares in a single day</strong> (January 22) and 178 million the next. Price went from $40 to nearly $500. Without that volume explosion, the move could not have happened. The volume was the fuel.',
+      callout:{icon:'💡',text:'<strong>Key lesson:</strong> Learn to use a volume scanner. When a stock you have never heard of suddenly appears in the top 10 most-traded stocks, <em>something</em> is happening. Volume is always the first signal — before the news hits.'},
+    },
+    glossary:[
+      {term:'Volume',def:'The total number of shares traded during a specific time period.'},
+      {term:'Relative Volume (RVOL)',def:'Current volume compared to average volume for that time — shows how unusual the activity is.'},
+      {term:'Volume Climax',def:'An extreme volume spike that often marks a trend exhaustion or reversal point.'},
+      {term:'Average Volume',def:'The typical daily volume for a stock, usually calculated as a 20 or 50-day average.'},
+      {term:'Float',def:'The number of shares available for public trading — low float stocks move faster on volume spikes.'},
+      {term:'Accumulation',def:'Institutions quietly buying large positions over time, often visible as rising volume on up days.'},
+      {term:'Distribution',def:'Institutions selling large positions over time, often visible as rising volume on down days.'},
+      {term:'Volume Confirmation',def:'When volume validates a price move — high volume on breakouts, low volume on pullbacks.'},
+    ],
+    quiz:[
+      {q:'Price breaks above a key resistance level. What volume condition makes this breakout MORE reliable?',opts:['Low volume — the breakout is clean and uncontested','High volume — many participants are confirming the move','Volume is irrelevant at breakout levels','Average volume — neither too high nor too low'],correct:1,feedback:'A breakout on high volume is far more reliable than a low-volume breakout. High volume means many buyers are participating and confirming the move. Low-volume breakouts frequently fail and reverse.'},
+      {q:'What is "Relative Volume" (RVOL) and why is it more useful than raw volume numbers?',opts:['The volume relative to the share price','Today\'s volume compared to the stock\'s average volume — shows how unusual the activity is','The ratio of buy orders to sell orders','The volume of only institutional trades'],correct:1,feedback:'RVOL compares today\'s volume to the stock\'s average. An RVOL of 5.0 means the stock is trading 5x its normal volume — far more meaningful than knowing the raw share count, which varies enormously between stocks.'},
+      {q:'A stock is in a strong uptrend but you notice each new high is made on DECLINING volume. What does this suggest?',opts:['The uptrend is accelerating and will continue strongly','The move is losing conviction — fewer participants. A reversal may be coming.','Volume declining is always bullish','This is called a volume breakout'],correct:1,feedback:'Declining volume in an uptrend is a warning sign called "divergence." The price is moving up but with less and less participation. When fewer people are buying each new high, the trend is weakening even if price has not shown it yet.'},
+      {q:'A stock drops 60% over three months, then has a single day with 10x its normal volume before reversing upward. What might this extreme volume spike represent?',opts:['The stock is about to go bankrupt','A volume climax — all sellers entered at once, leaving no more selling pressure, often marking a bottom','Random noise that should be ignored','A guaranteed buy signal with no risk'],correct:1,feedback:'A volume climax after a major decline often marks a bottom. All the sellers who wanted to sell have sold at once — panic peak. With no sellers left, even small buying can push price back up. It\'s not a guarantee but it\'s a powerful signal.'},
+      {q:'In a healthy uptrend, what is the preferred volume pattern?',opts:['Equal volume on up days and down days','Higher volume on DOWN days, lower on up days','Higher volume on UP days (advances) and lower volume on DOWN days (pullbacks)','Volume is not relevant in an uptrend'],correct:2,feedback:'In a healthy uptrend, you want to see strong volume on the up days (buyers are enthusiastic) and light volume on the down days (sellers are weak, just taking profits). This pattern shows institutional demand is driving the trend.'},
+    ],
+  },
+  {
+    id:'movingaverages', emoji:'📉', name:'Moving Averages',
+    color:'#4C8BC9', glow:'rgba(76,139,201,0.06)',
+    subtitle:'SMOOTHING THE NOISE',
+    desc:'A <strong>moving average (MA)</strong> smooths out price data to reveal the underlying trend direction, filtering out the random daily noise. It is one of the most widely used indicators in all of trading — because it is simple, visual, and remarkably effective.',
+    quote:'"The moving average does not predict the future. It reveals the present direction without the noise."',
+    diagramFn: buildMovingAvgDiagram,
+    diagramCaption:'The <strong>dashed line</strong> is raw price — noisy and jagged. The <strong>teal SMA 20</strong> smooths it into the short-term trend. The <strong>purple SMA 50</strong> shows the longer-term trend. When price is above both MAs, the bias is bullish. When below, bearish.',
+    concept:[
+      {title:'Simple Moving Average (SMA)',desc:'The SMA adds up the closing prices for a set number of periods and divides by that number. A <strong>20-day SMA</strong> is the average closing price of the last 20 trading days. As each new day passes, the oldest price drops off and the newest is added.'},
+      {title:'Exponential Moving Average (EMA)',desc:'The EMA gives <strong>more weight to recent prices</strong>, making it react faster to current price action. Traders who want a more responsive indicator use EMAs. The 9 EMA and 21 EMA are popular for short-term traders. The 50 EMA and 200 EMA for longer-term.'},
+      {title:'The Golden Cross and Death Cross',desc:'<strong>Golden Cross:</strong> The 50-day MA crosses ABOVE the 200-day MA — a long-term bullish signal. <strong>Death Cross:</strong> The 50-day MA crosses BELOW the 200-day MA — a long-term bearish signal. These crossovers get major media coverage and often move markets.'},
+      {title:'Price vs. moving average',desc:'When price is <strong>above</strong> a key moving average, the trend is up — bulls are in control. When price is <strong>below</strong>, the trend is down — bears are in control. The moving average itself acts as dynamic support (in uptrend) or resistance (in downtrend).'},
+    ],
+    patterns:[
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,60 L30,50 L50,40 L70,30 L90,20" fill="none" stroke="#4CC9A8" stroke-width="2.5"/><path d="M10,70 L30,62 L50,52 L70,42 L90,32" fill="none" stroke="#8B6FD4" stroke-width="2"/><text x="50" y="12" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-size="9">GOLDEN CROSS</text><circle cx="55" cy="37" r="5" fill="rgba(201,168,76,0.3)" stroke="#C9A84C" stroke-width="2"/></svg>`,
+       name:'Golden Cross', signal:'bull', signalText:'BULLISH', desc:'Fast MA crosses above slow MA. Long-term bullish signal. Many institutional algorithms buy this signal.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,20 L30,30 L50,40 L70,50 L90,60" fill="none" stroke="#4CC9A8" stroke-width="2.5"/><path d="M10,10 L30,18 L50,30 L70,40 L90,50" fill="none" stroke="#8B6FD4" stroke-width="2"/><text x="50" y="72" text-anchor="middle" fill="rgba(224,82,82,0.7)" font-size="9">DEATH CROSS</text><circle cx="50" cy="35" r="5" fill="rgba(224,82,82,0.25)" stroke="#E05252" stroke-width="2"/></svg>`,
+       name:'Death Cross', signal:'bear', signalText:'BEARISH', desc:'Fast MA crosses below slow MA. Long-term bearish signal — often triggers institutional selling programs.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,55 L30,45 L50,35 L70,25 L90,15" fill="none" stroke="#4CC9A8" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,65 L25,55 L35,60 L45,52 L55,45 L65,32 L80,22 L90,18" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="2.5"/><circle cx="45" cy="54" r="4" fill="rgba(61,186,114,0.4)" stroke="#3DBA72" stroke-width="2"/></svg>`,
+       name:'MA Bounce (Buy Dip)', signal:'bull', signalText:'ENTRY SIGNAL', desc:'Price pulls back to the moving average then bounces. Classic buy-the-dip setup in an uptrend.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,35 L30,38 L50,40 L70,38 L90,35" fill="none" stroke="#4CC9A8" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,40 L25,42 L40,38 L55,42 L70,39 L85,40" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="2"/><text x="50" y="18" text-anchor="middle" fill="rgba(201,168,76,0.4)" font-size="9">Flat = no trend</text></svg>`,
+       name:'Flat MA = No Trend', signal:'neutral', signalText:'AVOID', desc:'A flat moving average means the market is going nowhere. MAs are most useful in trending markets — not choppy ones.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,20 L30,25 L50,30 L70,35 L90,40" fill="none" stroke="#4CC9A8" stroke-width="2"/><path d="M10,15 L25,22 L30,28 L40,38 L50,45 L65,52 L75,48 L85,42 L90,43" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="2.5"/><circle cx="50" cy="37" r="4" fill="rgba(224,82,82,0.3)" stroke="#E05252" stroke-width="2"/></svg>`,
+       name:'Price Crosses Below MA', signal:'bear', signalText:'SELL SIGNAL', desc:'Price closes below a rising moving average. The first sign trend may be shifting — watch for confirmation.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,60 L30,52 L50,44 L70,36 L90,28" fill="none" stroke="#8B6FD4" stroke-width="2"/><path d="M10,50 L30,45 L50,38 L70,30 L90,22" fill="none" stroke="#4CC9A8" stroke-width="2"/><path d="M10,40 L25,36 L40,32 L55,26 L70,22 L80,18 L90,16" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="2.5" stroke-dasharray="4 2"/></svg>`,
+       name:'MA Stack (Strong Trend)', signal:'bull', signalText:'STRONG BULL', desc:'Price > Fast MA > Slow MA — all stacked in order. This is the strongest trending configuration. Stay long.'},
+    ],
+    example:{
+      scenario:'S&P 500 — The 200-Day Moving Average',
+      text:'The <strong>200-day simple moving average</strong> is the most watched indicator on Wall Street. When the S&P 500 is above its 200-day MA, institutions generally have a bullish bias. When it drops below — as it did in 2022 — it triggered widespread selling and risk-off positioning. In March 2023, when the S&P 500 reclaimed its 200-day MA, it was a major signal that the bull market was resuming.',
+      callout:{icon:'💡',text:'<strong>The big three to know:</strong> 20 MA (short-term trend), 50 MA (medium-term trend), 200 MA (long-term trend / institutional benchmark). When price is above all three and they are stacked in order — that is as bullish as it gets.'},
+    },
+    glossary:[
+      {term:'Moving Average (MA)',def:'An indicator that calculates the average price over a set number of periods, updated with each new candle.'},
+      {term:'SMA',def:'Simple Moving Average — equal weight given to all prices in the period.'},
+      {term:'EMA',def:'Exponential Moving Average — more weight given to recent prices, reacts faster.'},
+      {term:'20 MA',def:'Short-term trend indicator — popular with swing traders.'},
+      {term:'50 MA',def:'Medium-term trend indicator — watched by professional traders and institutions.'},
+      {term:'200 MA',def:'Long-term trend benchmark — the most important MA on Wall Street.'},
+      {term:'Golden Cross',def:'50-day MA crosses above 200-day MA — bullish long-term signal.'},
+      {term:'Death Cross',def:'50-day MA crosses below 200-day MA — bearish long-term signal.'},
+    ],
+    quiz:[
+      {q:'A Simple Moving Average (SMA) calculates price by:',opts:['Giving more weight to recent prices','Averaging the closing prices over a set number of periods equally','Averaging the high and low of each candle','Calculating the most common price in a period'],correct:1,feedback:'The SMA adds up closing prices over the specified period and divides by that number. A 20-day SMA adds the last 20 closing prices and divides by 20. Each day the oldest price drops off and the newest is added.'},
+      {q:'A stock\'s 50-day moving average crosses ABOVE its 200-day moving average. What is this called and what does it signal?',opts:['A Death Cross — bearish long-term signal','A Golden Cross — bullish long-term signal','A Volume Climax — trend exhaustion','A Doji — indecision'],correct:1,feedback:'The Golden Cross (50 MA crossing above 200 MA) is one of the most watched technical events on Wall Street. It signals that medium-term momentum has turned bullish relative to the long-term trend. Many algorithmic trading systems automatically buy this signal.'},
+      {q:'In a strong uptrend, price pulls back to touch the 20-day moving average and then bounces upward. What trading opportunity does this represent?',opts:['A sell signal — the trend is breaking','A buy-the-dip opportunity — price is finding support at the MA','No opportunity — wait for a better signal','This means the trend is ending'],correct:1,feedback:'A pullback to the moving average in an uptrend is a classic buy-the-dip setup. The MA acts as dynamic support — it rises with the trend and price bounces off it. This is one of the highest-probability entry techniques for trend traders.'},
+      {q:'You look at a chart and the 50-day moving average is completely flat (horizontal). What does this tell you?',opts:['The stock is in a strong uptrend','The stock is about to break out strongly','The market is going sideways — there is no clear trend. MAs are less useful here.','The stock is extremely oversold'],correct:2,feedback:'A flat moving average means price has been averaging roughly the same level — the market is in a range with no directional trend. Moving averages work best in trending markets. In choppy, sideways conditions they generate false signals.'},
+      {q:'What is the difference between a 9-period EMA and a 50-period SMA in terms of sensitivity to price changes?',opts:['They are equally sensitive — both are moving averages','The 9 EMA reacts much faster to recent price changes; the 50 SMA is slower and smoother','The 50 SMA is faster because it covers more data','EMAs and SMAs behave identically'],correct:1,feedback:'The 9 EMA is very sensitive — it reacts quickly to recent price moves and is used by short-term and day traders. The 50 SMA is slow and smooth — it filters out short-term noise and shows the bigger trend. Different tools for different purposes.'},
+    ],
+  },
+  {
+    id:'indicators', emoji:'🔮', name:'RSI, MACD & VWAP',
+    color:'#C94C4C', glow:'rgba(201,76,76,0.06)',
+    subtitle:'THE BIG THREE INDICATORS',
+    desc:'These three indicators are the most widely used in all of trading. <strong>RSI</strong> tells you if something is overbought or oversold. <strong>MACD</strong> shows momentum and trend changes. <strong>VWAP</strong> is the institutional benchmark that separates buyers from sellers every single day.',
+    quote:'"Indicators do not tell you what will happen. They tell you the current state of the market — and that is enough."',
+    diagramFn: buildRSIDiagram,
+    diagramCaption:'The RSI oscillates between 0 and 100. <strong>Red highlighted dots</strong> show overbought readings (70+) — the asset may be due for a pullback. <strong>Green highlighted dots</strong> show oversold readings (30 and below) — the asset may be due for a bounce. The midline at 50 separates bullish from bearish momentum.',
+    concept:[
+      {title:'RSI — Relative Strength Index',desc:'RSI measures the <strong>speed and magnitude of recent price changes</strong> on a scale of 0–100. Above 70 = overbought (may pull back). Below 30 = oversold (may bounce). The 50 level separates bullish momentum (RSI > 50) from bearish (RSI < 50). Do not use RSI alone — use it to confirm other signals.'},
+      {title:'MACD — Moving Average Convergence Divergence',desc:'MACD shows the relationship between two moving averages. It has three parts: the <strong>MACD line</strong> (12 EMA minus 26 EMA), the <strong>signal line</strong> (9 EMA of the MACD line), and a <strong>histogram</strong> showing the gap between them. When the MACD line crosses above the signal line — bullish. Below — bearish.'},
+      {title:'VWAP — Volume Weighted Average Price',desc:'VWAP is the average price weighted by volume throughout the day. Institutions use it as a benchmark — if they buy <strong>below VWAP</strong>, they got a good deal. If they bought above VWAP, they overpaid. Price above VWAP = bullish intraday bias. Below = bearish. VWAP resets every day at market open.'},
+      {title:'The golden rule of indicators',desc:'<strong>No indicator is perfect alone.</strong> The best traders use 2–3 indicators that confirm each other before acting. A breakout above resistance + RSI not yet overbought + above VWAP = much higher probability than any one signal alone. Confluence is the key.'},
+    ],
+    patterns:[
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="55" x2="90" y2="55" stroke="rgba(224,82,82,0.4)" stroke-width="1" stroke-dasharray="4 2"/><path d="M10,65 L25,60 L40,50 L55,30 L70,45 L85,55" fill="none" stroke="#C9A84C" stroke-width="2"/><text x="55" y="25" text-anchor="middle" fill="rgba(224,82,82,0.7)" font-size="9">Overbought</text><circle cx="55" cy="30" r="4" fill="rgba(224,82,82,0.4)" stroke="#E05252" stroke-width="2"/></svg>`,
+       name:'RSI Overbought', signal:'bear', signalText:'CAUTION', desc:'RSI above 70. The move has been fast and strong. A pullback or consolidation is likely — not a guaranteed sell, but a warning.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="30" x2="90" y2="30" stroke="rgba(61,186,114,0.4)" stroke-width="1" stroke-dasharray="4 2"/><path d="M10,20 L25,25 L40,35 L55,55 L70,42 L85,35" fill="none" stroke="#C9A84C" stroke-width="2"/><text x="55" y="68" text-anchor="middle" fill="rgba(61,186,114,0.7)" font-size="9">Oversold</text><circle cx="55" cy="55" r="4" fill="rgba(61,186,114,0.4)" stroke="#3DBA72" stroke-width="2"/></svg>`,
+       name:'RSI Oversold', signal:'bull', signalText:'OPPORTUNITY', desc:'RSI below 30. Price has fallen hard and fast. Potential bounce zone — especially when combined with support.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,60 L30,50 L50,40 L70,30 L85,22" fill="none" stroke="#4CC9A8" stroke-width="2"/><path d="M10,65 L30,58 L50,50 L70,42 L85,38" fill="none" stroke="#8B6FD4" stroke-width="2" stroke-dasharray="5 3"/><circle cx="42" cy="45" r="4" fill="rgba(61,186,114,0.3)" stroke="#3DBA72" stroke-width="2"/><text x="50" y="15" text-anchor="middle" fill="rgba(61,186,114,0.6)" font-size="9">Bullish Crossover</text></svg>`,
+       name:'MACD Bullish Cross', signal:'bull', signalText:'BUY SIGNAL', desc:'MACD line crosses above signal line. Bullish momentum is building. One of the most popular trading signals.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,25 L30,35 L50,50 L70,62 L85,70" fill="none" stroke="#4CC9A8" stroke-width="2"/><path d="M10,18 L30,28 L50,40 L70,52 L85,60" fill="none" stroke="#8B6FD4" stroke-width="2" stroke-dasharray="5 3"/><circle cx="48" cy="45" r="4" fill="rgba(224,82,82,0.3)" stroke="#E05252" stroke-width="2"/><text x="50" y="12" text-anchor="middle" fill="rgba(224,82,82,0.6)" font-size="9">Bearish Crossover</text></svg>`,
+       name:'MACD Bearish Cross', signal:'bear', signalText:'SELL SIGNAL', desc:'MACD line crosses below signal line. Bearish momentum building. Often triggers selling from systematic traders.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,45 L30,42 L50,40 L70,38 L90,35" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="2.5" stroke-dasharray="6 2"/><path d="M10,55 L25,52 L35,48 L48,43 L58,41 L72,38 L85,34" fill="none" stroke="rgba(76,139,201,0.5)" stroke-width="2"/><path d="M10,60 L20,55 L30,52 L40,46 L52,43 L62,40 L70,37 L80,34 L90,31" fill="none" stroke="#C9A84C" stroke-width="2.5"/></svg>`,
+       name:'Price Above VWAP', signal:'bull', signalText:'BULLISH BIAS', desc:'Price trading above VWAP all day. Buyers are in control. Institutions are not net sellers at this price.'},
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,35 L30,38 L50,40 L70,42 L90,45" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="2.5" stroke-dasharray="6 2"/><path d="M10,28 L25,32 L35,36 L48,40 L58,44 L72,48 L85,52" fill="none" stroke="rgba(76,139,201,0.5)" stroke-width="2"/><path d="M10,22 L20,27 L30,32 L40,38 L52,44 L62,48 L70,51 L80,55 L90,59" fill="none" stroke="#C9A84C" stroke-width="2.5"/></svg>`,
+       name:'Price Below VWAP', signal:'bear', signalText:'BEARISH BIAS', desc:'Price trading below VWAP. Sellers in control intraday. Institutions are not net buyers at current price.'},
+    ],
+    example:{
+      scenario:'Day Trading NVDA — RSI + VWAP Confluence',
+      text:'NVDA opens strong, pushing above VWAP immediately. By 10:30am RSI hits 78 — overbought territory. Price also reaches a known resistance level at $520. Three signals converge: <strong>RSI overbought, at resistance, and extended above VWAP</strong>. A momentum trader would consider reducing or exiting the long position here, not adding to it. An hour later NVDA pulls back 4% to VWAP before bouncing again.',
+      callout:{icon:'💡',text:'<strong>Confluence is everything:</strong> One indicator saying something = weak signal. Two indicators agreeing = moderate signal. Three indicators pointing the same direction = high-probability setup. Never trade off a single indicator alone.'},
+    },
+    glossary:[
+      {term:'RSI',def:'Relative Strength Index — momentum oscillator measuring overbought (>70) and oversold (<30) conditions.'},
+      {term:'MACD',def:'Moving Average Convergence Divergence — shows trend direction and momentum changes via MA crossovers.'},
+      {term:'VWAP',def:'Volume Weighted Average Price — the daily average price weighted by volume. Resets each session.'},
+      {term:'Overbought',def:'RSI above 70 — price has risen quickly, may be due for a pause or pullback.'},
+      {term:'Oversold',def:'RSI below 30 — price has fallen quickly, may be due for a bounce.'},
+      {term:'Divergence',def:'When price and an indicator move in opposite directions — often a reversal warning.'},
+      {term:'Confluence',def:'When multiple indicators agree on the same signal — higher probability trade setup.'},
+      {term:'Histogram',def:'The MACD bars showing the gap between the MACD line and signal line — wider = stronger momentum.'},
+    ],
+    quiz:[
+      {q:'The RSI reading on a stock is 82. What does this indicate?',opts:['The stock is oversold and likely to bounce','The stock is overbought — it has risen fast and may be due for a pullback','RSI of 82 means nothing — RSI only matters below 50','The stock has 82% institutional ownership'],correct:1,feedback:'RSI above 70 indicates overbought conditions — the stock has moved up quickly relative to recent history. It does NOT guarantee a reversal, but it warns that momentum may slow. Combined with resistance or bearish candlesticks, it becomes a stronger signal.'},
+      {q:'VWAP is described as the "institutional benchmark." Why do institutions care about VWAP?',opts:['They are legally required to trade at VWAP','VWAP tells them the average price other participants paid — buying below VWAP means they got a favorable price','VWAP is the only accurate price data available','Institutions invented VWAP for their own exclusive use'],correct:1,feedback:'Institutions benchmark their executions against VWAP. If they bought below the daily VWAP, they outperformed the average market participant. This creates natural buying interest below VWAP (institutions want good fills) which is why price below VWAP often finds support.'},
+      {q:'The MACD line crosses BELOW the signal line after an extended uptrend. What does this suggest?',opts:['Strong continuation of the uptrend — buy more','Bullish momentum is building — this is a buy signal','Bearish momentum is building — the upside trend may be losing steam','This is called a golden cross'],correct:2,feedback:'A bearish MACD crossover (MACD line crossing below signal line) indicates that short-term momentum is weakening relative to longer-term momentum. After an extended uptrend, this is a warning that the move may be exhausting. Not a guaranteed reversal but worth attention.'},
+      {q:'A stock is trading BELOW its VWAP for most of the trading session. What is the intraday bias?',opts:['Strongly bullish — below VWAP is a discount','Bearish — sellers have been in control all day, institutions have not been net buyers','Neutral — VWAP only matters for long-term investors','VWAP is only relevant for cryptocurrency trading'],correct:1,feedback:'Price below VWAP means the average participant who traded that day paid more than the current price — they are underwater. Institutions generally avoid adding to positions above their benchmark (VWAP). A bearish bias exists as long as price is below VWAP.'},
+      {q:'What is "confluence" in technical analysis and why is it important?',opts:['The volume of trades at a specific price level','When multiple independent indicators or signals agree, creating a higher-probability trade setup','A type of candlestick pattern','The crossover between the MACD and RSI lines'],correct:1,feedback:'Confluence means multiple indicators are pointing in the same direction simultaneously. One signal = weak. Three converging signals = strong. For example: price at support + RSI oversold + MACD bullish crossover + above VWAP = four confluent factors suggesting a high-probability long entry.'},
+    ],
+  },
+];
+
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let state={current:0,completed:{},totalXP:0,answers:{},submitted:{}};
+function loadState(){try{const s=JSON.parse(localStorage.getItem('dojo_charts')||'{}');Object.assign(state,s);}catch(e){}}
+function saveState(){try{localStorage.setItem('dojo_charts',JSON.stringify(state));}catch(e){}}
+
+// ═══════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════
+function buildSidebar(){
+  const nav=document.getElementById('sb-nav');
+  nav.innerHTML=LESSONS.map((l,i)=>{
+    const done=state.completed[i]!==undefined,active=i===state.current;
+    let bc='nb-idle',bt=(i+1)+'';
+    if(active&&!done){bc='nb-active';bt='▶';}
+    if(done){bc='nb-done';bt='✓';}
+    const meta=done?`${state.completed[i]}/5 correct`:active?'In progress':'Not started';
+    return `<div class="nav-item${active?' active':''}${done?' completed':''}" onclick="selectLesson(${i})" id="nav-${i}">
+      <div class="nav-color-dot" style="background:${l.color}"></div>
+      <div class="nav-info"><div class="nav-name">${l.emoji} ${l.name}</div><div class="nav-meta">${meta}</div></div>
+      <div class="nav-badge ${bc}">${bt}</div>
+    </div>`;
+  }).join('');
+  updateProgress();
+}
+
+function updateProgress(){
+  const done=Object.keys(state.completed).length;
+  document.getElementById('sp-txt').textContent=done+' / '+LESSONS.length;
+  document.getElementById('sp-fill').style.width=(done/LESSONS.length*100)+'%';
+  document.getElementById('xp-disp').textContent=state.totalXP;
+  document.getElementById('sb-xp').textContent=state.totalXP;
+}
+
+// ═══════════════════════════════════
+// BUILD LESSON
+// ═══════════════════════════════════
+function buildLesson(idx){
+  if(document.getElementById('lesson-'+idx))return;
+  const l=LESSONS[idx];
+  const area=document.getElementById('content-area');
+  const div=document.createElement('div');
+  div.className='lesson';div.id='lesson-'+idx;
+  div.style.setProperty('--lc-color',l.color);
+  div.style.setProperty('--lc-glow',l.glow);
+
+  div.innerHTML=`
+    <div class="lesson-hero">
+      <div class="hero-eyebrow">Module V · Lesson ${idx+1} of ${LESSONS.length}</div>
+      <span class="hero-emoji">${l.emoji}</span>
+      <div class="hero-title">${l.name}</div>
+      <div class="hero-sub">${l.subtitle}</div>
+      <p class="hero-desc">${l.desc}</p>
+      <div class="hero-quote">${l.quote}</div>
+    </div>
+
+    <div class="lesson-body">
+
+      <!-- INTERACTIVE DIAGRAM -->
+      <div class="section-block">
+        <div class="section-label">Interactive Diagram</div>
+        <div class="diagram-wrap">
+          <div class="diagram-header">
+            <div class="dh-title">${l.name} — Visual Breakdown</div>
+          </div>
+          <div class="diagram-svg-wrap" id="diagram-${idx}">${l.diagramFn()}</div>
+          <div class="diagram-caption">${l.diagramCaption}</div>
+        </div>
+      </div>
+
+      <!-- CONCEPTS -->
+      <div class="section-block">
+        <div class="section-label">How It Works</div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          ${l.concept.map((c,ci)=>`
+            <div style="display:flex;gap:20px;padding:18px 0;border-bottom:1px solid var(--border);${ci===l.concept.length-1?'border-bottom:none':''}">
+              <div style="width:34px;height:34px;border:2px solid ${l.color};display:flex;align-items:center;justify-content:center;font-family:Cinzel,serif;font-size:0.78rem;font-weight:700;color:${l.color};flex-shrink:0;">${ci+1}</div>
+              <div>
+                <div style="font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:5px;letter-spacing:0.04em">${c.title}</div>
+                <div style="font-size:0.93rem;line-height:1.65;color:var(--text-dim);font-weight:300">${c.desc}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- PATTERNS -->
+      <div class="section-block">
+        <div class="section-label">Key Patterns to Know</div>
+        <div class="pattern-grid">
+          ${l.patterns.map(p=>`
+            <div class="pattern-card">
+              <div class="pc-svg">${p.svg}</div>
+              <div class="pc-name">${p.name}</div>
+              <div class="pc-signal ${p.signal}">${p.signalText}</div>
+              <div class="pc-desc">${p.desc}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- EXAMPLE -->
+      <div class="section-block">
+        <div class="section-label">Real World Example</div>
+        <div class="example-box">
+          <div class="ex-scenario">${l.example.scenario}</div>
+          <div class="ex-text">${l.example.text}</div>
+          <div class="ex-callout">
+            <div class="ec-icon">${l.example.callout.icon}</div>
+            <div class="ec-text">${l.example.callout.text}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GLOSSARY -->
+      <div class="section-block">
+        <div class="section-label">Key Terms</div>
+        <div class="glossary-grid">
+          ${l.glossary.map(g=>`
+            <div class="glossary-item">
+              <div class="gi-term">${g.term}</div>
+              <div class="gi-def">${g.def}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- QUIZ -->
+    <div class="quiz-section">
+      <div class="quiz-title">Knowledge Check</div>
+      <div class="quiz-sub">5 questions · 50 XP each · 250 XP available</div>
+      ${l.quiz.map((q,qi)=>`
+        <div class="qz-block">
+          <div class="qz-num">Question ${qi+1}</div>
+          <div class="qz-q">${q.q}</div>
+          <div class="qz-opts" id="opts-${idx}-${qi}">
+            ${q.opts.map((o,oi)=>`
+              <button class="qz-opt" id="opt-${idx}-${qi}-${oi}" onclick="pickOpt(${idx},${qi},${oi})">
+                <div class="qz-dot">${String.fromCharCode(65+oi)}</div>
+                <div class="qz-opt-text">${o}</div>
+              </button>`).join('')}
+          </div>
+          <div class="qz-fb" id="fb-${idx}-${qi}"></div>
+        </div>`).join('')}
+      <div class="ornament"><span>◆</span></div>
+      <div class="qz-nav">
+        <button class="btn-sub" id="btn-sub-${idx}" onclick="submitQuiz(${idx})">Submit Answers</button>
+        <button class="btn-next-l" id="btn-next-${idx}" onclick="goNext(${idx})">
+          ${idx<LESSONS.length-1?'Next: '+LESSONS[idx+1].name+' →':'Complete Module ✓'}
+        </button>
+        <button class="btn-ghost" onclick="document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'})">↑ Review</button>
+      </div>
+      <div class="score-box" id="score-${idx}">
+        <div class="score-big" id="sbig-${idx}">0/5</div>
+        <div class="score-lbl">Questions Correct</div>
+        <div class="score-xp" id="sxp-${idx}">+0 XP</div>
+        <div class="score-msg" id="smsg-${idx}"></div>
+      </div>
+    </div>`;
+
+  area.appendChild(div);
+  const saved=state.answers[idx]||{};
+  Object.entries(saved).forEach(([qi,oi])=>{document.getElementById(`opt-${idx}-${qi}-${oi}`)?.classList.add('sel');});
+  if(state.submitted[idx])setTimeout(()=>renderSubmitted(idx),40);
+  checkReady(idx);
+}
+
+// ═══════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════
+function selectLesson(idx){
+  state.current=idx;
+  document.querySelectorAll('.lesson').forEach(l=>l.classList.remove('active'));
+  buildLesson(idx);
+  document.getElementById('lesson-'+idx).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach((n,i)=>n.classList.toggle('active',i===idx));
+  document.getElementById('content-area').scrollTo({top:0,behavior:'smooth'});
+}
+function goNext(idx){
+  if(idx<LESSONS.length-1)selectLesson(idx+1);
+  else alert('🏆 Chart Reading module complete! You can now read the market. Next: Risk Management.');
+}
+
+// ═══════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════
+function pickOpt(li,qi,oi){
+  if(state.submitted[li])return;
+  LESSONS[li].quiz[qi].opts.forEach((_,o)=>document.getElementById(`opt-${li}-${qi}-${o}`)?.classList.remove('sel'));
+  document.getElementById(`opt-${li}-${qi}-${oi}`)?.classList.add('sel');
+  if(!state.answers[li])state.answers[li]={};
+  state.answers[li][qi]=oi;
+  saveState();
+  checkReady(li);
+}
+function checkReady(li){
+  if(state.submitted[li])return;
+  const all=LESSONS[li].quiz.every((_,qi)=>state.answers[li]?.[qi]!==undefined);
+  document.getElementById('btn-sub-'+li)?.classList.toggle('rdy',all);
+}
+function submitQuiz(li){
+  if(!LESSONS[li].quiz.every((_,qi)=>state.answers[li]?.[qi]!==undefined))return;
+  state.submitted[li]=true;
+  renderSubmitted(li);
+  let correct=0;
+  LESSONS[li].quiz.forEach((q,qi)=>{if(state.answers[li][qi]===q.correct)correct++;});
+  const xp=correct*50;
+  state.completed[li]=correct;state.totalXP+=xp;
+  saveState();
+  const msgs=['Keep studying — review the lesson and try again.','Good effort — review the ones you missed.','Solid understanding building here.','Strong! You read charts well.','Perfect score — Chart Master! 🏆'];
+  document.getElementById('sbig-'+li).textContent=correct+'/5';
+  document.getElementById('sxp-'+li).textContent='+'+xp+' XP Earned';
+  document.getElementById('smsg-'+li).textContent=msgs[correct]||msgs[2];
+  document.getElementById('score-'+li).classList.add('show');
+  document.getElementById('btn-sub-'+li).style.display='none';
+  document.getElementById('btn-next-'+li).style.display='inline-block';
+  buildSidebar();
+  setTimeout(()=>document.getElementById('score-'+li)?.scrollIntoView({behavior:'smooth',block:'center'}),200);
+}
+function renderSubmitted(li){
+  const ans=state.answers[li]||{};
+  LESSONS[li].quiz.forEach((q,qi)=>{
+    q.opts.forEach((_,oi)=>{
+      const btn=document.getElementById(`opt-${li}-${qi}-${oi}`);
+      if(!btn)return;
+      btn.classList.remove('sel','ok','no');
+      if(oi===q.correct)btn.classList.add('ok');
+      else if(ans[qi]===oi)btn.classList.add('no');
+      btn.disabled=true;
+    });
+    const fb=document.getElementById(`fb-${li}-${qi}`);
+    if(fb){const ok=ans[qi]===q.correct;fb.className='qz-fb show '+(ok?'ok':'no');fb.textContent=(ok?'✓ ':'✗ Correct: '+q.opts[q.correct]+'. ')+q.feedback;}
+  });
+  document.getElementById('btn-sub-'+li).style.display='none';
+  document.getElementById('btn-next-'+li).style.display='inline-block';
+  if(state.completed[li]!==undefined){
+    const c=state.completed[li];
+    const msgs=['Keep studying.','Good effort.','Solid understanding.','Strong!','Perfect! 🏆'];
+    document.getElementById('sbig-'+li).textContent=c+'/5';
+    document.getElementById('sxp-'+li).textContent='+'+(c*50)+' XP Earned';
+    document.getElementById('smsg-'+li).textContent=msgs[c]||msgs[2];
+    document.getElementById('score-'+li)?.classList.add('show');
+  }
+}
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+loadState();
+buildSidebar();
+buildLesson(state.current);
+document.getElementById('lesson-'+state.current).classList.add('active');
+updateProgress();
+</script>
+</body>
+</html>
