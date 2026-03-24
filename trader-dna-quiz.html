@@ -6,7 +6,7 @@
 <title>Trader DNA Quiz · The Trading Dojo</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root {
+:root{
   --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;
   --ink:#0A0A0F;--ink-3:#1A1A24;--ink-4:#22222E;
   --panel:#13131C;--border:rgba(201,168,76,0.18);--border-bright:rgba(201,168,76,0.55);
@@ -24,12 +24,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 @keyframes o1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,50px)}}
 @keyframes o2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,-70px)}}
 @keyframes o3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-40%,-60%)}}
-
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
 
-/* TOP BAR */
+/* TOPBAR */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 36px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.85);backdrop-filter:blur(12px);}
-.logo{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold);display:flex;align-items:center;gap:10px;}
+.logo{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold);display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;}
 .logo-mark{width:30px;height:30px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.9rem;position:relative;}
 .logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.25);}
 .topbar-right{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;}
@@ -48,19 +47,26 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 2
 .eyebrow::after{background:linear-gradient(90deg,var(--gold-dim),transparent);}
 .intro-title{font-family:'Cinzel Decorative',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:var(--gold);line-height:1.1;margin-bottom:10px;text-shadow:0 0 60px rgba(201,168,76,0.2);}
 .intro-sub{font-family:'Cinzel',serif;font-size:0.9rem;letter-spacing:0.15em;color:var(--text-dim);margin-bottom:36px;}
-.intro-desc{font-size:1.05rem;line-height:1.75;color:var(--text-dim);font-weight:300;max-width:540px;margin:0 auto 48px;}
+.intro-desc{font-size:1.05rem;line-height:1.75;color:var(--text-dim);font-weight:300;max-width:540px;margin:0 auto 24px;}
 .intro-desc strong{color:var(--text);font-weight:500;}
+
+/* Recommendation banner */
+.rec-banner{background:rgba(201,168,76,0.06);border:1px solid var(--border);border-left:3px solid var(--gold);padding:16px 20px;max-width:540px;margin:0 auto 36px;text-align:left;display:flex;gap:14px;align-items:flex-start;}
+.rec-icon{font-size:1.4rem;line-height:1;flex-shrink:0;}
+.rec-text{font-size:0.9rem;color:var(--text-dim);line-height:1.6;font-weight:300;}
+.rec-text strong{color:var(--gold);font-weight:600;}
+
 .trait-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:48px;}
 .trait-pill{padding:8px 18px;border:1px solid var(--border);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--text-dim);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);background:var(--panel);}
 .btn-start{font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:18px 56px;cursor:pointer;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all 0.25s;}
 .btn-start:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold));transform:translateY(-2px);box-shadow:0 10px 40px rgba(201,168,76,0.25);}
 
-/* QUIZ */
-.quiz-header{margin-bottom:36px;}
+/* QUIZ HEADER */
+.quiz-header{margin-bottom:28px;}
 .quiz-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 .q-counter{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.2em;color:var(--gold-dim);}
 .q-counter span{color:var(--gold);font-size:0.9rem;font-weight:700;}
-.progress-track{width:100%;height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;position:relative;}
+.progress-track{width:100%;height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-light));border-radius:2px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);position:relative;}
 .progress-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:8px;background:var(--gold-light);filter:blur(3px);}
 .trait-bar-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
@@ -69,22 +75,57 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 2
 .ti-label span{color:var(--gold);}
 .ti-track{height:2px;background:var(--ink-4);border-radius:1px;overflow:hidden;}
 .ti-fill{height:100%;border-radius:1px;transition:width 0.6s ease;}
-.q-card{background:var(--panel);border:1px solid var(--border);padding:36px 40px;margin-bottom:24px;position:relative;overflow:hidden;}
+
+/* QUESTION CARD */
+.q-card{background:var(--panel);border:1px solid var(--border);padding:28px 32px;margin-bottom:20px;position:relative;overflow:hidden;}
 .q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-.q-scenario{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;color:var(--gold-dim);margin-bottom:14px;text-transform:uppercase;}
-.q-text{font-size:1.2rem;font-weight:500;line-height:1.6;color:var(--text);}
+.q-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
+.q-scenario{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;}
+.q-text{font-size:1.15rem;font-weight:500;line-height:1.6;color:var(--text);}
 .q-text em{color:var(--gold);font-style:normal;font-weight:600;}
-.options-grid{display:flex;flex-direction:column;gap:12px;}
-.option-btn{background:var(--panel);border:1px solid var(--border);padding:18px 24px;cursor:pointer;text-align:left;transition:all 0.2s;display:flex;align-items:flex-start;gap:16px;position:relative;overflow:hidden;width:100%;}
+
+/* SENSEI BUTTON */
+.sensei-btn{display:flex;align-items:center;gap:6px;background:rgba(201,168,76,0.07);border:1px solid var(--border);padding:6px 12px;cursor:pointer;flex-shrink:0;transition:all 0.2s;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--gold-dim);white-space:nowrap;}
+.sensei-btn:hover{background:rgba(201,168,76,0.13);color:var(--gold);border-color:rgba(201,168,76,0.4);}
+.sensei-btn-emoji{font-size:1rem;line-height:1;}
+
+/* SENSEI POPUP */
+.sensei-popup{display:none;background:var(--ink-3);border:1px solid rgba(201,168,76,0.3);padding:0;margin-bottom:16px;position:relative;animation:fadeUp 0.25s ease;}
+.sensei-popup.show{display:block;}
+.sensei-popup-inner{display:flex;gap:0;}
+.sensei-avatar-col{background:rgba(201,168,76,0.06);border-right:1px solid rgba(201,168,76,0.15);padding:16px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;min-width:80px;}
+.sensei-chibi{font-size:2.4rem;line-height:1;animation:bob 2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.sensei-name{font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.12em;color:var(--gold-dim);text-transform:uppercase;text-align:center;}
+.sensei-content{padding:16px 20px;flex:1;}
+.sensei-label{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
+.sensei-explain{font-size:0.95rem;line-height:1.65;color:var(--text-dim);font-weight:300;}
+.sensei-explain strong{color:var(--text);font-weight:500;}
+.sensei-tip{margin-top:10px;padding:8px 12px;background:rgba(201,168,76,0.05);border-left:2px solid var(--gold-dim);font-size:0.82rem;color:var(--text-dim);font-style:italic;line-height:1.5;}
+.sensei-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--text-faint,#3A3630);cursor:pointer;font-size:1rem;line-height:1;padding:2px 6px;transition:color 0.2s;}
+.sensei-close:hover{color:var(--gold-dim);}
+
+/* OPTIONS */
+.options-grid{display:flex;flex-direction:column;gap:10px;}
+.option-btn{background:var(--panel);border:1px solid var(--border);padding:16px 22px;cursor:pointer;text-align:left;transition:all 0.2s;display:flex;align-items:flex-start;gap:14px;position:relative;overflow:hidden;width:100%;}
 .option-btn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold-dim);transform:scaleY(0);transform-origin:center;transition:transform 0.25s;}
 .option-btn:hover::before,.option-btn.selected::before{transform:scaleY(1);}
 .option-btn.selected::before{background:var(--gold);}
+.option-btn.option-e::before{background:var(--text-dim);}
 .option-btn:hover{border-color:rgba(201,168,76,0.4);background:var(--ink-3);transform:translateX(4px);}
 .option-btn.selected{border-color:var(--gold);background:rgba(201,168,76,0.08);}
+.option-btn.option-e{border-style:dashed;opacity:0.75;}
+.option-btn.option-e:hover{opacity:1;border-style:solid;}
+.option-btn.option-e.selected{border-style:solid;opacity:1;border-color:var(--text-dim);background:rgba(138,128,112,0.08);}
 .opt-letter{width:28px;height:28px;border:1px solid var(--border-bright);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--gold);flex-shrink:0;transition:all 0.2s;}
+.option-btn.option-e .opt-letter{color:var(--text-dim);border-color:var(--text-dim);}
 .option-btn:hover .opt-letter,.option-btn.selected .opt-letter{background:var(--gold);color:var(--ink);border-color:var(--gold);}
-.opt-text{font-size:1rem;font-weight:400;line-height:1.5;color:var(--text-dim);padding-top:3px;transition:color 0.2s;}
+.option-btn.option-e.selected .opt-letter{background:var(--text-dim);color:var(--ink);border-color:var(--text-dim);}
+.opt-text{font-size:0.97rem;font-weight:400;line-height:1.5;color:var(--text-dim);padding-top:3px;transition:color 0.2s;}
 .option-btn:hover .opt-text,.option-btn.selected .opt-text{color:var(--text);}
+.opt-tag{font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.1em;padding:2px 7px;border:1px solid rgba(138,128,112,0.3);color:var(--text-dim);margin-left:auto;flex-shrink:0;margin-top:2px;align-self:center;}
+
+/* NAV */
 .quiz-nav{display:flex;justify-content:flex-end;align-items:center;gap:16px;margin-top:8px;}
 .btn-next{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:14px 40px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.25s;opacity:0.4;pointer-events:none;}
 .btn-next.enabled{opacity:1;pointer-events:all;}
@@ -161,7 +202,7 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 2
 <div class="bg-orbs"><span></span><span></span><span></span></div>
 <div class="app">
   <div class="topbar">
-    <div class="logo"><div class="logo-mark">⚔</div>The Trading Dojo</div>
+    <a class="logo" href="index.html"><div class="logo-mark">⚔</div>The Trading Dojo</a>
     <div class="topbar-right">Trader DNA · Identity Protocol</div>
   </div>
   <main>
@@ -172,7 +213,13 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 2
         <div class="eyebrow">Identity Protocol</div>
         <div class="intro-title">Trader DNA</div>
         <div class="intro-sub">Discover Your Trading Archetype</div>
-        <p class="intro-desc">10 real-world scenarios. No right or wrong answers.<br/>We measure <strong>5 core traits</strong> to reveal your natural trading personality — then build your custom learning path around it.</p>
+        <p class="intro-desc">10 real-world scenarios reveal your natural trading personality. No wrong answers — and if you do not know something yet, just pick <strong>Option E</strong>. Sensei 🥷 is here to explain anything you need.</p>
+
+        <div class="rec-banner">
+          <div class="rec-icon">🥷</div>
+          <div class="rec-text"><strong>Sensei says:</strong> You will get the most out of this quiz after completing the Instruments and Styles modules — but feel free to take it now and retake it later. Your results only get sharper as you learn more.</div>
+        </div>
+
         <div class="trait-pills">
           <div class="trait-pill">⚡ Speed &amp; Timing</div>
           <div class="trait-pill">🧠 Analysis Style</div>
@@ -194,11 +241,36 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 2
         <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
         <div class="trait-bar-row" id="trait-bar-row"></div>
       </div>
+
+      <!-- Sensei popup -->
+      <div class="sensei-popup" id="sensei-popup">
+        <div class="sensei-popup-inner">
+          <div class="sensei-avatar-col">
+            <div class="sensei-chibi">🥷</div>
+            <div class="sensei-name">Sensei</div>
+          </div>
+          <div class="sensei-content">
+            <div class="sensei-label">Sensei Explains</div>
+            <div class="sensei-explain" id="sensei-explain"></div>
+            <div class="sensei-tip" id="sensei-tip"></div>
+          </div>
+        </div>
+        <button class="sensei-close" onclick="closeSensei()">✕</button>
+      </div>
+
       <div class="q-card" id="q-card">
-        <div class="q-scenario" id="q-scenario"></div>
+        <div class="q-card-top">
+          <div class="q-scenario" id="q-scenario"></div>
+          <button class="sensei-btn" onclick="toggleSensei()" id="sensei-btn">
+            <span class="sensei-btn-emoji">🥷</span>
+            <span>Ask Sensei</span>
+          </button>
+        </div>
         <div class="q-text" id="q-text"></div>
       </div>
+
       <div class="options-grid" id="options-grid"></div>
+
       <div class="quiz-nav">
         <button class="q-skip" onclick="skipQuestion()">Skip →</button>
         <button class="btn-next" id="btn-next" onclick="nextQuestion()">Next</button>
@@ -237,7 +309,7 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 2
         <div class="result-cards" id="result-cards"></div>
         <div class="path-rec" id="path-rec"></div>
         <div class="result-cta">
-          <button class="btn-primary" onclick="lockInResult()">Lock In This Path</button>
+          <a href="instruments.html" class="btn-primary">Start Learning →</a>
           <button class="btn-ghost" onclick="retakeQuiz()">Retake Quiz</button>
         </div>
       </div>
@@ -245,22 +317,28 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 2
 
   </main>
 </div>
+
 <script>
 const TRAITS = {
-  speed:    { label:'Speed & Timing',  color:'#C9A84C', icon:'⚡' },
-  analysis: { label:'Analysis Style',  color:'#8B6FD4', icon:'🧠' },
-  risk:     { label:'Risk Appetite',   color:'#C94C4C', icon:'🎯' },
-  emotion:  { label:'Emotion Control', color:'#4CC9A8', icon:'🧘' },
-  patience: { label:'Patience',        color:'#4C8BC9', icon:'⏳' },
+  speed:    {label:'Speed & Timing',  color:'#C9A84C',icon:'⚡'},
+  analysis: {label:'Analysis Style',  color:'#8B6FD4',icon:'🧠'},
+  risk:     {label:'Risk Appetite',   color:'#C94C4C',icon:'🎯'},
+  emotion:  {label:'Emotion Control', color:'#4CC9A8',icon:'🧘'},
+  patience: {label:'Patience',        color:'#4C8BC9',icon:'⏳'},
 };
 
+// ── QUESTIONS with sensei explanation per question ──
 const QUESTIONS = [
   {
     scenario:'Pre-Market — 7:42 AM',
     text:'Your stock just gapped up <em>9% before the open</em>. You already hold a position. What do you do?',
+    sensei:{
+      explain:'A <strong>stock</strong> is a small piece of ownership in a company. When you own a stock and its price jumps up before the market opens, that is called a <strong>gap up</strong> — the price "jumped" overnight on good news. You now have a decision: take the profit now, wait for more, or add more.',
+      tip:'A 9% gap up before the open is a big move. There is no universally right answer — it depends on your trading style.',
+    },
     options:[
       {letter:'A',text:'Sell immediately at the open — lock in the profit before it fades.',scores:{speed:3,risk:-1,patience:-1}},
-      {letter:'B',text:'Set a limit order slightly below the gap high and wait for pullback confirmation.',scores:{analysis:2,patience:2,emotion:2}},
+      {letter:'B',text:'Set a limit order slightly below the gap high and wait for a pullback confirmation.',scores:{analysis:2,patience:2,emotion:2}},
       {letter:'C',text:'Hold — gaps like this often run further. Let it breathe.',scores:{patience:3,risk:2,speed:-1}},
       {letter:'D',text:'Add to the position. Momentum is your friend right now.',scores:{risk:3,speed:2,emotion:-2}},
     ]
@@ -268,6 +346,10 @@ const QUESTIONS = [
   {
     scenario:'Trade Management',
     text:'You are in a trade and it is <em>down 6%</em>. Your plan said cut at 5%. What happens?',
+    sensei:{
+      explain:'A <strong>stop loss</strong> is a pre-set rule that says "if this trade loses X%, I sell automatically to protect the rest of my money." Going "down 6%" means the price dropped and your investment is currently worth 6% less than what you paid. The question is: do you follow your plan or hope it bounces back?',
+      tip:'Most experienced traders say: always follow the plan. Breaking your stop loss rules is how small losses become big ones.',
+    },
     options:[
       {letter:'A',text:'Cut it. The plan is the plan. No emotions.',scores:{emotion:3,risk:-1,patience:1}},
       {letter:'B',text:'Hold a bit longer — it looks like it is forming a base. Maybe it bounces.',scores:{emotion:-2,patience:2,risk:2}},
@@ -278,6 +360,10 @@ const QUESTIONS = [
   {
     scenario:'Research Style',
     text:'You are looking for your next trade. <em>How do you find it?</em>',
+    sensei:{
+      explain:'Traders find trade ideas in different ways. <strong>Technical analysis</strong> means reading charts and price patterns. <strong>Fundamental analysis</strong> means studying a company\'s earnings and financials. <strong>Smart money tracking</strong> means watching what big institutions and insiders are doing. There is no single right method — each suits a different personality.',
+      tip:'Most successful traders eventually combine multiple approaches, but usually start with one they naturally connect with.',
+    },
     options:[
       {letter:'A',text:'I scan for volume spikes and price breakouts in real time.',scores:{speed:3,analysis:1,patience:-1}},
       {letter:'B',text:'I dig into earnings reports, revenue growth, and fundamentals.',scores:{analysis:3,patience:3,speed:-2}},
@@ -288,6 +374,10 @@ const QUESTIONS = [
   {
     scenario:'Time Horizon',
     text:'Your ideal trade lasts <em>how long</em>?',
+    sensei:{
+      explain:'Different trading styles hold positions for very different lengths of time. <strong>Day traders</strong> open and close the same day. <strong>Swing traders</strong> hold for days or weeks. <strong>Position traders</strong> hold for months. <strong>Long-term investors</strong> hold for years. Your ideal hold time says a lot about your personality and how much screen time you want to commit.',
+      tip:'There is no superior time horizon — each has different risk profiles, stress levels, and skill requirements.',
+    },
     options:[
       {letter:'A',text:'Minutes to a couple of hours. In and out same day.',scores:{speed:3,patience:-2,risk:2}},
       {letter:'B',text:'A few days to a couple of weeks. Ride the swing.',scores:{patience:2,speed:1,analysis:2}},
@@ -298,6 +388,10 @@ const QUESTIONS = [
   {
     scenario:'Market Crash — Red Day',
     text:'The market drops <em>4% in one session</em>. Everything is bleeding. Your reaction?',
+    sensei:{
+      explain:'A <strong>market crash or red day</strong> is when stock prices fall sharply across the board — sometimes from bad economic news, a crisis, or just panic selling. Your reaction on these days reveals a lot about your trading psychology. Some traders see panic as opportunity. Others protect capital. Others ride the downside.',
+      tip:'How you react to losses and fear is one of the most important factors in long-term trading success.',
+    },
     options:[
       {letter:'A',text:'Opportunity. I go shopping for quality assets at a discount.',scores:{patience:3,analysis:2,emotion:3}},
       {letter:'B',text:'I short the weakness. If it is going down, I am riding it down.',scores:{speed:3,risk:3,emotion:1}},
@@ -308,6 +402,10 @@ const QUESTIONS = [
   {
     scenario:'Win Streak',
     text:'You have hit <em>5 winning trades in a row</em>. What do you do next?',
+    sensei:{
+      explain:'A <strong>win streak</strong> is when multiple trades in a row come out profitable. The psychological trap here is called <strong>overconfidence</strong> — feeling like you cannot lose, which often leads to taking bigger risks than normal. How you respond to success is just as revealing as how you respond to losses.',
+      tip:'Professional traders treat win streaks with the same discipline as losing streaks. The rules do not change just because things are going well.',
+    },
     options:[
       {letter:'A',text:'Size up. I am in a flow state — capitalize on it.',scores:{risk:3,speed:2,emotion:-2}},
       {letter:'B',text:'Stay exactly the same size. Discipline does not change with luck.',scores:{emotion:3,risk:-1,patience:2}},
@@ -318,6 +416,10 @@ const QUESTIONS = [
   {
     scenario:'Instrument Preference',
     text:'Given the choice, <em>what do you want to trade</em>?',
+    sensei:{
+      explain:'Different financial instruments have different personalities. <strong>Stocks</strong> = ownership in a company, can hold long-term. <strong>Options</strong> = contracts that give you the right to buy/sell at a set price — leveraged, more complex. <strong>Crypto</strong> = digital currencies, high volatility 24/7. <strong>Futures/Forex</strong> = global markets for commodities and currencies. You will learn all of these in the Instruments module!',
+      tip:'Most beginners start with stocks — they are the most straightforward and have the longest track record of data to learn from.',
+    },
     options:[
       {letter:'A',text:'Options — leverage, defined risk, and the ability to play both directions.',scores:{analysis:3,risk:2,speed:1}},
       {letter:'B',text:'Crypto — 24/7 markets, big volatility, massive potential moves.',scores:{risk:3,speed:3,patience:-1}},
@@ -328,6 +430,10 @@ const QUESTIONS = [
   {
     scenario:'The Big Loss',
     text:'You just took your <em>biggest loss ever</em> — 3x your normal risk. What happens next?',
+    sensei:{
+      explain:'Every trader eventually takes a big loss. How you respond is one of the most important character tests in trading. <strong>Revenge trading</strong> means immediately jumping back in to try to make the money back — this almost always makes things worse. <strong>Journaling</strong> means writing down what happened and analyzing your mistake so you can learn from it.',
+      tip:'The traders who survive long-term are not the ones who never lose — they are the ones who know how to process a loss and come back clear-headed.',
+    },
     options:[
       {letter:'A',text:'Stop trading for the day. Review it tomorrow with fresh eyes.',scores:{emotion:3,patience:3,analysis:2}},
       {letter:'B',text:'Take one more controlled trade to get my confidence back.',scores:{emotion:1,risk:2,speed:2}},
@@ -338,6 +444,10 @@ const QUESTIONS = [
   {
     scenario:'News Event',
     text:'Big earnings drop <em>after market close</em>. The stock is up 15% after-hours. You do not own it yet.',
+    sensei:{
+      explain:'<strong>Earnings</strong> are quarterly reports where companies announce how much money they made. If results beat expectations, the stock often pops up. <strong>After-hours trading</strong> happens after the regular 4pm market close — it is less liquid and can be more volatile. The question here tests how you balance urgency vs. discipline.',
+      tip:'Many gap-ups on earnings fade or reverse by mid-morning. "First mover" is not always the winner — patience and confirmation often are.',
+    },
     options:[
       {letter:'A',text:'Buy AH right now. First mover wins.',scores:{speed:3,risk:3,patience:-2}},
       {letter:'B',text:'Wait for the market open, see how it trades, then decide.',scores:{patience:3,analysis:2,emotion:2}},
@@ -348,6 +458,10 @@ const QUESTIONS = [
   {
     scenario:'Your Trading Goal',
     text:'<em>Why are you learning to trade?</em> Be honest.',
+    sensei:{
+      explain:'Your motivation for trading shapes everything — how much risk you take, how patient you are, and what success means to you. There is no wrong answer here. Whether you want a quick income stream, long-term wealth, or just to understand how money works in the world, knowing your "why" helps you pick the right style and stay disciplined when things get hard.',
+      tip:'The traders who last longest are usually the ones trading for the right reasons — and honest with themselves about what they want.',
+    },
     options:[
       {letter:'A',text:'I want to generate income — trading as a real skill and eventually a job.',scores:{speed:3,risk:2,patience:-1}},
       {letter:'B',text:'I want to grow my wealth steadily over time without constant stress.',scores:{patience:3,risk:-1,emotion:3}},
@@ -356,6 +470,13 @@ const QUESTIONS = [
     ]
   },
 ];
+
+// Option E — appended to every question dynamically
+const OPTION_E = {
+  letter:'E',
+  text:"I'm not sure yet — I haven't learned about this topic.",
+  scores:{} // neutral, no trait changes
+};
 
 const ARCHETYPES = [
   {
@@ -438,11 +559,14 @@ const ARCHETYPES = [
   },
 ];
 
-let currentQ=0,answers={},traitScores={speed:10,analysis:10,risk:10,emotion:10,patience:10};
+// ── STATE ──
+let currentQ=0, answers={}, traitScores={speed:10,analysis:10,risk:10,emotion:10,patience:10};
 let resultArchetype=null;
+let senseiOpen=false;
 
 function startQuiz(){
   currentQ=0;answers={};traitScores={speed:10,analysis:10,risk:10,emotion:10,patience:10};
+  senseiOpen=false;
   showScreen('screen-quiz');
   renderTraitBars();
   renderQuestion();
@@ -465,18 +589,28 @@ function updateTraitBars(){
 }
 
 function renderQuestion(){
+  closeSensei();
   const q=QUESTIONS[currentQ];
   document.getElementById('q-num').textContent=currentQ+1;
   document.getElementById('progress-fill').style.width=(currentQ/QUESTIONS.length*100)+'%';
   document.getElementById('q-scenario').textContent=q.scenario;
   document.getElementById('q-text').innerHTML=q.text;
-  document.getElementById('options-grid').innerHTML=q.options.map((o,i)=>`
-    <button class="option-btn${answers[currentQ]===i?' selected':''}" id="opt-${i}" onclick="selectOption(${i})">
+
+  // Build options A–D plus Option E
+  const allOptions=[...q.options, OPTION_E];
+  document.getElementById('options-grid').innerHTML=allOptions.map((o,i)=>{
+    const isE = o.letter==='E';
+    const isSelected = answers[currentQ]===i;
+    return `<button class="option-btn${isE?' option-e':''}${isSelected?' selected':''}" id="opt-${i}" onclick="selectOption(${i})">
       <div class="opt-letter">${o.letter}</div>
       <div class="opt-text">${o.text}</div>
-    </button>`).join('');
+      ${isE?'<span class="opt-tag">No XP penalty</span>':''}
+    </button>`;
+  }).join('');
+
   const btn=document.getElementById('btn-next');
   btn.classList.toggle('enabled',answers[currentQ]!==undefined);
+
   const card=document.getElementById('q-card');
   card.style.animation='none';card.offsetHeight;card.style.animation='';
 }
@@ -488,10 +622,38 @@ function selectOption(idx){
   document.getElementById('btn-next').classList.add('enabled');
 }
 
+// ── SENSEI ──
+function toggleSensei(){
+  senseiOpen?closeSensei():openSensei();
+}
+
+function openSensei(){
+  const q=QUESTIONS[currentQ];
+  document.getElementById('sensei-explain').innerHTML=q.sensei.explain;
+  document.getElementById('sensei-tip').textContent='💡 '+q.sensei.tip;
+  document.getElementById('sensei-popup').classList.add('show');
+  document.getElementById('sensei-btn').style.color='var(--gold)';
+  senseiOpen=true;
+}
+
+function closeSensei(){
+  document.getElementById('sensei-popup').classList.remove('show');
+  const btn=document.getElementById('sensei-btn');
+  if(btn) btn.style.color='';
+  senseiOpen=false;
+}
+
+// ── NAVIGATION ──
 function nextQuestion(){
   if(answers[currentQ]===undefined)return;
-  const delta=QUESTIONS[currentQ].options[answers[currentQ]].scores;
-  Object.entries(delta).forEach(([t,v])=>{ traitScores[t]=Math.max(0,Math.min(30,(traitScores[t]||10)+v)); });
+  const allOptions=[...QUESTIONS[currentQ].options, OPTION_E];
+  const chosen=allOptions[answers[currentQ]];
+  // Only apply scores if not Option E
+  if(chosen.letter!=='E' && chosen.scores){
+    Object.entries(chosen.scores).forEach(([t,v])=>{
+      traitScores[t]=Math.max(0,Math.min(30,(traitScores[t]||10)+v));
+    });
+  }
   updateTraitBars();
   currentQ++;
   currentQ>=QUESTIONS.length?finishQuiz():renderQuestion();
@@ -502,6 +664,7 @@ function skipQuestion(){
   currentQ>=QUESTIONS.length?finishQuiz():renderQuestion();
 }
 
+// ── ANALYZING ──
 const MSGS=['Analyzing your trading instincts...','Mapping your risk tolerance...','Sequencing emotion control patterns...','Calibrating patience index...','Cross-referencing 6 archetypes...','Generating your Trader DNA profile...'];
 
 function finishQuiz(){
@@ -513,6 +676,7 @@ function finishQuiz(){
   setTimeout(()=>{clearInterval(iv);buildResult();},4200);
 }
 
+// ── RESULT ──
 function buildResult(){
   let arch=ARCHETYPES.find(a=>a.match(traitScores));
   if(!arch){
@@ -568,9 +732,6 @@ function buildResult(){
   }catch(e){}
 }
 
-function lockInResult(){
-  alert('Your Trader DNA is locked in as ' + (resultArchetype?resultArchetype.name:'your archetype') + '! Next up: Instruments Module.');
-}
 function retakeQuiz(){startQuiz();}
 
 function showScreen(id){
