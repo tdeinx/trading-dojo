@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Enter the Market · The Trading Dojo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{
+  font-family:'Rajdhani',sans-serif;
+  background:#0A0A0F;
+  color:#E8E0CC;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  position:relative;
+}
+
+/* Animated grid bg */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+  animation:grid-scroll 20s linear infinite;
+  pointer-events:none;
+}
+@keyframes grid-scroll{
+  from{background-position:0 0;}
+  to{background-position:60px 60px;}
+}
+
+/* Vignette */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse at center, transparent 30%, rgba(10,10,15,0.85) 100%);
+  pointer-events:none;
+}
+
+.entry-wrap{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  padding:40px 24px;
+  max-width:600px;
+  animation:entry-fade-in 1s ease forwards;
+}
+@keyframes entry-fade-in{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* Ticker tape at top */
+.ticker-tape{
+  position:fixed;top:0;left:0;right:0;
+  background:rgba(201,168,76,0.06);
+  border-bottom:1px solid rgba(201,168,76,0.15);
+  padding:8px 0;
+  overflow:hidden;
+  white-space:nowrap;
+  z-index:10;
+}
+.ticker-inner{
+  display:inline-block;
+  animation:ticker 18s linear infinite;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.72rem;
+  color:rgba(201,168,76,0.5);
+  letter-spacing:0.08em;
+}
+@keyframes ticker{
+  from{transform:translateX(100vw);}
+  to{transform:translateX(-100%);}
+}
+
+/* Status bar at bottom */
+.status-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(10,10,15,0.9);
+  border-top:1px solid rgba(201,168,76,0.12);
+  padding:8px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.62rem;
+  color:rgba(201,168,76,0.35);
+  z-index:10;
+}
+.sb-dot{width:5px;height:5px;border-radius:50%;background:#3DBA72;animation:blink 1.5s ease-in-out infinite;margin-right:5px;display:inline-block;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+/* Main content */
+.entry-logo{
+  font-family:'Cinzel Decorative',serif;
+  font-size:0.85rem;
+  color:rgba(201,168,76,0.4);
+  letter-spacing:0.25em;
+  margin-bottom:40px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.entry-logo-mark{
+  width:22px;height:22px;
+  border:1.5px solid rgba(201,168,76,0.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.7rem;
+}
+
+.entry-warning{
+  display:inline-block;
+  font-family:'Cinzel',serif;
+  font-size:0.58rem;
+  letter-spacing:0.25em;
+  color:rgba(224,82,82,0.6);
+  text-transform:uppercase;
+  margin-bottom:20px;
+  padding:5px 14px;
+  border:1px solid rgba(224,82,82,0.2);
+}
+
+.entry-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(2.4rem,6vw,4rem);
+  font-weight:900;
+  color:#C9A84C;
+  line-height:1.05;
+  margin-bottom:8px;
+  text-shadow:0 0 60px rgba(201,168,76,0.2);
+}
+
+.entry-sub{
+  font-family:'Cinzel',serif;
+  font-size:0.82rem;
+  letter-spacing:0.2em;
+  color:rgba(138,128,112,0.7);
+  margin-bottom:32px;
+}
+
+/* Stats row */
+.entry-stats{
+  display:flex;justify-content:center;gap:0;
+  border:1px solid rgba(201,168,76,0.12);
+  margin-bottom:36px;
+}
+.es-item{
+  padding:14px 28px;
+  border-right:1px solid rgba(201,168,76,0.08);
+  text-align:center;
+}
+.es-item:last-child{border-right:none;}
+.es-val{
+  font-family:'Share Tech Mono',monospace;
+  font-size:1.1rem;
+  color:#C9A84C;
+  display:block;
+  line-height:1;
+}
+.es-label{
+  font-family:'Cinzel',serif;
+  font-size:0.52rem;
+  letter-spacing:0.15em;
+  color:rgba(138,128,112,0.5);
+  text-transform:uppercase;
+  margin-top:4px;
+  display:block;
+}
+
+/* Rules */
+.entry-rules{
+  background:rgba(201,168,76,0.03);
+  border:1px solid rgba(201,168,76,0.1);
+  border-left:3px solid rgba(224,82,82,0.5);
+  padding:16px 22px;
+  text-align:left;
+  margin-bottom:32px;
+}
+.er-title{
+  font-family:'Cinzel',serif;
+  font-size:0.6rem;
+  letter-spacing:0.2em;
+  color:rgba(224,82,82,0.6);
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.er-rule{
+  font-size:0.88rem;
+  color:rgba(138,128,112,0.8);
+  line-height:1.5;
+  display:flex;align-items:flex-start;gap:8px;
+  margin-bottom:5px;
+  font-weight:300;
+}
+.er-rule:last-child{margin-bottom:0;}
+.er-rule::before{content:'◆';font-size:0.4rem;color:rgba(201,168,76,0.4);flex-shrink:0;margin-top:5px;}
+.er-rule strong{color:#E8E0CC;font-weight:500;}
+
+/* CTA Button */
+.entry-btn{
+  font-family:'Cinzel',serif;
+  font-size:0.88rem;
+  font-weight:700;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:#0A0A0F;
+  background:linear-gradient(135deg,#C9A84C,#F0CC7A);
+  border:none;
+  padding:18px 60px;
+  cursor:pointer;
+  clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+  transition:all 0.3s;
+  display:inline-block;
+  text-decoration:none;
+  position:relative;
+  overflow:hidden;
+}
+.entry-btn::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,0.15) 50%,transparent 70%);
+  transform:translateX(-100%);
+  transition:transform 0.5s;
+}
+.entry-btn:hover::after{transform:translateX(100%);}
+.entry-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px rgba(201,168,76,0.3);
+}
+.entry-btn.launching{
+  pointer-events:none;
+  opacity:0.8;
+  animation:btn-pulse 0.4s ease infinite alternate;
+}
+@keyframes btn-pulse{
+  from{box-shadow:0 0 0 0 rgba(201,168,76,0.4);}
+  to{box-shadow:0 0 0 12px rgba(201,168,76,0);}
+}
+
+.entry-back{
+  display:block;
+  margin-top:18px;
+  font-family:'Cinzel',serif;
+  font-size:0.62rem;
+  letter-spacing:0.15em;
+  color:rgba(138,128,112,0.4);
+  text-decoration:none;
+  transition:color 0.2s;
+}
+.entry-back:hover{color:rgba(201,168,76,0.5);}
+
+/* Loading overlay */
+.loading-overlay{
+  position:fixed;inset:0;
+  background:#0A0A0F;
+  z-index:100;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.4s;
+}
+.loading-overlay.show{opacity:1;pointer-events:all;}
+.lo-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:1.2rem;
+  color:#C9A84C;
+  margin-bottom:16px;
+  animation:lo-pulse 1s ease-in-out infinite;
+}
+@keyframes lo-pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.lo-bar-wrap{width:240px;height:3px;background:rgba(201,168,76,0.1);border-radius:2px;overflow:hidden;}
+.lo-bar{height:100%;background:linear-gradient(90deg,#7A5E24,#C9A84C,#F0CC7A);border-radius:2px;width:0%;transition:width 0.1s;}
+.lo-msg{
+  margin-top:14px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.65rem;
+  color:rgba(138,128,112,0.5);
+  letter-spacing:0.1em;
+}
+
+/* Rank display */
+.entry-rank{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(201,168,76,0.05);
+  border:1px solid rgba(201,168,76,0.12);
+  padding:7px 16px;
+  margin-bottom:28px;
+  font-family:'Cinzel',serif;
+}
+.er-emoji{font-size:1.1rem;line-height:1;}
+.er-name{font-size:0.68rem;letter-spacing:0.12em;color:#C9A84C;}
+.er-xp{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#8A8070;margin-left:6px;}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-tape">
+  <span class="ticker-inner">
+    AAPL $187.32 +1.24% &nbsp;·&nbsp; TSLA $241.15 -0.87% &nbsp;·&nbsp; NVDA $875.40 +3.12% &nbsp;·&nbsp; BTC $67,420 +2.34% &nbsp;·&nbsp; EUR/USD 1.08420 &nbsp;·&nbsp; SPY $523.18 +0.45% &nbsp;·&nbsp; AMZN $198.76 +1.89% &nbsp;·&nbsp; GBP/USD 1.26540 &nbsp;·&nbsp; MSFT $415.32 +0.92% &nbsp;·&nbsp; ETH $3,241 +1.76% &nbsp;·&nbsp; GOOGL $175.44 +0.61% &nbsp;·&nbsp; USD/JPY 149.820 &nbsp;·&nbsp; META $521.30 +2.44%
+  </span>
+</div>
+
+<!-- MAIN -->
+<div class="entry-wrap">
+  <div class="entry-logo"><div class="entry-logo-mark">⚔</div>THE TRADING DOJO</div>
+
+  <div class="entry-warning">⚠ Paper Trading — Virtual Currency Only</div>
+
+  <div class="entry-title">Enter<br>the Market</div>
+  <div class="entry-sub">Real prices. Zero real risk. Real lessons.</div>
+
+  <!-- Rank -->
+  <div class="entry-rank" id="entry-rank-display">
+    <span class="er-emoji">🥋</span>
+    <span class="er-name">Rookie</span>
+    <span class="er-xp">0 XP</span>
+  </div>
+
+  <!-- Stats -->
+  <div class="entry-stats">
+    <div class="es-item">
+      <span class="es-val">$10,000</span>
+      <span class="es-label">Starting Capital</span>
+    </div>
+    <div class="es-item">
+      <span class="es-val" id="entry-prev-pnl">$0.00</span>
+      <span class="es-label">Prev. P&amp;L</span>
+    </div>
+    <div class="es-item">
+      <span class="es-val" id="entry-trades">0</span>
+      <span class="es-label">Total Trades</span>
+    </div>
+  </div>
+
+  <!-- Rules reminder -->
+  <div class="entry-rules">
+    <div class="er-title">⚔ Rules of the Dojo</div>
+    <div class="er-rule"><strong>1% Rule:</strong> Never risk more than 1% per trade.</div>
+    <div class="er-rule"><strong>Stop Losses:</strong> Always set one before entering.</div>
+    <div class="er-rule"><strong>R:R Ratio:</strong> Minimum 1:2 before taking a trade.</div>
+    <div class="er-rule"><strong>No Revenge Trading:</strong> 3 losses = stop for the session.</div>
+  </div>
+
+  <button class="entry-btn" id="entry-btn" onclick="launchSim()">Begin Session</button>
+  <a href="index.html" class="entry-back">← Return to Hub</a>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <span><span class="sb-dot"></span>LIVE DATA FEED ACTIVE</span>
+  <span id="sb-time"></span>
+  <span>PAPER TRADING MODE</span>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="lo-title">Connecting to Markets</div>
+  <div class="lo-bar-wrap"><div class="lo-bar" id="lo-bar"></div></div>
+  <div class="lo-msg" id="lo-msg">Initializing price feeds...</div>
+</div>
+
+<script>
+// Load saved sim state
+function loadSimState(){
+  try{
+    const s = JSON.parse(localStorage.getItem('dojo_sim')||'{}');
+    const cash = s.cash || 10000;
+    const positions = s.positions || {};
+    const history = s.history || [];
+    const trades = s.totalTrades || 0;
+
+    // Calc total account value
+    const invested = Object.values(positions).reduce((sum,p)=>sum+(p.shares*(p.avgCost||0)*(p.lotSize||1)),0);
+    const totalVal = cash + invested;
+    const pnl = totalVal - 10000;
+    const sign = pnl >= 0 ? '+' : '';
+
+    document.getElementById('entry-prev-pnl').textContent = sign+'$'+pnl.toFixed(2);
+    document.getElementById('entry-prev-pnl').style.color = pnl >= 0 ? '#3DBA72' : '#E05252';
+    document.getElementById('entry-trades').textContent = trades;
+  }catch(e){}
+}
+
+// Load rank from XP
+function loadRank(){
+  try{
+    const keys=['dojo_instruments','dojo_styles','dojo_platforms','dojo_charts','dojo_risk'];
+    let xp = 0;
+    keys.forEach(k=>{
+      const s=JSON.parse(localStorage.getItem(k)||'{}');
+      if(s.totalXP) xp+=s.totalXP;
+    });
+    const RANKS=[
+      {name:'Rookie',minXP:0,emoji:'🥋'},
+      {name:'Apprentice',minXP:500,emoji:'⚔️'},
+      {name:'Warrior',minXP:1500,emoji:'🥷'},
+      {name:'Strategist',minXP:3000,emoji:'🦉'},
+      {name:'Elite',minXP:5000,emoji:'🐉'},
+      {name:'Sensei',minXP:8000,emoji:'🏆'},
+    ];
+    let rank = RANKS[0];
+    for(const r of RANKS){ if(xp>=r.minXP) rank=r; else break; }
+    const el = document.getElementById('entry-rank-display');
+    if(el){
+      el.querySelector('.er-emoji').textContent = rank.emoji;
+      el.querySelector('.er-name').textContent  = rank.name;
+      el.querySelector('.er-xp').textContent    = xp.toLocaleString()+' XP';
+    }
+  }catch(e){}
+}
+
+// Clock
+function updateClock(){
+  const now = new Date();
+  const t = now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const d = now.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'});
+  const el = document.getElementById('sb-time');
+  if(el) el.textContent = d+' '+t;
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// Launch
+const LOADING_MSGS = [
+  'Initializing price feeds...',
+  'Fetching live market data...',
+  'Loading order book...',
+  'Syncing portfolio state...',
+  'Connecting to exchanges...',
+  'Ready. Entering the market.',
+];
+
+function launchSim(){
+  const btn = document.getElementById('entry-btn');
+  const overlay = document.getElementById('loading-overlay');
+  const bar = document.getElementById('lo-bar');
+  const msg = document.getElementById('lo-msg');
+
+  btn.classList.add('launching');
+  overlay.classList.add('show');
+
+  let pct = 0;
+  let msgIdx = 0;
+  const interval = setInterval(()=>{
+    pct += Math.random()*18+6;
+    if(pct > 100) pct = 100;
+    bar.style.width = pct+'%';
+    if(msgIdx < LOADING_MSGS.length-1 && pct > (msgIdx+1)*16){
+      msgIdx++;
+      msg.textContent = LOADING_MSGS[msgIdx];
+    }
+    if(pct >= 100){
+      clearInterval(interval);
+      setTimeout(()=>{ window.location.href = 'simulator.html'; }, 400);
+    }
+  }, 120);
+}
+
+loadSimState();
+loadRank();
+</script>
+</body>
+</html>
