@@ -632,3 +632,47 @@ window.DojoEngine = {
 if (!window.DOJO_ENGINE_MANUAL_INIT) {
   document.addEventListener('DOMContentLoaded', () => dojoEngineInit());
 }
+
+// ═══════════════════════════════════════════════
+// THEME SYSTEM
+// ═══════════════════════════════════════════════
+function initTheme() {
+  if (!document.getElementById('dojo-theme-css')) {
+    const link = document.createElement('link');
+    link.id   = 'dojo-theme-css';
+    link.rel  = 'stylesheet';
+    link.href = 'dojo-theme.css';
+    document.head.appendChild(link);
+  }
+  const saved = localStorage.getItem('dojo_theme') || 'dark';
+  applyTheme(saved, false);
+}
+
+function applyTheme(theme, save) {
+  document.documentElement.setAttribute('data-theme', theme);
+  if (save) localStorage.setItem('dojo_theme', theme);
+  const btn = document.getElementById('dojo-theme-btn');
+  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(current === 'dark' ? 'light' : 'dark', true);
+}
+
+function injectThemeToggle() {
+  if (document.getElementById('dojo-theme-btn')) return;
+  const btn = document.createElement('button');
+  btn.id        = 'dojo-theme-btn';
+  btn.className = 'dojo-theme-toggle';
+  btn.title     = 'Toggle light / dark mode';
+  btn.textContent = (localStorage.getItem('dojo_theme') || 'dark') === 'dark' ? '☀️' : '🌙';
+  btn.onclick = toggleTheme;
+  const target = document.querySelector('.topbar-right');
+  if (target) target.insertBefore(btn, target.firstChild);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initTheme();
+  injectThemeToggle();
+});
