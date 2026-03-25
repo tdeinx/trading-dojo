@@ -1,0 +1,310 @@
+/**
+ * DOJO THEME v1.0
+ * Light / Dark mode CSS variables for The Trading Dojo
+ * Applied via data-theme attribute on <html> element
+ * Dark mode is default — light mode activates on data-theme="light"
+ */
+
+/* ── DARK MODE (default) ── */
+:root {
+  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;--gold-faint:rgba(201,168,76,0.07);
+  --ink:#0A0A0F;--ink-2:#111118;--ink-3:#1A1A24;--ink-4:#22222E;--ink-5:#2A2A38;
+  --panel:#13131C;--panel-2:#0F0F18;--panel-3:#111119;
+  --border:rgba(201,168,76,0.15);--border-b:rgba(201,168,76,0.5);
+  --text:#E8E0CC;--text-dim:#8A8070;--text-faint:#3A3630;
+  --green:#3DBA72;--green-dim:rgba(61,186,114,0.12);
+  --red:#E05252;--red-dim:rgba(224,82,82,0.12);
+  --teal:#4CC9A8;--purple:#8B6FD4;--blue:#4C8BC9;--amber:#C9904C;
+  --theme-icon:'☀️';
+  --noise-opacity:0.025;
+  --shadow:rgba(0,0,0,0.4);
+}
+
+/* ── LIGHT MODE ── */
+[data-theme="light"] {
+  --gold:#9A6F1A;--gold-light:#B8861F;--gold-dim:#7A5E24;--gold-faint:rgba(154,111,26,0.07);
+  --ink:#F5F0E8;--ink-2:#EDE8DF;--ink-3:#E4DDD2;--ink-4:#D8D0C4;--ink-5:#CCC3B5;
+  --panel:#FFFFFF;--panel-2:#F9F5EE;--panel-3:#F5F0E8;
+  --border:rgba(154,111,26,0.18);--border-b:rgba(154,111,26,0.45);
+  --text:#1A1508;--text-dim:#5A4E38;--text-faint:#9A8E78;
+  --green:#1E8A4A;--green-dim:rgba(30,138,74,0.1);
+  --red:#C03030;--red-dim:rgba(192,48,48,0.1);
+  --teal:#0E7A62;--purple:#5B3FA8;--blue:#1E5FA0;--amber:#A05A10;
+  --theme-icon:'🌙';
+  --noise-opacity:0.01;
+  --shadow:rgba(0,0,0,0.12);
+}
+
+/* ── LIGHT MODE OVERRIDES ── */
+[data-theme="light"] body::before {
+  opacity: var(--noise-opacity);
+}
+
+[data-theme="light"] .bg-orbs span,
+[data-theme="light"] .orbs span,
+[data-theme="light"] .bg-brush span {
+  opacity: 0.06;
+}
+
+/* Topbar */
+[data-theme="light"] .topbar,
+[data-theme="light"] nav {
+  background: rgba(245,240,232,0.92);
+  border-bottom-color: rgba(154,111,26,0.15);
+}
+
+/* Sidebar */
+[data-theme="light"] .sidebar {
+  background: #F9F5EE;
+  border-right-color: rgba(154,111,26,0.15);
+}
+
+[data-theme="light"] .sb-header,
+[data-theme="light"] .sb-footer {
+  border-color: rgba(154,111,26,0.12);
+}
+
+[data-theme="light"] .nav-item:hover {
+  background: rgba(154,111,26,0.06);
+}
+
+[data-theme="light"] .nav-item.active {
+  background: rgba(154,111,26,0.1);
+}
+
+/* Cards and panels */
+[data-theme="light"] .platform-card,
+[data-theme="light"] .module-card,
+[data-theme="light"] .position-card,
+[data-theme="light"] .result-card,
+[data-theme="light"] .pattern-card,
+[data-theme="light"] .glossary-item,
+[data-theme="light"] .stack-card,
+[data-theme="light"] .concept-item,
+[data-theme="light"] .q-card,
+[data-theme="light"] .option-btn,
+[data-theme="light"] .qz-opt,
+[data-theme="light"] .d-opt,
+[data-theme="light"] .decision-block,
+[data-theme="light"] .example-box,
+[data-theme="light"] .analogy-card,
+[data-theme="light"] .who-card,
+[data-theme="light"] .adv,
+[data-theme="light"] .calc-wrap,
+[data-theme="light"] .blowup-wrap,
+[data-theme="light"] .diagram-wrap,
+[data-theme="light"] .trait-results,
+[data-theme="light"] .path-rec,
+[data-theme="light"] .score-box,
+[data-theme="light"] .score-reveal {
+  background: #FFFFFF;
+  border-color: rgba(154,111,26,0.15);
+}
+
+/* Quiz options hover */
+[data-theme="light"] .option-btn:hover,
+[data-theme="light"] .qz-opt:hover,
+[data-theme="light"] .d-opt:hover {
+  background: rgba(154,111,26,0.06);
+}
+
+[data-theme="light"] .option-btn.selected,
+[data-theme="light"] .qz-opt.sel {
+  background: rgba(154,111,26,0.08);
+}
+
+/* Inputs */
+[data-theme="light"] .calc-input,
+[data-theme="light"] .ot-input,
+[data-theme="light"] .dojo-input,
+[data-theme="light"] .search-input,
+[data-theme="light"] .calc-select,
+[data-theme="light"] .ot-select {
+  background: #F5F0E8;
+  color: #1A1508;
+  border-color: rgba(154,111,26,0.2);
+}
+
+/* Avatar cards */
+[data-theme="light"] .avatar-card {
+  background: #FFFFFF;
+  border-color: rgba(154,111,26,0.15);
+}
+
+[data-theme="light"] .avatar-card.selected {
+  background: rgba(154,111,26,0.07);
+  border-color: #9A6F1A;
+}
+
+/* Market panel (simulator) */
+[data-theme="light"] .market-panel,
+[data-theme="light"] .portfolio-panel {
+  background: #F9F5EE;
+}
+
+[data-theme="light"] .ticker-row:hover {
+  background: rgba(154,111,26,0.04);
+}
+
+[data-theme="light"] .ticker-row.selected {
+  background: rgba(154,111,26,0.08);
+}
+
+[data-theme="light"] .asset-header,
+[data-theme="light"] .order-ticket,
+[data-theme="light"] .center-panel {
+  background: #F5F0E8;
+}
+
+/* Progress bars */
+[data-theme="light"] .sp-track,
+[data-theme="light"] .xp-track,
+[data-theme="light"] .level-bar,
+[data-theme="light"] .mc-progress,
+[data-theme="light"] .adv-bar,
+[data-theme="light"] .pcr-track,
+[data-theme="light"] .tr-track,
+[data-theme="light"] .ba-bar,
+[data-theme="light"] .ti-track {
+  background: rgba(154,111,26,0.12);
+}
+
+/* Scrollbar */
+[data-theme="light"] ::-webkit-scrollbar-track { background: #F5F0E8; }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: #C9A87A; }
+
+/* Module complete overlay */
+[data-theme="light"] .dojo-complete-overlay {
+  background: rgba(245,240,232,0.95);
+}
+
+[data-theme="light"] .dojo-complete-card {
+  background: #FFFFFF;
+  border-color: rgba(154,111,26,0.3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+/* Streak notif */
+[data-theme="light"] .dojo-streak-notif {
+  background: #FFFFFF;
+  border-color: rgba(154,111,26,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Rank badge */
+[data-theme="light"] .dojo-rank-badge {
+  background: #FFFFFF;
+  border-color: rgba(154,111,26,0.2);
+}
+
+/* Back to hub */
+[data-theme="light"] .dojo-back-hub {
+  color: #9A6F1A;
+  border-color: rgba(154,111,26,0.2);
+}
+
+/* Hero sections */
+[data-theme="light"] .lesson-hero,
+[data-theme="light"] .mod-hero,
+[data-theme="light"] .blowup-header,
+[data-theme="light"] .calc-header {
+  background: #F9F5EE;
+}
+
+/* Quiz section backgrounds */
+[data-theme="light"] .quiz-section,
+[data-theme="light"] .quiz-wrap {
+  background: #F5F0E8;
+}
+
+/* Result cards */
+[data-theme="light"] .result-card::before,
+[data-theme="light"] .trait-results::before,
+[data-theme="light"] .example-box::before,
+[data-theme="light"] .pc-card::before {
+  background: #FFFFFF;
+}
+
+/* Tables */
+[data-theme="light"] .rr-table td {
+  border-bottom-color: rgba(154,111,26,0.08);
+}
+
+[data-theme="light"] .rr-table tr:hover td {
+  background: rgba(154,111,26,0.03);
+}
+
+/* Mantra banners */
+[data-theme="light"] .mantra {
+  background: rgba(192,48,48,0.04);
+  border-color: rgba(192,48,48,0.15);
+}
+
+/* Rookie mistake */
+[data-theme="light"] .rookie-mistake {
+  background: rgba(160,90,16,0.06);
+  border-color: rgba(160,90,16,0.15);
+}
+
+/* Prop callout */
+[data-theme="light"] .prop-callout {
+  background: rgba(91,63,168,0.05);
+  border-color: rgba(91,63,168,0.18);
+}
+
+/* Blowup steps */
+[data-theme="light"] .blowup-step {
+  background: #F5F0E8;
+}
+
+/* Daily banner */
+[data-theme="light"] .daily-banner {
+  background: #FFFFFF;
+}
+
+/* Stat chips */
+[data-theme="light"] .stat-chip,
+[data-theme="light"] .xp-chip,
+[data-theme="light"] .trait-pill,
+[data-theme="light"] .pc-tag,
+[data-theme="light"] .tool-chip {
+  background: #FFFFFF;
+}
+
+/* Score box */
+[data-theme="light"] .score-big { color: #9A6F1A; }
+
+/* Theme toggle button */
+.dojo-theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: all 0.22s;
+  border-radius: 0;
+  color: var(--text-dim);
+}
+.dojo-theme-toggle:hover {
+  border-color: var(--border-b);
+  background: var(--gold-faint);
+}
+
+/* Smooth theme transition */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+}
+
+/* But don't transition transforms/animations */
+.dojo-xp-pop,
+.dojo-complete-card,
+.dcc-emoji,
+.result-avatar,
+.sensei-chibi,
+.ba-value,
+.lo-bar {
+  transition: none !important;
+}
