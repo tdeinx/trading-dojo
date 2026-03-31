@@ -198,6 +198,7 @@ main{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 2
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
 </style>
 <link rel="stylesheet" href="dojo-theme.css"/>
+<link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#C9A84C"/><link rel="apple-touch-icon" href="/icons/icon-192.png"/>
 </head>
 <body>
 <div class="bg-orbs"><span></span><span></span><span></span></div>
@@ -742,5 +743,6 @@ function showScreen(id){
 }
 </script>
 <script src="dojo-engine.js"></script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(r=>console.log("SW registered")).catch(e=>console.log("SW failed",e));});}</script>
 </body>
 </html>
