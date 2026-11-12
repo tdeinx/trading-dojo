@@ -10,12 +10,12 @@
 // RANK SYSTEM
 // ═══════════════════════════════════════════════
 const RANKS = [
-  { name: 'Rookie',      minXP: 0,    emoji: '🥋', color: '#8A8070' },
-  { name: 'Apprentice',  minXP: 500,  emoji: '⚔️',  color: '#4CC9A8' },
-  { name: 'Warrior',     minXP: 1500, emoji: '🥷',  color: '#C9A84C' },
-  { name: 'Strategist',  minXP: 3000, emoji: '🦉',  color: '#8B6FD4' },
-  { name: 'Elite',       minXP: 5000, emoji: '🐉',  color: '#4C8BC9' },
-  { name: 'Sensei',      minXP: 8000, emoji: '🏆',  color: '#F0CC7A' },
+  { name: 'Rookie',      minXP: 0,    emoji: '🥋', color: '#51514C' },
+  { name: 'Apprentice',  minXP: 500,  emoji: '⚔️',  color: '#087F70' },
+  { name: 'Warrior',     minXP: 1500, emoji: '🥷',  color: '#2046F5' },
+  { name: 'Strategist',  minXP: 3000, emoji: '🦉',  color: '#6E3ABD' },
+  { name: 'Elite',       minXP: 5000, emoji: '🐉',  color: '#205AC4' },
+  { name: 'Sensei',      minXP: 8000, emoji: '🏆',  color: '#FFF200' },
 ];
 
 function getRank(xp) {
@@ -131,7 +131,7 @@ function showModuleComplete(opts) {
       <div class="dcc-msg">${opts.message || 'You survived. Most traders don\'t.'}</div>
       <div class="dcc-btns">
         ${opts.nextHref ? `<a href="${opts.nextHref}" class="dcc-btn-primary">${opts.nextLabel || 'Next Module →'}</a>` : ''}
-        <a href="index.html" class="dcc-btn-ghost">Back to Hub</a>
+        <a href="index.html" class="dcc-btn-ghost">Back to dashboard</a>
       </div>
     </div>`;
 
@@ -210,8 +210,8 @@ function injectBackToHub() {
   const btn = document.createElement('a');
   btn.id = 'dojo-back-hub';
   btn.className = 'dojo-back-hub';
-  btn.href = 'index.html';
-  btn.innerHTML = '← Hub';
+  btn.href = 'dashboard.html';
+  btn.innerHTML = '← Dashboard';
   logo.parentNode.insertBefore(btn, logo);
 }
 
@@ -258,10 +258,10 @@ function injectStyles() {
     /* XP POP */
     .dojo-xp-pop {
       position: absolute;
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 1rem;
       font-weight: 700;
-      color: #3DBA72;
+      color: #13884F;
       pointer-events: none;
       z-index: 9999;
       opacity: 1;
@@ -285,13 +285,13 @@ function injectStyles() {
       left: 50%;
       transform: translateX(-50%) translateY(-20px);
       opacity: 0;
-      background: #13131C;
-      border: 1px solid rgba(201,168,76,0.4);
+      background: #FFFEFA;
+      border: 1px solid rgba(32,70,245,0.4);
       padding: 10px 22px;
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 0.78rem;
       letter-spacing: 0.12em;
-      color: #C9A84C;
+      color: #2046F5;
       z-index: 999;
       clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
       transition: all 0.3s ease;
@@ -301,17 +301,17 @@ function injectStyles() {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
-    .dojo-streak-notif.streak-hot  { color: #E05252; border-color: rgba(224,82,82,0.4); }
-    .dojo-streak-notif.streak-fire { color: #F0CC7A; border-color: rgba(240,204,122,0.5); }
-    .dojo-streak-notif.streak-dead { color: #8A8070; border-color: rgba(138,128,112,0.3); }
+    .dojo-streak-notif.streak-hot  { color: #CC303D; border-color: rgba(224,82,82,0.4); }
+    .dojo-streak-notif.streak-fire { color: #FFF200; border-color: rgba(240,204,122,0.5); }
+    .dojo-streak-notif.streak-dead { color: #51514C; border-color: rgba(138,128,112,0.3); }
 
     /* RANK BADGE */
     .dojo-rank-badge {
       display: flex;
       align-items: center;
       gap: 8px;
-      background: #13131C;
-      border: 1px solid rgba(201,168,76,0.15);
+      background: #FFFEFA;
+      border: 1px solid rgba(32,70,245,0.15);
       padding: 6px 12px;
       clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
       cursor: default;
@@ -319,33 +319,33 @@ function injectStyles() {
     .drb-emoji { font-size: 1.1rem; line-height: 1; }
     .drb-info  { display: flex; flex-direction: column; }
     .drb-name  {
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 0.62rem;
       font-weight: 700;
       letter-spacing: 0.1em;
-      color: var(--rank-color, #C9A84C);
+      color: var(--rank-color, #2046F5);
       line-height: 1.2;
     }
     .drb-xp {
       font-family: 'Share Tech Mono', monospace;
       font-size: 0.58rem;
-      color: #8A8070;
+      color: #51514C;
       line-height: 1.2;
     }
 
     /* BACK TO HUB */
     .dojo-back-hub {
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 0.6rem;
       letter-spacing: 0.15em;
-      color: #7A5E24;
+      color: #2046F5;
       text-decoration: none;
       padding: 6px 10px;
-      border: 1px solid rgba(201,168,76,0.12);
+      border: 1px solid rgba(32,70,245,0.12);
       transition: all 0.2s;
       white-space: nowrap;
     }
-    .dojo-back-hub:hover { color: #C9A84C; border-color: rgba(201,168,76,0.3); }
+    .dojo-back-hub:hover { color: #2046F5; border-color: rgba(32,70,245,0.3); }
 
     /* INJECTED NAV */
     .dojo-injected-nav {
@@ -354,12 +354,12 @@ function injectStyles() {
       list-style: none;
     }
     .dojo-injected-nav a {
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 0.62rem;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #8A8070;
+      color: #51514C;
       text-decoration: none;
       padding: 6px 10px;
       border: 1px solid transparent;
@@ -367,9 +367,9 @@ function injectStyles() {
     }
     .dojo-injected-nav a:hover,
     .dojo-injected-nav a.active {
-      color: #C9A84C;
-      border-color: rgba(201,168,76,0.2);
-      background: rgba(201,168,76,0.05);
+      color: #2046F5;
+      border-color: rgba(32,70,245,0.2);
+      background: rgba(32,70,245,0.05);
     }
     @media(max-width: 900px) { .dojo-injected-nav { display: none; } }
 
@@ -377,7 +377,7 @@ function injectStyles() {
     .dojo-complete-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(10,10,15,0.92);
+      background: rgba(248,246,239,0.92);
       backdrop-filter: blur(12px);
       z-index: 9000;
       display: flex;
@@ -389,8 +389,8 @@ function injectStyles() {
     .dojo-complete-overlay.show { opacity: 1; }
 
     .dojo-complete-card {
-      background: #13131C;
-      border: 1px solid rgba(201,168,76,0.3);
+      background: #FFFEFA;
+      border: 1px solid rgba(32,70,245,0.3);
       padding: 48px 52px;
       text-align: center;
       max-width: 480px;
@@ -407,7 +407,7 @@ function injectStyles() {
     .dcc-glow {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at center top, rgba(201,168,76,0.08) 0%, transparent 70%);
+      background: radial-gradient(ellipse at center top, rgba(32,70,245,0.08) 0%, transparent 70%);
       pointer-events: none;
     }
     .dcc-emoji {
@@ -421,31 +421,31 @@ function injectStyles() {
       to   { transform: scale(1); opacity: 1; }
     }
     .dcc-eyebrow {
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 0.62rem;
       letter-spacing: 0.3em;
-      color: #7A5E24;
+      color: #2046F5;
       text-transform: uppercase;
       margin-bottom: 8px;
     }
     .dcc-title {
-      font-family: 'Cinzel Decorative', serif;
+      font-family: 'Barlow Condensed', serif;
       font-size: 1.6rem;
       font-weight: 700;
-      color: #C9A84C;
+      color: #2046F5;
       margin-bottom: 12px;
       line-height: 1.2;
     }
     .dcc-xp {
       font-family: 'Share Tech Mono', monospace;
       font-size: 1.1rem;
-      color: #3DBA72;
+      color: #13884F;
       margin-bottom: 16px;
       letter-spacing: 0.1em;
     }
     .dcc-rank {
-      background: rgba(201,168,76,0.05);
-      border: 1px solid rgba(201,168,76,0.15);
+      background: rgba(32,70,245,0.05);
+      border: 1px solid rgba(32,70,245,0.15);
       padding: 12px 16px;
       margin-bottom: 16px;
     }
@@ -458,7 +458,7 @@ function injectStyles() {
     }
     .dcc-rank-emoji { font-size: 1.4rem; }
     .dcc-rank-name {
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 0.9rem;
       font-weight: 700;
       letter-spacing: 0.1em;
@@ -467,7 +467,7 @@ function injectStyles() {
     .dcc-rank-bar {
       width: 200px;
       height: 4px;
-      background: #22222E;
+      background: #DDDCD5;
       border-radius: 2px;
       overflow: hidden;
     }
@@ -477,27 +477,27 @@ function injectStyles() {
       transition: width 1s ease 0.5s;
     }
     .dcc-rank-next {
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 0.58rem;
       letter-spacing: 0.1em;
-      color: #8A8070;
+      color: #51514C;
     }
     .dcc-msg {
       font-size: 0.95rem;
-      color: #8A8070;
+      color: #51514C;
       font-weight: 300;
       line-height: 1.6;
       margin-bottom: 28px;
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'DM Sans', sans-serif;
     }
     .dcc-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
     .dcc-btn-primary {
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.15em;
-      color: #0A0A0F;
-      background: linear-gradient(135deg, #C9A84C, #F0CC7A);
+      color: #F8F6EF;
+      background: linear-gradient(135deg, #2046F5, #FFF200);
       border: none;
       padding: 12px 28px;
       cursor: pointer;
@@ -506,14 +506,14 @@ function injectStyles() {
       transition: all 0.22s;
       display: inline-block;
     }
-    .dcc-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.25); }
+    .dcc-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(32,70,245,0.25); }
     .dcc-btn-ghost {
-      font-family: 'Cinzel', serif;
+      font-family: 'DM Sans', serif;
       font-size: 0.7rem;
       letter-spacing: 0.13em;
-      color: #C9A84C;
+      color: #2046F5;
       background: transparent;
-      border: 1px solid rgba(201,168,76,0.4);
+      border: 1px solid rgba(32,70,245,0.4);
       padding: 11px 22px;
       cursor: pointer;
       clip-path: polygon(7px 0%, 100% 0%, calc(100% - 7px) 100%, 0% 100%);
@@ -521,7 +521,7 @@ function injectStyles() {
       transition: all 0.22s;
       display: inline-block;
     }
-    .dcc-btn-ghost:hover { background: rgba(201,168,76,0.07); }
+    .dcc-btn-ghost:hover { background: rgba(32,70,245,0.07); }
 
     /* CORRECT ANSWER FLASH */
     @keyframes dojo-correct-flash {
@@ -540,12 +540,12 @@ function injectStyles() {
       left: 50%;
       transform: translateX(-50%) translateY(-30px);
       opacity: 0;
-      background: linear-gradient(135deg, #13131C, #1A1A24);
-      border: 2px solid rgba(201,168,76,0.5);
+      background: linear-gradient(135deg, #FFFEFA, #E9E7DF);
+      border: 2px solid rgba(32,70,245,0.5);
       padding: 14px 28px;
-      font-family: 'Cinzel Decorative', serif;
+      font-family: 'Barlow Condensed', serif;
       font-size: 0.85rem;
-      color: #C9A84C;
+      color: #2046F5;
       z-index: 999;
       clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
       transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
@@ -624,6 +624,8 @@ window.DojoEngine = {
   showModuleComplete,
   getTotalXP,
   getRank,
+  getNextRank,
+  getRankProgress,
   checkRankUp,
   updateRankBadge,
 };
@@ -644,19 +646,19 @@ function initTheme() {
     link.href = 'dojo-theme.css';
     document.head.appendChild(link);
   }
-  const saved = localStorage.getItem('dojo_theme') || 'dark';
+  const saved = localStorage.getItem('dojo_theme_v2') || 'light';
   applyTheme(saved, false);
 }
 
 function applyTheme(theme, save) {
   document.documentElement.setAttribute('data-theme', theme);
-  if (save) localStorage.setItem('dojo_theme', theme);
+  if (save) localStorage.setItem('dojo_theme_v2', theme);
   const btn = document.getElementById('dojo-theme-btn');
   if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
 }
 
 function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
   applyTheme(current === 'dark' ? 'light' : 'dark', true);
 }
 
@@ -666,7 +668,7 @@ function injectThemeToggle() {
   btn.id        = 'dojo-theme-btn';
   btn.className = 'dojo-theme-toggle';
   btn.title     = 'Toggle light / dark mode';
-  btn.textContent = (localStorage.getItem('dojo_theme') || 'dark') === 'dark' ? '☀️' : '🌙';
+  btn.textContent = (localStorage.getItem('dojo_theme_v2') || 'light') === 'dark' ? '☀️' : '🌙';
   btn.onclick = toggleTheme;
   const target = document.querySelector('.topbar-right');
   if (target) target.insertBefore(btn, target.firstChild);

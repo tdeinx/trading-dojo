@@ -4,30 +4,30 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Chart Reading · The Trading Dojo</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/fonts/fonts.css"/>
 <style>
 :root{
-  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;
-  --ink:#0A0A0F;--ink-3:#1A1A24;--ink-4:#22222E;
-  --panel:#13131C;--panel-2:#0F0F18;--panel-3:#111119;
-  --border:rgba(201,168,76,0.15);--border-b:rgba(201,168,76,0.5);
-  --text:#E8E0CC;--text-dim:#8A8070;--text-faint:#3A3630;
-  --green:#3DBA72;--red:#E05252;--teal:#4CC9A8;--purple:#8B6FD4;--blue:#4C8BC9;
+  --gold:#2046F5;--gold-light:#FFF200;--gold-dim:#2046F5;
+  --ink:#F8F6EF;--ink-3:#E9E7DF;--ink-4:#DDDCD5;
+  --panel:#FFFEFA;--panel-2:#F3F1EA;--panel-3:#F8F6EF;
+  --border:rgba(32,70,245,0.15);--border-b:rgba(32,70,245,0.5);
+  --text:#131313;--text-dim:#51514C;--text-faint:#5B5B55;
+  --green:#13884F;--red:#CC303D;--teal:#087F70;--purple:#6E3ABD;--blue:#205AC4;
   --mono:'Share Tech Mono',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
 .app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;}
 
 /* TOPBAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.92);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;}
-.logo{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);display:flex;align-items:center;gap:9px;cursor:pointer;text-decoration:none;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(248,246,239,0.92);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;}
+.logo{font-family:'Barlow Condensed',serif;font-size:1rem;color:var(--gold);display:flex;align-items:center;gap:9px;cursor:pointer;text-decoration:none;}
 .logo-mark{width:28px;height:28px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.85rem;position:relative;flex-shrink:0;}
-.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.22);}
-.topbar-center{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
-.xp-chip{background:var(--panel);border:1px solid var(--border);padding:6px 14px;font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--gold);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(32,70,245,0.22);}
+.topbar-center{font-family:'DM Sans',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
+.xp-chip{background:var(--panel);border:1px solid var(--border);padding:6px 14px;font-family:'DM Sans',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--gold);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
 
 /* LAYOUT */
 .body-layout{display:flex;flex:1;min-height:0;}
@@ -35,29 +35,29 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* SIDEBAR */
 .sidebar{width:268px;flex-shrink:0;border-right:1px solid var(--border);background:var(--panel-2);display:flex;flex-direction:column;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
 .sb-header{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
-.sb-title{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;}
-.sb-sub{font-size:0.85rem;color:var(--text-dim);font-weight:300;}
+.sb-title{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;}
+.sb-sub{font-size:0.85rem;color:var(--text-dim);font-weight:400;}
 .sb-progress{margin-top:14px;}
-.sp-row{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:5px;}
+.sp-row{display:flex;justify-content:space-between;font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:5px;}
 .sp-row span{color:var(--gold);}
 .sp-track{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
 .sp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.6s ease;}
 .sb-nav{padding:10px 0;flex:1;}
 .nav-item{display:flex;align-items:center;gap:11px;padding:12px 18px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
-.nav-item:hover{background:rgba(201,168,76,0.04);border-left-color:rgba(201,168,76,0.25);}
-.nav-item.active{background:rgba(201,168,76,0.07);border-left-color:var(--gold);}
+.nav-item:hover{background:rgba(32,70,245,0.04);border-left-color:rgba(32,70,245,0.25);}
+.nav-item.active{background:rgba(32,70,245,0.07);border-left-color:var(--gold);}
 .nav-color-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .nav-info{flex:1;min-width:0;}
-.nav-name{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--text);}
+.nav-name{font-family:'DM Sans',serif;font-size:0.7rem;font-weight:700;color:var(--text);}
 .nav-item.active .nav-name{color:var(--gold);}
 .nav-meta{font-size:0.63rem;color:var(--text-dim);margin-top:2px;}
-.nav-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.52rem;flex-shrink:0;font-family:'Cinzel',serif;}
+.nav-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.52rem;flex-shrink:0;font-family:'DM Sans',serif;}
 .nb-idle{background:var(--ink-4);color:var(--text-faint);}
 .nb-active{background:var(--gold);color:var(--ink);font-weight:700;animation:pb 2s ease-in-out infinite;}
 .nb-done{background:rgba(76,201,168,0.18);color:var(--teal);border:1px solid rgba(76,201,168,0.35);}
-@keyframes pb{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{box-shadow:0 0 0 5px rgba(201,168,76,0)}}
+@keyframes pb{0%,100%{box-shadow:0 0 0 0 rgba(32,70,245,0.4)}50%{box-shadow:0 0 0 5px rgba(32,70,245,0)}}
 .sb-footer{padding:14px 18px;border-top:1px solid var(--border);}
-.sb-xp{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.14em;color:var(--text-faint);}
+.sb-xp{font-family:'DM Sans',serif;font-size:0.63rem;letter-spacing:0.14em;color:var(--text-faint);}
 .sb-xp span{color:var(--gold);font-size:0.82rem;}
 
 /* CONTENT */
@@ -68,52 +68,52 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 /* HERO */
 .lesson-hero{padding:44px 52px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
-.lesson-hero::after{content:'';position:absolute;top:0;right:0;width:320px;height:100%;background:radial-gradient(ellipse at right,var(--lc-glow,rgba(201,168,76,0.05)) 0%,transparent 70%);pointer-events:none;}
-.hero-eyebrow{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:14px;}
-.hero-emoji{font-size:3rem;line-height:1;display:block;margin-bottom:14px;filter:drop-shadow(0 0 18px var(--lc-glow,rgba(201,168,76,0.3)));}
-.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:900;color:var(--lc-color,var(--gold));line-height:1.1;margin-bottom:6px;}
-.hero-sub{font-family:'Cinzel',serif;font-size:0.8rem;letter-spacing:0.18em;color:var(--text-dim);margin-bottom:16px;}
-.hero-desc{font-size:1.05rem;font-weight:300;color:var(--text-dim);line-height:1.68;max-width:580px;}
+.lesson-hero::after{content:'';position:absolute;top:0;right:0;width:320px;height:100%;background:radial-gradient(ellipse at right,var(--lc-glow,rgba(32,70,245,0.05)) 0%,transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:14px;}
+.hero-emoji{font-size:3rem;line-height:1;display:block;margin-bottom:14px;filter:drop-shadow(0 0 18px var(--lc-glow,rgba(32,70,245,0.3)));}
+.hero-title{font-family:'Barlow Condensed',serif;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:900;color:var(--lc-color,var(--gold));line-height:1.1;margin-bottom:6px;}
+.hero-sub{font-family:'DM Sans',serif;font-size:0.8rem;letter-spacing:0.18em;color:var(--text-dim);margin-bottom:16px;}
+.hero-desc{font-size:1.05rem;font-weight:400;color:var(--text-dim);line-height:1.68;max-width:580px;}
 .hero-desc strong{color:var(--text);font-weight:500;}
-.hero-quote{margin-top:18px;padding:13px 18px;border-left:2px solid var(--lc-color,var(--gold));font-family:'Cinzel',serif;font-size:0.8rem;font-style:italic;color:var(--text-dim);}
+.hero-quote{margin-top:18px;padding:13px 18px;border-left:2px solid var(--lc-color,var(--gold));font-family:'DM Sans',serif;font-size:0.8rem;font-style:italic;color:var(--text-dim);}
 
 /* LESSON BODY */
 .lesson-body{padding:44px 52px;max-width:940px;}
-.section-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.28em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.section-label{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.28em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
 .section-block{margin-bottom:44px;}
 
 /* INTERACTIVE DIAGRAM */
 .diagram-wrap{background:var(--panel-3);border:1px solid var(--border);overflow:hidden;}
 .diagram-header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.dh-title{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;}
+.dh-title{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;}
 .dh-controls{display:flex;gap:6px;}
-.dh-btn{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;padding:5px 12px;background:transparent;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;transition:all 0.18s;}
-.dh-btn:hover,.dh-btn.active{border-color:rgba(201,168,76,0.4);color:var(--gold);background:rgba(201,168,76,0.06);}
+.dh-btn{font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.1em;padding:5px 12px;background:transparent;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;transition:all 0.18s;}
+.dh-btn:hover,.dh-btn.active{border-color:rgba(32,70,245,0.4);color:var(--gold);background:rgba(32,70,245,0.06);}
 .diagram-svg-wrap{padding:24px;overflow-x:auto;}
 .diagram-svg-wrap svg{display:block;margin:0 auto;}
-.diagram-caption{padding:12px 20px;border-top:1px solid var(--border);font-size:0.82rem;color:var(--text-dim);font-weight:300;line-height:1.5;}
+.diagram-caption{padding:12px 20px;border-top:1px solid var(--border);font-size:0.82rem;color:var(--text-dim);font-weight:400;line-height:1.5;}
 .diagram-caption strong{color:var(--gold);}
 
 /* PATTERN GRID */
 .pattern-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
 .pattern-card{background:var(--panel);border:1px solid var(--border);padding:18px;transition:border-color 0.2s;}
-.pattern-card:hover{border-color:rgba(201,168,76,0.3);}
+.pattern-card:hover{border-color:rgba(32,70,245,0.3);}
 .pc-svg{margin-bottom:12px;}
-.pc-name{font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;color:var(--text);margin-bottom:4px;}
-.pc-signal{font-size:0.7rem;font-family:'Cinzel',serif;letter-spacing:0.1em;margin-bottom:6px;}
+.pc-name{font-family:'DM Sans',serif;font-size:0.75rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.pc-signal{font-size:0.7rem;font-family:'DM Sans',serif;letter-spacing:0.1em;margin-bottom:6px;}
 .pc-signal.bull{color:var(--green);}
 .pc-signal.bear{color:var(--red);}
 .pc-signal.neutral{color:var(--gold-dim);}
-.pc-desc{font-size:0.85rem;color:var(--text-dim);line-height:1.5;font-weight:300;}
+.pc-desc{font-size:0.85rem;color:var(--text-dim);line-height:1.5;font-weight:400;}
 
 /* EXAMPLE BOX */
 .example-box{background:var(--panel);border:1px solid var(--border);padding:28px 32px;position:relative;}
-.example-box::before{content:'REAL EXAMPLE';position:absolute;top:-9px;left:20px;background:var(--panel);padding:0 8px;font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold-dim);}
-.ex-scenario{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;color:var(--lc-color,var(--gold));margin-bottom:12px;letter-spacing:0.06em;}
-.ex-text{font-size:0.97rem;line-height:1.7;color:var(--text-dim);font-weight:300;}
+.example-box::before{content:'REAL EXAMPLE';position:absolute;top:-9px;left:20px;background:var(--panel);padding:0 8px;font-family:'DM Sans',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--gold-dim);}
+.ex-scenario{font-family:'DM Sans',serif;font-size:0.78rem;font-weight:700;color:var(--lc-color,var(--gold));margin-bottom:12px;letter-spacing:0.06em;}
+.ex-text{font-size:0.97rem;line-height:1.7;color:var(--text-dim);font-weight:400;}
 .ex-text strong{color:var(--text);font-weight:500;}
-.ex-callout{margin-top:14px;background:rgba(201,168,76,0.04);border:1px solid var(--border);padding:13px 16px;display:flex;gap:10px;}
+.ex-callout{margin-top:14px;background:rgba(32,70,245,0.04);border:1px solid var(--border);padding:13px 16px;display:flex;gap:10px;}
 .ec-icon{font-size:1rem;line-height:1.4;flex-shrink:0;}
 .ec-text{font-size:0.87rem;color:var(--text-dim);line-height:1.5;}
 .ec-text strong{color:var(--gold);font-weight:600;}
@@ -121,26 +121,26 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* GLOSSARY */
 .glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:11px;}
 .glossary-item{background:var(--panel);border:1px solid var(--border);padding:14px 16px;transition:border-color 0.2s;}
-.glossary-item:hover{border-color:rgba(201,168,76,0.3);}
-.gi-term{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;color:var(--lc-color,var(--gold));margin-bottom:4px;}
-.gi-def{font-size:0.86rem;color:var(--text-dim);line-height:1.5;font-weight:300;}
+.glossary-item:hover{border-color:rgba(32,70,245,0.3);}
+.gi-term{font-family:'DM Sans',serif;font-size:0.72rem;font-weight:700;color:var(--lc-color,var(--gold));margin-bottom:4px;}
+.gi-def{font-size:0.86rem;color:var(--text-dim);line-height:1.5;font-weight:400;}
 
 /* QUIZ */
 .quiz-section{background:var(--panel-2);border-top:1px solid var(--border);padding:44px 52px;}
-.quiz-title{font-family:'Cinzel Decorative',serif;font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:6px;}
-.quiz-sub{font-size:0.92rem;color:var(--text-dim);font-weight:300;margin-bottom:32px;}
+.quiz-title{font-family:'Barlow Condensed',serif;font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.quiz-sub{font-size:0.92rem;color:var(--text-dim);font-weight:400;margin-bottom:32px;}
 .qz-block{margin-bottom:24px;}
-.qz-num{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:8px;}
+.qz-num{font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:8px;}
 .qz-q{font-size:1.02rem;font-weight:500;color:var(--text);line-height:1.55;margin-bottom:13px;}
 .qz-q em{color:var(--gold);font-style:normal;font-weight:600;}
 .qz-opts{display:flex;flex-direction:column;gap:7px;}
 .qz-opt{background:var(--panel);border:1px solid var(--border);padding:12px 17px;cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:12px;transition:all 0.17s;width:100%;}
-.qz-opt:hover{border-color:rgba(201,168,76,0.38);background:var(--ink-3);transform:translateX(3px);}
-.qz-opt.sel{border-color:var(--gold);background:rgba(201,168,76,0.07);}
+.qz-opt:hover{border-color:rgba(32,70,245,0.38);background:var(--ink-3);transform:translateX(3px);}
+.qz-opt.sel{border-color:var(--gold);background:rgba(32,70,245,0.07);}
 .qz-opt.ok{border-color:var(--teal)!important;background:rgba(76,201,168,0.07)!important;}
 .qz-opt.no{border-color:var(--red)!important;background:rgba(224,82,82,0.07)!important;}
 .qz-opt:disabled{cursor:default;transform:none!important;}
-.qz-dot{width:22px;height:22px;border:1px solid var(--border-b);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.54rem;font-family:'Cinzel',serif;transition:all 0.17s;margin-top:1px;}
+.qz-dot{width:22px;height:22px;border:1px solid var(--border-b);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.54rem;font-family:'DM Sans',serif;transition:all 0.17s;margin-top:1px;}
 .qz-opt.sel .qz-dot{background:var(--gold);border-color:var(--gold);color:var(--ink);}
 .qz-opt.ok .qz-dot{background:var(--teal);border-color:var(--teal);color:var(--ink);}
 .qz-opt.no .qz-dot{background:var(--red);border-color:var(--red);color:#fff;}
@@ -151,22 +151,22 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .qz-fb.ok{background:rgba(76,201,168,0.07);border:1px solid rgba(76,201,168,0.2);color:var(--teal);}
 .qz-fb.no{background:rgba(224,82,82,0.07);border:1px solid rgba(224,82,82,0.2);color:#E87878;}
 .qz-nav{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:6px;}
-.btn-sub{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.17em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:12px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;opacity:0.38;pointer-events:none;}
+.btn-sub{font-family:'DM Sans',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.17em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:12px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;opacity:0.38;pointer-events:none;}
 .btn-sub.rdy{opacity:1;pointer-events:all;}
-.btn-sub.rdy:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(201,168,76,0.22);}
-.btn-next-l{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:12px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;display:none;}
+.btn-sub.rdy:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(32,70,245,0.22);}
+.btn-next-l{font-family:'DM Sans',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:12px 32px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;display:none;}
 .btn-next-l:hover{transform:translateY(-2px);}
-.btn-ghost{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);background:transparent;border:1px solid var(--border-b);padding:11px 24px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;}
-.btn-ghost:hover{background:rgba(201,168,76,0.06);}
+.btn-ghost{font-family:'DM Sans',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);background:transparent;border:1px solid var(--border-b);padding:11px 24px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;}
+.btn-ghost:hover{background:rgba(32,70,245,0.06);}
 .score-box{display:none;background:var(--panel);border:1px solid var(--border);padding:24px 28px;margin-top:24px;text-align:center;animation:fu 0.38s ease;}
 .score-box.show{display:block;}
-.score-big{font-family:'Cinzel Decorative',serif;font-size:2.6rem;font-weight:900;color:var(--gold);line-height:1;}
-.score-lbl{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.17em;color:var(--text-dim);margin-top:5px;}
-.score-xp{display:inline-block;margin-top:11px;padding:6px 16px;background:rgba(201,168,76,0.09);border:1px solid var(--border-b);font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);}
-.score-msg{margin-top:12px;font-size:0.91rem;color:var(--text-dim);font-weight:300;line-height:1.5;}
+.score-big{font-family:'Barlow Condensed',serif;font-size:2.6rem;font-weight:900;color:var(--gold);line-height:1;}
+.score-lbl{font-family:'DM Sans',serif;font-size:0.63rem;letter-spacing:0.17em;color:var(--text-dim);margin-top:5px;}
+.score-xp{display:inline-block;margin-top:11px;padding:6px 16px;background:rgba(32,70,245,0.09);border:1px solid var(--border-b);font-family:'DM Sans',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);}
+.score-msg{margin-top:12px;font-size:0.91rem;color:var(--text-dim);font-weight:400;line-height:1.5;}
 .ornament{display:flex;align-items:center;gap:12px;margin:28px 0;}
 .ornament::before,.ornament::after{content:'';flex:1;height:1px;background:var(--border);}
-.ornament span{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.2em;color:var(--text-faint);}
+.ornament span{font-family:'DM Sans',serif;font-size:0.56rem;letter-spacing:0.2em;color:var(--text-faint);}
 
 @media(max-width:768px){
   .sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);}
@@ -176,20 +176,31 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
 </style>
 <link rel="stylesheet" href="dojo-theme.css"/>
-<link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#C9A84C"/><link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+<link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#2046F5"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+<script src="dojo-ui.js" defer></script>
+<link rel="icon" href="/favicon.ico" sizes="any"/>
+<meta name="description" content="Learn trading instruments, chart reading, trading styles and risk management at Trading Dojo."/>
+<meta property="og:title" content="Trading Dojo — Put in the reps."/>
+<meta property="og:description" content="Lessons, knowledge checks and deliberate practice for better trading decisions."/>
+<meta property="og:image" content="https://trading-dojo.netlify.app/og-image.png"/>
+<meta property="og:url" content="https://trading-dojo.netlify.app/charts-module.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Trading Dojo"/>
+<meta name="twitter:description" content="Learn the market. Learn yourself."/>
+<meta name="twitter:image" content="https://trading-dojo.netlify.app/og-image.png"/>
 </head>
-<body>
+<body class="page-charts-module">
 <div class="app">
   <div class="topbar">
-    <a class="logo" href="index.html"><div class="logo-mark">⚔</div>The Trading Dojo</a>
-    <div class="topbar-center">Module V · Chart Reading</div>
+    <a class="logo" href="dashboard.html"><div class="logo-mark">⚔</div>The Trading Dojo</a>
+    <div class="topbar-center">Module IV · Chart Reading</div>
     <div class="topbar-right"><div class="xp-chip">⚡ <span id="xp-disp">0</span> XP</div></div>
   </div>
 
   <div class="body-layout">
     <aside class="sidebar">
       <div class="sb-header">
-        <div class="sb-title">Module V</div>
+        <div class="sb-title">Module IV</div>
         <div class="sb-sub">Chart Reading</div>
         <div class="sb-progress">
           <div class="sp-row">Progress <span id="sp-txt">0 / 6</span></div>
@@ -216,14 +227,14 @@ function buildCandlestickDiagram(type='both'){
     {x:80, o:200,c:120,h:100,l:230, bull:true,  label:'Bullish'},
     {x:240,o:120,c:200,h:100,l:220, bull:false, label:'Bearish'},
   ];
-  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif">`;
   // Grid
   for(let i=0;i<5;i++){
     const y=40+i*50;
-    svg+=`<line x1="40" y1="${y}" x2="${W-40}" y2="${y}" stroke="rgba(201,168,76,0.06)" stroke-width="1"/>`;
+    svg+=`<line x1="40" y1="${y}" x2="${W-40}" y2="${y}" stroke="rgba(32,70,245,0.06)" stroke-width="1"/>`;
   }
   candles.forEach(c=>{
-    const col=c.bull?'#3DBA72':'#E05252';
+    const col=c.bull?'#13884F':'#CC303D';
     const bx=c.x, bw=80;
     const by=Math.min(c.o,c.c), bh=Math.abs(c.o-c.c)||4;
     // Wick
@@ -231,14 +242,14 @@ function buildCandlestickDiagram(type='both'){
     // Body
     svg+=`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" fill="${col}" rx="2" opacity="0.9"/>`;
     // Label
-    svg+=`<text x="${bx+bw/2}" y="${H-18}" text-anchor="middle" fill="${col}" font-size="13" font-family="Cinzel,serif" font-weight="700">${c.label}</text>`;
+    svg+=`<text x="${bx+bw/2}" y="${H-18}" text-anchor="middle" fill="${col}" font-size="13" font-family="DM Sans,serif" font-weight="700">${c.label}</text>`;
   });
   // Annotations for bullish
   const bc=candles[0];
-  svg+=`<line x1="${bc.x+bc.label.length}" y1="${bc.h+4}" x2="${bc.x-24}" y2="${bc.h-10}" stroke="rgba(201,168,76,0.4)" stroke-width="1" stroke-dasharray="3 3"/>`;
-  svg+=`<text x="${bc.x-28}" y="${bc.h-14}" text-anchor="end" fill="rgba(201,168,76,0.7)" font-size="11">High (wick top)</text>`;
-  svg+=`<line x1="${bc.x+bc.label.length}" y1="${bc.l-4}" x2="${bc.x-24}" y2="${bc.l+10}" stroke="rgba(201,168,76,0.4)" stroke-width="1" stroke-dasharray="3 3"/>`;
-  svg+=`<text x="${bc.x-28}" y="${bc.l+14}" text-anchor="end" fill="rgba(201,168,76,0.7)" font-size="11">Low (wick bottom)</text>`;
+  svg+=`<line x1="${bc.x+bc.label.length}" y1="${bc.h+4}" x2="${bc.x-24}" y2="${bc.h-10}" stroke="rgba(32,70,245,0.4)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  svg+=`<text x="${bc.x-28}" y="${bc.h-14}" text-anchor="end" fill="rgba(32,70,245,0.7)" font-size="11">High (wick top)</text>`;
+  svg+=`<line x1="${bc.x+bc.label.length}" y1="${bc.l-4}" x2="${bc.x-24}" y2="${bc.l+10}" stroke="rgba(32,70,245,0.4)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  svg+=`<text x="${bc.x-28}" y="${bc.l+14}" text-anchor="end" fill="rgba(32,70,245,0.7)" font-size="11">Low (wick bottom)</text>`;
   svg+=`<line x1="${bc.x+2}" y1="${Math.min(bc.o,bc.c)+Math.abs(bc.o-bc.c)/2}" x2="${bc.x-24}" y2="${Math.min(bc.o,bc.c)+Math.abs(bc.o-bc.c)/2}" stroke="rgba(61,186,114,0.5)" stroke-width="1" stroke-dasharray="3 3"/>`;
   svg+=`<text x="${bc.x-28}" y="${Math.min(bc.o,bc.c)+Math.abs(bc.o-bc.c)/2+4}" text-anchor="end" fill="rgba(61,186,114,0.8)" font-size="11">Body (open→close)</text>`;
   // Annotations for bearish
@@ -258,34 +269,34 @@ function buildSupportResistanceDiagram(){
   const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
   const px=(i)=>pad.l+(i/(prices.length-1))*iW;
   const py=(v)=>pad.t+((maxP-v)/(maxP-minP))*iH;
-  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif">`;
   // Grid
   [140,155,170].forEach(v=>{
-    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>`;
-    svg+=`<text x="${pad.l-6}" y="${py(v)+4}" text-anchor="end" fill="rgba(201,168,76,0.3)" font-size="10" font-family="Share Tech Mono,monospace">$${v}</text>`;
+    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="rgba(32,70,245,0.05)" stroke-width="1"/>`;
+    svg+=`<text x="${pad.l-6}" y="${py(v)+4}" text-anchor="end" fill="rgba(32,70,245,0.3)" font-size="10" font-family="Share Tech Mono,monospace">$${v}</text>`;
   });
   // Support line at 140
   const sy=py(140);
-  svg+=`<line x1="${pad.l}" y1="${sy}" x2="${W-pad.r}" y2="${sy}" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.7"/>`;
-  svg+=`<text x="${W-pad.r+4}" y="${sy+4}" fill="#3DBA72" font-size="11" font-family="Cinzel,serif">Support</text>`;
+  svg+=`<line x1="${pad.l}" y1="${sy}" x2="${W-pad.r}" y2="${sy}" stroke="#13884F" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.7"/>`;
+  svg+=`<text x="${W-pad.r+4}" y="${sy+4}" fill="#13884F" font-size="11" font-family="DM Sans,serif">Support</text>`;
   // Resistance line at 178
   const ry=py(178);
-  svg+=`<line x1="${pad.l}" y1="${ry}" x2="${W-pad.r}" y2="${ry}" stroke="#E05252" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.7"/>`;
-  svg+=`<text x="${W-pad.r+4}" y="${ry+4}" fill="#E05252" font-size="11" font-family="Cinzel,serif">Resistance</text>`;
+  svg+=`<line x1="${pad.l}" y1="${ry}" x2="${W-pad.r}" y2="${ry}" stroke="#CC303D" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.7"/>`;
+  svg+=`<text x="${W-pad.r+4}" y="${ry+4}" fill="#CC303D" font-size="11" font-family="DM Sans,serif">Resistance</text>`;
   // Price line
   const pts=prices.map((v,i)=>`${px(i)},${py(v)}`).join(' ');
-  svg+=`<polyline points="${pts}" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  svg+=`<polyline points="${pts}" fill="none" stroke="#2046F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
   // Bounce dots at support
   [3,7].forEach(i=>{
-    svg+=`<circle cx="${px(i)}" cy="${py(prices[i])}" r="5" fill="none" stroke="#3DBA72" stroke-width="2"/>`;
+    svg+=`<circle cx="${px(i)}" cy="${py(prices[i])}" r="5" fill="none" stroke="#13884F" stroke-width="2"/>`;
   });
   // Rejection dots at resistance
   [0,13].forEach(i=>{
-    svg+=`<circle cx="${px(i)}" cy="${py(prices[i])}" r="5" fill="none" stroke="#E05252" stroke-width="2"/>`;
+    svg+=`<circle cx="${px(i)}" cy="${py(prices[i])}" r="5" fill="none" stroke="#CC303D" stroke-width="2"/>`;
   });
   // Price dots
   prices.forEach((v,i)=>{
-    svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="#C9A84C"/>`;
+    svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="#2046F5"/>`;
   });
   svg+='</svg>';
   return svg;
@@ -300,36 +311,36 @@ function buildTrendlineDiagram(){
   const minP=90,maxP=180;
   const px=(i,len)=>pad.l+(i/(len-1))*iW;
   const py=(v)=>pad.t+((maxP-v)/(maxP-minP))*iH;
-  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif">`;
   // Grid
   [100,130,160].forEach(v=>{
-    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>`;
-    svg+=`<text x="${pad.l-6}" y="${py(v)+4}" text-anchor="end" fill="rgba(201,168,76,0.3)" font-size="10" font-family="Share Tech Mono,monospace">$${v}</text>`;
+    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="rgba(32,70,245,0.05)" stroke-width="1"/>`;
+    svg+=`<text x="${pad.l-6}" y="${py(v)+4}" text-anchor="end" fill="rgba(32,70,245,0.3)" font-size="10" font-family="Share Tech Mono,monospace">$${v}</text>`;
   });
   // Trendline (support line connecting lows)
   const lows=[[0,100],[2,108],[4,120],[6,132],[8,145],[10,152]];
   const tl1x=px(lows[0][0],upPrices.length),tl1y=py(lows[0][1]);
   const tl2x=px(lows[lows.length-1][0],upPrices.length),tl2y=py(lows[lows.length-1][1]);
-  svg+=`<line x1="${tl1x}" y1="${tl1y}" x2="${tl2x+40}" y2="${tl2y-18}" stroke="#3DBA72" stroke-width="2" stroke-dasharray="7 3" opacity="0.8"/>`;
-  svg+=`<text x="${tl2x+44}" y="${tl2y-14}" fill="#3DBA72" font-size="11" font-family="Cinzel,serif">Uptrend line</text>`;
+  svg+=`<line x1="${tl1x}" y1="${tl1y}" x2="${tl2x+40}" y2="${tl2y-18}" stroke="#13884F" stroke-width="2" stroke-dasharray="7 3" opacity="0.8"/>`;
+  svg+=`<text x="${tl2x+44}" y="${tl2y-14}" fill="#13884F" font-size="11" font-family="DM Sans,serif">Uptrend line</text>`;
   // Price line
   const pts=upPrices.map((v,i)=>`${px(i,upPrices.length)},${py(v)}`).join(' ');
-  svg+=`<polyline points="${pts}" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  svg+=`<polyline points="${pts}" fill="none" stroke="#2046F5" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
   // Higher highs annotation
   [[1,115],[3,128],[5,140],[7,155],[9,162],[11,170]].forEach(([i,v],idx)=>{
     if(idx>0){
-      svg+=`<circle cx="${px(i,upPrices.length)}" cy="${py(v)}" r="4" fill="#C9A84C" opacity="0.6"/>`;
+      svg+=`<circle cx="${px(i,upPrices.length)}" cy="${py(v)}" r="4" fill="#2046F5" opacity="0.6"/>`;
     }
   });
   // HH / HL labels
-  svg+=`<text x="${px(1,upPrices.length)}" y="${py(115)-8}" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-size="10">HH</text>`;
-  svg+=`<text x="${px(3,upPrices.length)}" y="${py(128)-8}" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-size="10">HH</text>`;
+  svg+=`<text x="${px(1,upPrices.length)}" y="${py(115)-8}" text-anchor="middle" fill="rgba(32,70,245,0.6)" font-size="10">HH</text>`;
+  svg+=`<text x="${px(3,upPrices.length)}" y="${py(128)-8}" text-anchor="middle" fill="rgba(32,70,245,0.6)" font-size="10">HH</text>`;
   svg+=`<text x="${px(2,upPrices.length)}" y="${py(108)+16}" text-anchor="middle" fill="rgba(61,186,114,0.6)" font-size="10">HL</text>`;
   svg+=`<text x="${px(4,upPrices.length)}" y="${py(120)+16}" text-anchor="middle" fill="rgba(61,186,114,0.6)" font-size="10">HL</text>`;
-  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-size="11" font-family="Cinzel,serif">UPTREND: Higher Highs (HH) + Higher Lows (HL)</text>`;
+  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(32,70,245,0.35)" font-size="11" font-family="DM Sans,serif">UPTREND: Higher Highs (HH) + Higher Lows (HL)</text>`;
   // Price dots
   upPrices.forEach((v,i)=>{
-    svg+=`<circle cx="${px(i,upPrices.length)}" cy="${py(v)}" r="2.5" fill="#C9A84C"/>`;
+    svg+=`<circle cx="${px(i,upPrices.length)}" cy="${py(v)}" r="2.5" fill="#2046F5"/>`;
   });
   svg+='</svg>';
   return svg;
@@ -353,10 +364,10 @@ function buildVolumeDiagram(){
   const minP=Math.min(...prices)-5,maxP=Math.max(...prices)+5;
   const px=(i)=>startX+i*(bw+gap)+bw/2;
   const py=(v)=>pad.t+((maxP-v)/(maxP-minP))*chartH;
-  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif">`;
   // Divider
-  svg+=`<line x1="${pad.l}" y1="${pad.t+chartH+16}" x2="${W-pad.r}" y2="${pad.t+chartH+16}" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>`;
-  svg+=`<text x="${pad.l-6}" y="${pad.t+chartH+28}" text-anchor="end" fill="rgba(201,168,76,0.4)" font-size="10" font-family="Cinzel,serif">VOL</text>`;
+  svg+=`<line x1="${pad.l}" y1="${pad.t+chartH+16}" x2="${W-pad.r}" y2="${pad.t+chartH+16}" stroke="rgba(32,70,245,0.1)" stroke-width="1"/>`;
+  svg+=`<text x="${pad.l-6}" y="${pad.t+chartH+28}" text-anchor="end" fill="rgba(32,70,245,0.4)" font-size="10" font-family="DM Sans,serif">VOL</text>`;
   // Volume bars
   bars.forEach((b,i)=>{
     const bh=(b.v/maxV)*volH;
@@ -366,14 +377,14 @@ function buildVolumeDiagram(){
   });
   // Highlight high volume bars
   [3,4,7,8].forEach(i=>{
-    svg+=`<rect x="${startX+i*(bw+gap)-2}" y="${H-20-(bars[i].v/maxV)*volH-4}" width="${bw+4}" height="4" fill="${bars[i].bull?'#3DBA72':'#E05252'}" rx="1" opacity="0.8"/>`;
+    svg+=`<rect x="${startX+i*(bw+gap)-2}" y="${H-20-(bars[i].v/maxV)*volH-4}" width="${bw+4}" height="4" fill="${bars[i].bull?'#13884F':'#CC303D'}" rx="1" opacity="0.8"/>`;
   });
   // Price line
   const pts=prices.map((v,i)=>`${px(i)},${py(v)}`).join(' ');
-  svg+=`<polyline points="${pts}" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
-  prices.forEach((v,i)=>{svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="#C9A84C"/>`;});
+  svg+=`<polyline points="${pts}" fill="none" stroke="#2046F5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  prices.forEach((v,i)=>{svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="#2046F5"/>`;});
   // Label
-  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-size="11" font-family="Cinzel,serif">High volume confirms price moves · Low volume = weak signal</text>`;
+  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(32,70,245,0.35)" font-size="11" font-family="DM Sans,serif">High volume confirms price moves · Low volume = weak signal</text>`;
   svg+='</svg>';
   return svg;
 }
@@ -388,27 +399,27 @@ function buildMovingAvgDiagram(){
   const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
   const px=(i)=>pad.l+(i/(prices.length-1))*iW;
   const py=(v)=>pad.t+((maxP-v)/(maxP-minP))*iH;
-  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif">`;
   // Grid
   [150,160,170,180].forEach(v=>{
-    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>`;
-    svg+=`<text x="${pad.l-6}" y="${py(v)+4}" text-anchor="end" fill="rgba(201,168,76,0.3)" font-size="10" font-family="Share Tech Mono,monospace">$${v}</text>`;
+    svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="rgba(32,70,245,0.05)" stroke-width="1"/>`;
+    svg+=`<text x="${pad.l-6}" y="${py(v)+4}" text-anchor="end" fill="rgba(32,70,245,0.3)" font-size="10" font-family="Share Tech Mono,monospace">$${v}</text>`;
   });
   // Price line
   const pts=prices.map((v,i)=>`${px(i)},${py(v)}`).join(' ');
-  svg+=`<polyline points="${pts}" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 2"/>`;
+  svg+=`<polyline points="${pts}" fill="none" stroke="rgba(32,70,245,0.4)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="4 2"/>`;
   // SMA 20 (fast - teal)
   const sma20pts=sma20.map((v,i)=>v?`${px(i)},${py(v)}`:null).filter(Boolean).join(' ');
-  svg+=`<polyline points="${sma20pts}" fill="none" stroke="${'#4CC9A8'}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
-  svg+=`<text x="${W-pad.r+4}" y="${py(sma20[sma20.length-1])+4}" fill="#4CC9A8" font-size="11" font-family="Cinzel,serif">SMA 20</text>`;
+  svg+=`<polyline points="${sma20pts}" fill="none" stroke="${'#087F70'}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  svg+=`<text x="${W-pad.r+4}" y="${py(sma20[sma20.length-1])+4}" fill="#087F70" font-size="11" font-family="DM Sans,serif">SMA 20</text>`;
   // SMA 50 (purple)
   const sma50pts=sma50.map((v,i)=>v?`${px(i)},${py(v)}`:null).filter(Boolean).join(' ');
-  svg+=`<polyline points="${sma50pts}" fill="none" stroke="${'#8B6FD4'}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
-  svg+=`<text x="${W-pad.r+4}" y="${py(sma50[sma50.length-1])+4}" fill="#8B6FD4" font-size="11" font-family="Cinzel,serif">SMA 50</text>`;
+  svg+=`<polyline points="${sma50pts}" fill="none" stroke="${'#6E3ABD'}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  svg+=`<text x="${W-pad.r+4}" y="${py(sma50[sma50.length-1])+4}" fill="#6E3ABD" font-size="11" font-family="DM Sans,serif">SMA 50</text>`;
   // Price dots
-  prices.forEach((v,i)=>{svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2" fill="rgba(201,168,76,0.7)"/>`;});
+  prices.forEach((v,i)=>{svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2" fill="rgba(32,70,245,0.7)"/>`;});
   // Golden cross annotation (where fast crosses above slow)
-  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-size="11" font-family="Cinzel,serif">Dashed = price · Teal = SMA 20 (fast) · Purple = SMA 50 (slow)</text>`;
+  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(32,70,245,0.35)" font-size="11" font-family="DM Sans,serif">Dashed = price · Teal = SMA 20 (fast) · Purple = SMA 50 (slow)</text>`;
   svg+='</svg>';
   return svg;
 }
@@ -420,7 +431,7 @@ function buildRSIDiagram(){
   const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
   const px=(i)=>pad.l+(i/(rsiv.length-1))*iW;
   const py=(v)=>pad.t+((100-v)/100)*iH;
-  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Rajdhani,sans-serif">`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif">`;
   // Overbought zone (70+)
   const oy=py(70),obh=py(0)-py(70);
   svg+=`<rect x="${pad.l}" y="${pad.t}" width="${iW}" height="${oy-pad.t}" fill="rgba(224,82,82,0.06)" rx="0"/>`;
@@ -428,20 +439,20 @@ function buildRSIDiagram(){
   const osY=py(30);
   svg+=`<rect x="${pad.l}" y="${osY}" width="${iW}" height="${H-pad.b-osY}" fill="rgba(61,186,114,0.06)" rx="0"/>`;
   // Level lines
-  [[70,'rgba(224,82,82,0.5)','Overbought (70)'],[50,'rgba(201,168,76,0.25)','Midline (50)'],[30,'rgba(61,186,114,0.5)','Oversold (30)']].forEach(([v,col,lbl])=>{
+  [[70,'rgba(224,82,82,0.5)','Overbought (70)'],[50,'rgba(32,70,245,0.25)','Midline (50)'],[30,'rgba(61,186,114,0.5)','Oversold (30)']].forEach(([v,col,lbl])=>{
     svg+=`<line x1="${pad.l}" y1="${py(v)}" x2="${W-pad.r}" y2="${py(v)}" stroke="${col}" stroke-width="1.2" stroke-dasharray="5 3"/>`;
-    svg+=`<text x="${W-pad.r+4}" y="${py(v)+4}" fill="${col}" font-size="11" font-family="Cinzel,serif">${lbl}</text>`;
+    svg+=`<text x="${W-pad.r+4}" y="${py(v)+4}" fill="${col}" font-size="11" font-family="DM Sans,serif">${lbl}</text>`;
   });
   // RSI line
   const pts=rsiv.map((v,i)=>`${px(i)},${py(v)}`).join(' ');
-  svg+=`<polyline points="${pts}" fill="none" stroke="#C9A84C" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  svg+=`<polyline points="${pts}" fill="none" stroke="#2046F5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
   // Overbought highlight
   rsiv.forEach((v,i)=>{
-    if(v>=70) svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="4" fill="rgba(224,82,82,0.5)" stroke="#E05252" stroke-width="1.5"/>`;
-    else if(v<=30) svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="4" fill="rgba(61,186,114,0.5)" stroke="#3DBA72" stroke-width="1.5"/>`;
-    else svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="#C9A84C"/>`;
+    if(v>=70) svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="4" fill="rgba(224,82,82,0.5)" stroke="#CC303D" stroke-width="1.5"/>`;
+    else if(v<=30) svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="4" fill="rgba(61,186,114,0.5)" stroke="#13884F" stroke-width="1.5"/>`;
+    else svg+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.5" fill="#2046F5"/>`;
   });
-  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-size="11" font-family="Cinzel,serif">RSI 0–100 · Red zone = overbought · Green zone = oversold</text>`;
+  svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="rgba(32,70,245,0.35)" font-size="11" font-family="DM Sans,serif">RSI 0–100 · Red zone = overbought · Green zone = oversold</text>`;
   svg+='</svg>';
   return svg;
 }
@@ -450,22 +461,22 @@ function buildRSIDiagram(){
 // CANDLESTICK PATTERN SVGs
 // ═══════════════════════════════════
 function doji(){
-  return `<svg viewBox="0 0 60 80" width="60" height="80"><line x1="30" y1="5" x2="30" y2="75" stroke="#C9A84C" stroke-width="2"/><rect x="10" y="35" width="40" height="4" fill="#C9A84C" rx="1"/></svg>`;
+  return `<svg viewBox="0 0 60 80" width="60" height="80"><line x1="30" y1="5" x2="30" y2="75" stroke="#2046F5" stroke-width="2"/><rect x="10" y="35" width="40" height="4" fill="#2046F5" rx="1"/></svg>`;
 }
 function hammer(){
-  return `<svg viewBox="0 0 60 90" width="60" height="90"><line x1="30" y1="5" x2="30" y2="20" stroke="#3DBA72" stroke-width="2"/><rect x="15" y="20" width="30" height="20" fill="#3DBA72" rx="2"/><line x1="30" y1="40" x2="30" y2="85" stroke="#3DBA72" stroke-width="2"/></svg>`;
+  return `<svg viewBox="0 0 60 90" width="60" height="90"><line x1="30" y1="5" x2="30" y2="20" stroke="#13884F" stroke-width="2"/><rect x="15" y="20" width="30" height="20" fill="#13884F" rx="2"/><line x1="30" y1="40" x2="30" y2="85" stroke="#13884F" stroke-width="2"/></svg>`;
 }
 function shootingStar(){
-  return `<svg viewBox="0 0 60 90" width="60" height="90"><line x1="30" y1="5" x2="30" y2="50" stroke="#E05252" stroke-width="2"/><rect x="15" y="50" width="30" height="20" fill="#E05252" rx="2"/><line x1="30" y1="70" x2="30" y2="80" stroke="#E05252" stroke-width="2"/></svg>`;
+  return `<svg viewBox="0 0 60 90" width="60" height="90"><line x1="30" y1="5" x2="30" y2="50" stroke="#CC303D" stroke-width="2"/><rect x="15" y="50" width="30" height="20" fill="#CC303D" rx="2"/><line x1="30" y1="70" x2="30" y2="80" stroke="#CC303D" stroke-width="2"/></svg>`;
 }
 function engulfingBull(){
-  return `<svg viewBox="0 0 80 90" width="80" height="90"><rect x="10" y="30" width="24" height="30" fill="#E05252" rx="2"/><line x1="22" y1="15" x2="22" y2="30" stroke="#E05252" stroke-width="2"/><line x1="22" y1="60" x2="22" y2="75" stroke="#E05252" stroke-width="2"/><rect x="46" y="20" width="24" height="50" fill="#3DBA72" rx="2"/><line x1="58" y1="10" x2="58" y2="20" stroke="#3DBA72" stroke-width="2"/><line x1="58" y1="70" x2="58" y2="80" stroke="#3DBA72" stroke-width="2"/></svg>`;
+  return `<svg viewBox="0 0 80 90" width="80" height="90"><rect x="10" y="30" width="24" height="30" fill="#CC303D" rx="2"/><line x1="22" y1="15" x2="22" y2="30" stroke="#CC303D" stroke-width="2"/><line x1="22" y1="60" x2="22" y2="75" stroke="#CC303D" stroke-width="2"/><rect x="46" y="20" width="24" height="50" fill="#13884F" rx="2"/><line x1="58" y1="10" x2="58" y2="20" stroke="#13884F" stroke-width="2"/><line x1="58" y1="70" x2="58" y2="80" stroke="#13884F" stroke-width="2"/></svg>`;
 }
 function insideBar(){
-  return `<svg viewBox="0 0 80 90" width="80" height="90"><rect x="5" y="15" width="30" height="60" fill="rgba(201,168,76,0.4)" stroke="#C9A84C" stroke-width="1.5" rx="2"/><rect x="46" y="28" width="22" height="35" fill="rgba(201,168,76,0.2)" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="3 2" rx="2"/></svg>`;
+  return `<svg viewBox="0 0 80 90" width="80" height="90"><rect x="5" y="15" width="30" height="60" fill="rgba(32,70,245,0.4)" stroke="#2046F5" stroke-width="1.5" rx="2"/><rect x="46" y="28" width="22" height="35" fill="rgba(32,70,245,0.2)" stroke="#2046F5" stroke-width="1.5" stroke-dasharray="3 2" rx="2"/></svg>`;
 }
 function marubozu(){
-  return `<svg viewBox="0 0 60 80" width="60" height="80"><rect x="12" y="10" width="36" height="60" fill="#3DBA72" rx="2"/></svg>`;
+  return `<svg viewBox="0 0 60 80" width="60" height="80"><rect x="12" y="10" width="36" height="60" fill="#13884F" rx="2"/></svg>`;
 }
 
 // ═══════════════════════════════════
@@ -474,7 +485,7 @@ function marubozu(){
 const LESSONS = [
   {
     id:'candlesticks', emoji:'🕯️', name:'Candlesticks',
-    color:'#C9A84C', glow:'rgba(201,168,76,0.06)',
+    color:'#2046F5', glow:'rgba(32,70,245,0.06)',
     subtitle:'THE LANGUAGE OF PRICE',
     desc:'A <strong>candlestick</strong> is the most fundamental unit of a price chart. Every single candle tells a complete story about what happened in a given time period — who was in control, how hard they fought, and who won.',
     quote:'"Learn to read one candle and you can read the whole story of a stock."',
@@ -519,7 +530,7 @@ const LESSONS = [
   },
   {
     id:'supportresistance', emoji:'🏗️', name:'Support & Resistance',
-    color:'#4CC9A8', glow:'rgba(76,201,168,0.06)',
+    color:'#087F70', glow:'rgba(76,201,168,0.06)',
     subtitle:'THE FLOOR AND THE CEILING',
     desc:'<strong>Support</strong> is a price level where buyers consistently step in and stop price from falling further — like a floor. <strong>Resistance</strong> is a price level where sellers consistently appear and stop price from rising — like a ceiling. These are the two most important concepts in technical analysis.',
     quote:'"The market has memory. Price remembers where it turned before — and often turns again."',
@@ -532,17 +543,17 @@ const LESSONS = [
       {title:'Strong vs weak levels',desc:'A level that has been tested and held 3+ times is very strong. A level that held once is weak. The <strong>more tests a level survives</strong>, the bigger the eventual breakout tends to be when price finally breaks through.'},
     ],
     patterns:[
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="60" x2="90" y2="60" stroke="#3DBA72" stroke-width="2" stroke-dasharray="5 3"/><path d="M15,40 Q25,20 35,40 Q45,55 55,40 Q65,20 75,40 Q85,55 90,45" fill="none" stroke="#C9A84C" stroke-width="2"/><circle cx="35" cy="59" r="4" fill="none" stroke="#3DBA72" stroke-width="2"/><circle cx="55" cy="59" r="4" fill="none" stroke="#3DBA72" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="60" x2="90" y2="60" stroke="#13884F" stroke-width="2" stroke-dasharray="5 3"/><path d="M15,40 Q25,20 35,40 Q45,55 55,40 Q65,20 75,40 Q85,55 90,45" fill="none" stroke="#2046F5" stroke-width="2"/><circle cx="35" cy="59" r="4" fill="none" stroke="#13884F" stroke-width="2"/><circle cx="55" cy="59" r="4" fill="none" stroke="#13884F" stroke-width="2"/></svg>`,
        name:'Double Bottom', signal:'bull', signalText:'BULLISH', desc:'Price touches support twice and bounces both times. A classic buy signal when the second bounce holds.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="20" x2="90" y2="20" stroke="#E05252" stroke-width="2" stroke-dasharray="5 3"/><path d="M15,45 Q25,60 35,45 Q45,25 55,45 Q65,60 75,45 Q85,25 90,38" fill="none" stroke="#C9A84C" stroke-width="2"/><circle cx="35" cy="21" r="4" fill="none" stroke="#E05252" stroke-width="2"/><circle cx="55" cy="21" r="4" fill="none" stroke="#E05252" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="20" x2="90" y2="20" stroke="#CC303D" stroke-width="2" stroke-dasharray="5 3"/><path d="M15,45 Q25,60 35,45 Q45,25 55,45 Q65,60 75,45 Q85,25 90,38" fill="none" stroke="#2046F5" stroke-width="2"/><circle cx="35" cy="21" r="4" fill="none" stroke="#CC303D" stroke-width="2"/><circle cx="55" cy="21" r="4" fill="none" stroke="#CC303D" stroke-width="2"/></svg>`,
        name:'Double Top', signal:'bear', signalText:'BEARISH', desc:'Price hits resistance twice and gets rejected both times. A classic sell signal — the second rejection confirms sellers are strong.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="50" x2="50" y2="50" stroke="#E05252" stroke-width="2" stroke-dasharray="4 3"/><line x1="50" y1="50" x2="90" y2="50" stroke="#3DBA72" stroke-width="2" stroke-dasharray="4 3"/><path d="M10,65 L30,65 L50,30 L70,50 L90,35" fill="none" stroke="#C9A84C" stroke-width="2"/><circle cx="50" cy="50" r="5" fill="rgba(201,168,76,0.3)" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="50" x2="50" y2="50" stroke="#CC303D" stroke-width="2" stroke-dasharray="4 3"/><line x1="50" y1="50" x2="90" y2="50" stroke="#13884F" stroke-width="2" stroke-dasharray="4 3"/><path d="M10,65 L30,65 L50,30 L70,50 L90,35" fill="none" stroke="#2046F5" stroke-width="2"/><circle cx="50" cy="50" r="5" fill="rgba(32,70,245,0.3)" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'Breakout + Retest', signal:'bull', signalText:'BULLISH SETUP', desc:'Price breaks above resistance, then pulls back to retest that level (now support). This retest is a high-probability entry.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="25" y="25" width="50" height="30" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.3)" stroke-width="1" stroke-dasharray="3 2"/><line x1="25" y1="25" x2="75" y2="25" stroke="#E05252" stroke-width="1.5" stroke-dasharray="5 3"/><line x1="25" y1="55" x2="75" y2="55" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="5 3"/><path d="M10,40 Q20,38 30,42 Q40,38 50,40 Q60,42 70,39 L90,40" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="25" y="25" width="50" height="30" fill="rgba(32,70,245,0.05)" stroke="rgba(32,70,245,0.3)" stroke-width="1" stroke-dasharray="3 2"/><line x1="25" y1="25" x2="75" y2="25" stroke="#CC303D" stroke-width="1.5" stroke-dasharray="5 3"/><line x1="25" y1="55" x2="75" y2="55" stroke="#13884F" stroke-width="1.5" stroke-dasharray="5 3"/><path d="M10,40 Q20,38 30,42 Q40,38 50,40 Q60,42 70,39 L90,40" fill="none" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'Trading Range', signal:'neutral', signalText:'CONSOLIDATION', desc:'Price bounces between support and resistance in a defined range. Buy at support, sell at resistance — until price breaks out.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="60" x2="50" y2="60" stroke="#3DBA72" stroke-width="2" stroke-dasharray="4 3"/><line x1="50" y1="60" x2="90" y2="60" stroke="#E05252" stroke-width="2" stroke-dasharray="4 3"/><path d="M10,45 L40,45 L50,75 L65,55 L80,65 L90,50" fill="none" stroke="#C9A84C" stroke-width="2"/><text x="50" y="18" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-size="10" font-family="Cinzel,serif">FLIP</text><path d="M50,20 L50,58" stroke="rgba(201,168,76,0.4)" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arrow)"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="60" x2="50" y2="60" stroke="#13884F" stroke-width="2" stroke-dasharray="4 3"/><line x1="50" y1="60" x2="90" y2="60" stroke="#CC303D" stroke-width="2" stroke-dasharray="4 3"/><path d="M10,45 L40,45 L50,75 L65,55 L80,65 L90,50" fill="none" stroke="#2046F5" stroke-width="2"/><text x="50" y="18" text-anchor="middle" fill="rgba(32,70,245,0.6)" font-size="10" font-family="DM Sans,serif">FLIP</text><path d="M50,20 L50,58" stroke="rgba(32,70,245,0.4)" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arrow)"/></svg>`,
        name:'Support → Resistance Flip', signal:'bear', signalText:'FLIP ZONE', desc:'Old support breaks and becomes new resistance. A critical concept — the level did not disappear, it switched sides.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="40" x2="90" y2="40" stroke="rgba(201,168,76,0.4)" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,55 L20,45 L30,50 L40,42 L50,38 L55,42" fill="none" stroke="#C9A84C" stroke-width="2"/><path d="M55,42 L60,28 L65,30 L75,25 L85,20 L90,18" fill="none" stroke="#3DBA72" stroke-width="2.5"/><circle cx="55" cy="40" r="5" fill="rgba(201,168,76,0.4)" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="40" x2="90" y2="40" stroke="rgba(32,70,245,0.4)" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,55 L20,45 L30,50 L40,42 L50,38 L55,42" fill="none" stroke="#2046F5" stroke-width="2"/><path d="M55,42 L60,28 L65,30 L75,25 L85,20 L90,18" fill="none" stroke="#13884F" stroke-width="2.5"/><circle cx="55" cy="40" r="5" fill="rgba(32,70,245,0.4)" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'Clean Breakout', signal:'bull', signalText:'STRONG BULLISH', desc:'Price pushes cleanly through resistance with strong volume. The break is clear and decisive — no hesitation.'},
     ],
     example:{
@@ -570,7 +581,7 @@ const LESSONS = [
   },
   {
     id:'trendlines', emoji:'📐', name:'Trend Lines',
-    color:'#8B6FD4', glow:'rgba(139,111,212,0.06)',
+    color:'#6E3ABD', glow:'rgba(139,111,212,0.06)',
     subtitle:'DIRECTION IS EVERYTHING',
     desc:'A <strong>trend line</strong> is a straight line connecting a series of price points that reveals the overall direction a market is moving. Trading <strong>with the trend</strong> is one of the highest-probability approaches in trading. "The trend is your friend" is one of the oldest rules in the game.',
     quote:'"Do not fight the trend. Until it ends, it is simply the market telling you where it wants to go."',
@@ -583,17 +594,17 @@ const LESSONS = [
       {title:'Trend line breaks',desc:'When price closes <strong>convincingly below an uptrend line</strong> — the trend may be changing. This is one of the earliest warning signals that the market is shifting direction. Confirmation with volume and follow-through makes the signal stronger.'},
     ],
     patterns:[
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="70" x2="90" y2="20" stroke="#3DBA72" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,65 L25,50 L40,55 L55,40 L70,45 L85,28" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="70" x2="90" y2="20" stroke="#13884F" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,65 L25,50 L40,55 L55,40 L70,45 L85,28" fill="none" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'Uptrend', signal:'bull', signalText:'BULLISH', desc:'Series of higher highs and higher lows. Trend line connects the lows as dynamic support. Trade in the direction of the trend.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="15" x2="90" y2="65" stroke="#E05252" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,20 L25,35 L40,28 L55,45 L70,38 L85,60" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="15" x2="90" y2="65" stroke="#CC303D" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,20 L25,35 L40,28 L55,45 L70,38 L85,60" fill="none" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'Downtrend', signal:'bear', signalText:'BEARISH', desc:'Series of lower highs and lower lows. Trend line connects the highs as dynamic resistance. Short-selling or staying out.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="60" x2="90" y2="20" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2"/><line x1="10" y1="72" x2="90" y2="32" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2"/><path d="M10,65 L20,55 L35,62 L50,50 L65,57 L80,44 L90,48" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="60" x2="90" y2="20" stroke="#13884F" stroke-width="1.5" stroke-dasharray="4 2"/><line x1="10" y1="72" x2="90" y2="32" stroke="#13884F" stroke-width="1.5" stroke-dasharray="4 2"/><path d="M10,65 L20,55 L35,62 L50,50 L65,57 L80,44 L90,48" fill="none" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'Channel', signal:'neutral', signalText:'RANGING', desc:'Price bounces between two parallel trend lines. Buy at the lower channel line, sell at the upper — until a breakout.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="65" x2="60" y2="25" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/><path d="M10,60 L25,45 L40,50 L55,32 L58,40 L65,58 L75,65 L85,62 L90,55" fill="none" stroke="#C9A84C" stroke-width="2"/><circle cx="62" cy="35" r="5" fill="rgba(224,82,82,0.3)" stroke="#E05252" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="65" x2="60" y2="25" stroke="#13884F" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/><path d="M10,60 L25,45 L40,50 L55,32 L58,40 L65,58 L75,65 L85,62 L90,55" fill="none" stroke="#2046F5" stroke-width="2"/><circle cx="62" cy="35" r="5" fill="rgba(224,82,82,0.3)" stroke="#CC303D" stroke-width="2"/></svg>`,
        name:'Trend Break', signal:'bear', signalText:'WARNING', desc:'Price closes below the uptrend line. Not always a reversal — but it is a warning sign. Watch for follow-through.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="20" y1="65" x2="55" y2="30" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/><line x1="55" y1="30" x2="90" y2="55" stroke="#E05252" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/><path d="M10,65 L25,50 L40,55 L55,28 L70,42 L85,52" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="20" y1="65" x2="55" y2="30" stroke="#13884F" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/><line x1="55" y1="30" x2="90" y2="55" stroke="#CC303D" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/><path d="M10,65 L25,50 L40,55 L55,28 L70,42 L85,52" fill="none" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'V-Reversal', signal:'bear', signalText:'REVERSAL', desc:'Sharp uptrend suddenly reverses. The trend line break is steep and fast — one of the more violent trend changes.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="70" x2="50" y2="30" stroke="#3DBA72" stroke-width="1.5" stroke-dasharray="4 2"/><line x1="50" y1="30" x2="90" y2="30" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" stroke-dasharray="4 2"/><path d="M10,65 L25,50 L40,55 L55,30 L70,32 L85,28" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="70" x2="50" y2="30" stroke="#13884F" stroke-width="1.5" stroke-dasharray="4 2"/><line x1="50" y1="30" x2="90" y2="30" stroke="rgba(32,70,245,0.4)" stroke-width="1.5" stroke-dasharray="4 2"/><path d="M10,65 L25,50 L40,55 L55,30 L70,32 L85,28" fill="none" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'Trend to Range', signal:'neutral', signalText:'TRANSITION', desc:'A strong uptrend flattens into consolidation. The market is pausing to decide its next direction.'},
     ],
     example:{
@@ -621,7 +632,7 @@ const LESSONS = [
   },
   {
     id:'volume', emoji:'📊', name:'Volume',
-    color:'#C9904C', glow:'rgba(201,144,76,0.06)',
+    color:'#955A11', glow:'rgba(201,144,76,0.06)',
     subtitle:'THE FUEL BEHIND THE MOVE',
     desc:'<strong>Volume</strong> is the number of shares (or contracts) traded during a specific time period. Price tells you WHAT happened. Volume tells you <strong>HOW MUCH conviction</strong> was behind it. A move with high volume is real. A move with low volume is suspect.',
     quote:'"Price is what you pay. Volume is what confirms you are right."',
@@ -634,17 +645,17 @@ const LESSONS = [
       {title:'Climax volume',desc:'An extremely high spike in volume after a long trend often signals a <strong>trend exhaustion</strong>. All the buyers (or sellers) have entered at once — there is nobody left to continue the move. These volume climaxes often mark turning points.'},
     ],
     patterns:[
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="55" width="14" height="15" fill="rgba(61,186,114,0.5)"/><rect x="35" y="50" width="14" height="20" fill="rgba(61,186,114,0.5)"/><rect x="55" y="30" width="14" height="40" fill="rgba(61,186,114,0.8)" stroke="#3DBA72" stroke-width="1.5"/><rect x="75" y="45" width="14" height="25" fill="rgba(61,186,114,0.5)"/><line x1="10" y1="20" x2="90" y2="20" stroke="rgba(61,186,114,0.3)" stroke-width="1" stroke-dasharray="3 2"/><text x="62" y="17" text-anchor="middle" fill="#3DBA72" font-size="9">High Vol</text></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="55" width="14" height="15" fill="rgba(61,186,114,0.5)"/><rect x="35" y="50" width="14" height="20" fill="rgba(61,186,114,0.5)"/><rect x="55" y="30" width="14" height="40" fill="rgba(61,186,114,0.8)" stroke="#13884F" stroke-width="1.5"/><rect x="75" y="45" width="14" height="25" fill="rgba(61,186,114,0.5)"/><line x1="10" y1="20" x2="90" y2="20" stroke="rgba(61,186,114,0.3)" stroke-width="1" stroke-dasharray="3 2"/><text x="62" y="17" text-anchor="middle" fill="#13884F" font-size="9">High Vol</text></svg>`,
        name:'Breakout Volume', signal:'bull', signalText:'CONFIRMED', desc:'Price breaks above resistance on the highest volume in the recent range. High conviction — buyers are serious.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="40" width="14" height="30" fill="rgba(61,186,114,0.5)"/><rect x="35" y="50" width="14" height="20" fill="rgba(61,186,114,0.5)"/><rect x="55" y="60" width="14" height="10" fill="rgba(61,186,114,0.3)"/><path d="M20,35 L40,25 L60,28 L80,30" fill="none" stroke="#C9A84C" stroke-width="2"/><text x="50" y="15" text-anchor="middle" fill="rgba(224,82,82,0.7)" font-size="9">Divergence</text></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="40" width="14" height="30" fill="rgba(61,186,114,0.5)"/><rect x="35" y="50" width="14" height="20" fill="rgba(61,186,114,0.5)"/><rect x="55" y="60" width="14" height="10" fill="rgba(61,186,114,0.3)"/><path d="M20,35 L40,25 L60,28 L80,30" fill="none" stroke="#2046F5" stroke-width="2"/><text x="50" y="15" text-anchor="middle" fill="rgba(224,82,82,0.7)" font-size="9">Divergence</text></svg>`,
        name:'Volume Divergence', signal:'bear', signalText:'WARNING', desc:'Price rising but volume declining. The move is losing conviction — fewer participants. Often precedes a reversal.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="10" y="20" width="14" height="50" fill="rgba(224,82,82,0.8)" stroke="#E05252" stroke-width="1.5"/><rect x="30" y="40" width="14" height="30" fill="rgba(224,82,82,0.5)"/><rect x="50" y="50" width="14" height="20" fill="rgba(224,82,82,0.3)"/><rect x="70" y="55" width="14" height="15" fill="rgba(61,186,114,0.4)"/><text x="17" y="16" text-anchor="middle" fill="#E05252" font-size="9">Climax</text></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="10" y="20" width="14" height="50" fill="rgba(224,82,82,0.8)" stroke="#CC303D" stroke-width="1.5"/><rect x="30" y="40" width="14" height="30" fill="rgba(224,82,82,0.5)"/><rect x="50" y="50" width="14" height="20" fill="rgba(224,82,82,0.3)"/><rect x="70" y="55" width="14" height="15" fill="rgba(61,186,114,0.4)"/><text x="17" y="16" text-anchor="middle" fill="#CC303D" font-size="9">Climax</text></svg>`,
        name:'Volume Climax', signal:'bull', signalText:'EXHAUSTION', desc:'Massive selling spike — all sellers entered at once. Nothing left to sell. Often marks the bottom of a decline.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="50" width="14" height="20" fill="rgba(61,186,114,0.3)"/><rect x="35" y="55" width="14" height="15" fill="rgba(61,186,114,0.3)"/><rect x="55" y="52" width="14" height="18" fill="rgba(61,186,114,0.3)"/><rect x="75" y="50" width="14" height="20" fill="rgba(61,186,114,0.3)"/><path d="M20,40 L40,42 L60,38 L80,40" fill="none" stroke="#C9A84C" stroke-width="2" stroke-dasharray="4 2"/><text x="50" y="25" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="9">Low vol range</text></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="50" width="14" height="20" fill="rgba(61,186,114,0.3)"/><rect x="35" y="55" width="14" height="15" fill="rgba(61,186,114,0.3)"/><rect x="55" y="52" width="14" height="18" fill="rgba(61,186,114,0.3)"/><rect x="75" y="50" width="14" height="20" fill="rgba(61,186,114,0.3)"/><path d="M20,40 L40,42 L60,38 L80,40" fill="none" stroke="#2046F5" stroke-width="2" stroke-dasharray="4 2"/><text x="50" y="25" text-anchor="middle" fill="rgba(32,70,245,0.5)" font-size="9">Low vol range</text></svg>`,
        name:'Low Volume Range', signal:'neutral', signalText:'CAUTION', desc:'Price moving sideways on low volume. No conviction either way. Avoid trading until volume returns.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="10" y="50" width="12" height="20" fill="rgba(61,186,114,0.3)"/><rect x="26" y="45" width="12" height="25" fill="rgba(61,186,114,0.4)"/><rect x="42" y="35" width="12" height="35" fill="rgba(61,186,114,0.6)"/><rect x="58" y="20" width="12" height="50" fill="rgba(61,186,114,0.85)" stroke="#3DBA72" stroke-width="1.5"/><rect x="74" y="30" width="12" height="40" fill="rgba(61,186,114,0.6)"/><path d="M16,45 L32,38 L48,28 L64,15 L80,22" fill="none" stroke="#C9A84C" stroke-width="2.2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="10" y="50" width="12" height="20" fill="rgba(61,186,114,0.3)"/><rect x="26" y="45" width="12" height="25" fill="rgba(61,186,114,0.4)"/><rect x="42" y="35" width="12" height="35" fill="rgba(61,186,114,0.6)"/><rect x="58" y="20" width="12" height="50" fill="rgba(61,186,114,0.85)" stroke="#13884F" stroke-width="1.5"/><rect x="74" y="30" width="12" height="40" fill="rgba(61,186,114,0.6)"/><path d="M16,45 L32,38 L48,28 L64,15 L80,22" fill="none" stroke="#2046F5" stroke-width="2.2"/></svg>`,
        name:'Accumulation Volume', signal:'bull', signalText:'BUILDING', desc:'Gradually rising volume during an uptrend. Institutional buyers are systematically building positions.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="45" width="14" height="25" fill="rgba(61,186,114,0.4)"/><rect x="35" y="40" width="14" height="30" fill="rgba(224,82,82,0.4)"/><rect x="55" y="35" width="14" height="35" fill="rgba(61,186,114,0.4)"/><rect x="75" y="30" width="14" height="40" fill="rgba(61,186,114,0.7)" stroke="#3DBA72" stroke-width="1.5"/><path d="M20,38 L40,42 L60,30 L82,20" fill="none" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><rect x="15" y="45" width="14" height="25" fill="rgba(61,186,114,0.4)"/><rect x="35" y="40" width="14" height="30" fill="rgba(224,82,82,0.4)"/><rect x="55" y="35" width="14" height="35" fill="rgba(61,186,114,0.4)"/><rect x="75" y="30" width="14" height="40" fill="rgba(61,186,114,0.7)" stroke="#13884F" stroke-width="1.5"/><path d="M20,38 L40,42 L60,30 L82,20" fill="none" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'Buying on Dips', signal:'bull', signalText:'HEALTHY TREND', desc:'Volume highest on up days, lower on down days. Smart money is buying every pullback — healthy uptrend.'},
     ],
     example:{
@@ -672,7 +683,7 @@ const LESSONS = [
   },
   {
     id:'movingaverages', emoji:'📉', name:'Moving Averages',
-    color:'#4C8BC9', glow:'rgba(76,139,201,0.06)',
+    color:'#205AC4', glow:'rgba(76,139,201,0.06)',
     subtitle:'SMOOTHING THE NOISE',
     desc:'A <strong>moving average (MA)</strong> smooths out price data to reveal the underlying trend direction, filtering out the random daily noise. It is one of the most widely used indicators in all of trading — because it is simple, visual, and remarkably effective.',
     quote:'"The moving average does not predict the future. It reveals the present direction without the noise."',
@@ -685,17 +696,17 @@ const LESSONS = [
       {title:'Price vs. moving average',desc:'When price is <strong>above</strong> a key moving average, the trend is up — bulls are in control. When price is <strong>below</strong>, the trend is down — bears are in control. The moving average itself acts as dynamic support (in uptrend) or resistance (in downtrend).'},
     ],
     patterns:[
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,60 L30,50 L50,40 L70,30 L90,20" fill="none" stroke="#4CC9A8" stroke-width="2.5"/><path d="M10,70 L30,62 L50,52 L70,42 L90,32" fill="none" stroke="#8B6FD4" stroke-width="2"/><text x="50" y="12" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-size="9">GOLDEN CROSS</text><circle cx="55" cy="37" r="5" fill="rgba(201,168,76,0.3)" stroke="#C9A84C" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,60 L30,50 L50,40 L70,30 L90,20" fill="none" stroke="#087F70" stroke-width="2.5"/><path d="M10,70 L30,62 L50,52 L70,42 L90,32" fill="none" stroke="#6E3ABD" stroke-width="2"/><text x="50" y="12" text-anchor="middle" fill="rgba(32,70,245,0.6)" font-size="9">GOLDEN CROSS</text><circle cx="55" cy="37" r="5" fill="rgba(32,70,245,0.3)" stroke="#2046F5" stroke-width="2"/></svg>`,
        name:'Golden Cross', signal:'bull', signalText:'BULLISH', desc:'Fast MA crosses above slow MA. Long-term bullish signal. Many institutional algorithms buy this signal.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,20 L30,30 L50,40 L70,50 L90,60" fill="none" stroke="#4CC9A8" stroke-width="2.5"/><path d="M10,10 L30,18 L50,30 L70,40 L90,50" fill="none" stroke="#8B6FD4" stroke-width="2"/><text x="50" y="72" text-anchor="middle" fill="rgba(224,82,82,0.7)" font-size="9">DEATH CROSS</text><circle cx="50" cy="35" r="5" fill="rgba(224,82,82,0.25)" stroke="#E05252" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,20 L30,30 L50,40 L70,50 L90,60" fill="none" stroke="#087F70" stroke-width="2.5"/><path d="M10,10 L30,18 L50,30 L70,40 L90,50" fill="none" stroke="#6E3ABD" stroke-width="2"/><text x="50" y="72" text-anchor="middle" fill="rgba(224,82,82,0.7)" font-size="9">DEATH CROSS</text><circle cx="50" cy="35" r="5" fill="rgba(224,82,82,0.25)" stroke="#CC303D" stroke-width="2"/></svg>`,
        name:'Death Cross', signal:'bear', signalText:'BEARISH', desc:'Fast MA crosses below slow MA. Long-term bearish signal — often triggers institutional selling programs.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,55 L30,45 L50,35 L70,25 L90,15" fill="none" stroke="#4CC9A8" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,65 L25,55 L35,60 L45,52 L55,45 L65,32 L80,22 L90,18" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="2.5"/><circle cx="45" cy="54" r="4" fill="rgba(61,186,114,0.4)" stroke="#3DBA72" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,55 L30,45 L50,35 L70,25 L90,15" fill="none" stroke="#087F70" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,65 L25,55 L35,60 L45,52 L55,45 L65,32 L80,22 L90,18" fill="none" stroke="rgba(32,70,245,0.7)" stroke-width="2.5"/><circle cx="45" cy="54" r="4" fill="rgba(61,186,114,0.4)" stroke="#13884F" stroke-width="2"/></svg>`,
        name:'MA Bounce (Buy Dip)', signal:'bull', signalText:'ENTRY SIGNAL', desc:'Price pulls back to the moving average then bounces. Classic buy-the-dip setup in an uptrend.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,35 L30,38 L50,40 L70,38 L90,35" fill="none" stroke="#4CC9A8" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,40 L25,42 L40,38 L55,42 L70,39 L85,40" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="2"/><text x="50" y="18" text-anchor="middle" fill="rgba(201,168,76,0.4)" font-size="9">Flat = no trend</text></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,35 L30,38 L50,40 L70,38 L90,35" fill="none" stroke="#087F70" stroke-width="2" stroke-dasharray="5 3"/><path d="M10,40 L25,42 L40,38 L55,42 L70,39 L85,40" fill="none" stroke="rgba(32,70,245,0.7)" stroke-width="2"/><text x="50" y="18" text-anchor="middle" fill="rgba(32,70,245,0.4)" font-size="9">Flat = no trend</text></svg>`,
        name:'Flat MA = No Trend', signal:'neutral', signalText:'AVOID', desc:'A flat moving average means the market is going nowhere. MAs are most useful in trending markets — not choppy ones.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,20 L30,25 L50,30 L70,35 L90,40" fill="none" stroke="#4CC9A8" stroke-width="2"/><path d="M10,15 L25,22 L30,28 L40,38 L50,45 L65,52 L75,48 L85,42 L90,43" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="2.5"/><circle cx="50" cy="37" r="4" fill="rgba(224,82,82,0.3)" stroke="#E05252" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,20 L30,25 L50,30 L70,35 L90,40" fill="none" stroke="#087F70" stroke-width="2"/><path d="M10,15 L25,22 L30,28 L40,38 L50,45 L65,52 L75,48 L85,42 L90,43" fill="none" stroke="rgba(32,70,245,0.7)" stroke-width="2.5"/><circle cx="50" cy="37" r="4" fill="rgba(224,82,82,0.3)" stroke="#CC303D" stroke-width="2"/></svg>`,
        name:'Price Crosses Below MA', signal:'bear', signalText:'SELL SIGNAL', desc:'Price closes below a rising moving average. The first sign trend may be shifting — watch for confirmation.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,60 L30,52 L50,44 L70,36 L90,28" fill="none" stroke="#8B6FD4" stroke-width="2"/><path d="M10,50 L30,45 L50,38 L70,30 L90,22" fill="none" stroke="#4CC9A8" stroke-width="2"/><path d="M10,40 L25,36 L40,32 L55,26 L70,22 L80,18 L90,16" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="2.5" stroke-dasharray="4 2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,60 L30,52 L50,44 L70,36 L90,28" fill="none" stroke="#6E3ABD" stroke-width="2"/><path d="M10,50 L30,45 L50,38 L70,30 L90,22" fill="none" stroke="#087F70" stroke-width="2"/><path d="M10,40 L25,36 L40,32 L55,26 L70,22 L80,18 L90,16" fill="none" stroke="rgba(32,70,245,0.6)" stroke-width="2.5" stroke-dasharray="4 2"/></svg>`,
        name:'MA Stack (Strong Trend)', signal:'bull', signalText:'STRONG BULL', desc:'Price > Fast MA > Slow MA — all stacked in order. This is the strongest trending configuration. Stay long.'},
     ],
     example:{
@@ -723,7 +734,7 @@ const LESSONS = [
   },
   {
     id:'indicators', emoji:'🔮', name:'RSI, MACD & VWAP',
-    color:'#C94C4C', glow:'rgba(201,76,76,0.06)',
+    color:'#CC303D', glow:'rgba(201,76,76,0.06)',
     subtitle:'THE BIG THREE INDICATORS',
     desc:'These three indicators are the most widely used in all of trading. <strong>RSI</strong> tells you if something is overbought or oversold. <strong>MACD</strong> shows momentum and trend changes. <strong>VWAP</strong> is the institutional benchmark that separates buyers from sellers every single day.',
     quote:'"Indicators do not tell you what will happen. They tell you the current state of the market — and that is enough."',
@@ -736,17 +747,17 @@ const LESSONS = [
       {title:'The golden rule of indicators',desc:'<strong>No indicator is perfect alone.</strong> The best traders use 2–3 indicators that confirm each other before acting. A breakout above resistance + RSI not yet overbought + above VWAP = much higher probability than any one signal alone. Confluence is the key.'},
     ],
     patterns:[
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="55" x2="90" y2="55" stroke="rgba(224,82,82,0.4)" stroke-width="1" stroke-dasharray="4 2"/><path d="M10,65 L25,60 L40,50 L55,30 L70,45 L85,55" fill="none" stroke="#C9A84C" stroke-width="2"/><text x="55" y="25" text-anchor="middle" fill="rgba(224,82,82,0.7)" font-size="9">Overbought</text><circle cx="55" cy="30" r="4" fill="rgba(224,82,82,0.4)" stroke="#E05252" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="55" x2="90" y2="55" stroke="rgba(224,82,82,0.4)" stroke-width="1" stroke-dasharray="4 2"/><path d="M10,65 L25,60 L40,50 L55,30 L70,45 L85,55" fill="none" stroke="#2046F5" stroke-width="2"/><text x="55" y="25" text-anchor="middle" fill="rgba(224,82,82,0.7)" font-size="9">Overbought</text><circle cx="55" cy="30" r="4" fill="rgba(224,82,82,0.4)" stroke="#CC303D" stroke-width="2"/></svg>`,
        name:'RSI Overbought', signal:'bear', signalText:'CAUTION', desc:'RSI above 70. The move has been fast and strong. A pullback or consolidation is likely — not a guaranteed sell, but a warning.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="30" x2="90" y2="30" stroke="rgba(61,186,114,0.4)" stroke-width="1" stroke-dasharray="4 2"/><path d="M10,20 L25,25 L40,35 L55,55 L70,42 L85,35" fill="none" stroke="#C9A84C" stroke-width="2"/><text x="55" y="68" text-anchor="middle" fill="rgba(61,186,114,0.7)" font-size="9">Oversold</text><circle cx="55" cy="55" r="4" fill="rgba(61,186,114,0.4)" stroke="#3DBA72" stroke-width="2"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><line x1="10" y1="30" x2="90" y2="30" stroke="rgba(61,186,114,0.4)" stroke-width="1" stroke-dasharray="4 2"/><path d="M10,20 L25,25 L40,35 L55,55 L70,42 L85,35" fill="none" stroke="#2046F5" stroke-width="2"/><text x="55" y="68" text-anchor="middle" fill="rgba(61,186,114,0.7)" font-size="9">Oversold</text><circle cx="55" cy="55" r="4" fill="rgba(61,186,114,0.4)" stroke="#13884F" stroke-width="2"/></svg>`,
        name:'RSI Oversold', signal:'bull', signalText:'OPPORTUNITY', desc:'RSI below 30. Price has fallen hard and fast. Potential bounce zone — especially when combined with support.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,60 L30,50 L50,40 L70,30 L85,22" fill="none" stroke="#4CC9A8" stroke-width="2"/><path d="M10,65 L30,58 L50,50 L70,42 L85,38" fill="none" stroke="#8B6FD4" stroke-width="2" stroke-dasharray="5 3"/><circle cx="42" cy="45" r="4" fill="rgba(61,186,114,0.3)" stroke="#3DBA72" stroke-width="2"/><text x="50" y="15" text-anchor="middle" fill="rgba(61,186,114,0.6)" font-size="9">Bullish Crossover</text></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,60 L30,50 L50,40 L70,30 L85,22" fill="none" stroke="#087F70" stroke-width="2"/><path d="M10,65 L30,58 L50,50 L70,42 L85,38" fill="none" stroke="#6E3ABD" stroke-width="2" stroke-dasharray="5 3"/><circle cx="42" cy="45" r="4" fill="rgba(61,186,114,0.3)" stroke="#13884F" stroke-width="2"/><text x="50" y="15" text-anchor="middle" fill="rgba(61,186,114,0.6)" font-size="9">Bullish Crossover</text></svg>`,
        name:'MACD Bullish Cross', signal:'bull', signalText:'BUY SIGNAL', desc:'MACD line crosses above signal line. Bullish momentum is building. One of the most popular trading signals.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,25 L30,35 L50,50 L70,62 L85,70" fill="none" stroke="#4CC9A8" stroke-width="2"/><path d="M10,18 L30,28 L50,40 L70,52 L85,60" fill="none" stroke="#8B6FD4" stroke-width="2" stroke-dasharray="5 3"/><circle cx="48" cy="45" r="4" fill="rgba(224,82,82,0.3)" stroke="#E05252" stroke-width="2"/><text x="50" y="12" text-anchor="middle" fill="rgba(224,82,82,0.6)" font-size="9">Bearish Crossover</text></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,25 L30,35 L50,50 L70,62 L85,70" fill="none" stroke="#087F70" stroke-width="2"/><path d="M10,18 L30,28 L50,40 L70,52 L85,60" fill="none" stroke="#6E3ABD" stroke-width="2" stroke-dasharray="5 3"/><circle cx="48" cy="45" r="4" fill="rgba(224,82,82,0.3)" stroke="#CC303D" stroke-width="2"/><text x="50" y="12" text-anchor="middle" fill="rgba(224,82,82,0.6)" font-size="9">Bearish Crossover</text></svg>`,
        name:'MACD Bearish Cross', signal:'bear', signalText:'SELL SIGNAL', desc:'MACD line crosses below signal line. Bearish momentum building. Often triggers selling from systematic traders.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,45 L30,42 L50,40 L70,38 L90,35" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="2.5" stroke-dasharray="6 2"/><path d="M10,55 L25,52 L35,48 L48,43 L58,41 L72,38 L85,34" fill="none" stroke="rgba(76,139,201,0.5)" stroke-width="2"/><path d="M10,60 L20,55 L30,52 L40,46 L52,43 L62,40 L70,37 L80,34 L90,31" fill="none" stroke="#C9A84C" stroke-width="2.5"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,45 L30,42 L50,40 L70,38 L90,35" fill="none" stroke="rgba(32,70,245,0.6)" stroke-width="2.5" stroke-dasharray="6 2"/><path d="M10,55 L25,52 L35,48 L48,43 L58,41 L72,38 L85,34" fill="none" stroke="rgba(76,139,201,0.5)" stroke-width="2"/><path d="M10,60 L20,55 L30,52 L40,46 L52,43 L62,40 L70,37 L80,34 L90,31" fill="none" stroke="#2046F5" stroke-width="2.5"/></svg>`,
        name:'Price Above VWAP', signal:'bull', signalText:'BULLISH BIAS', desc:'Price trading above VWAP all day. Buyers are in control. Institutions are not net sellers at this price.'},
-      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,35 L30,38 L50,40 L70,42 L90,45" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="2.5" stroke-dasharray="6 2"/><path d="M10,28 L25,32 L35,36 L48,40 L58,44 L72,48 L85,52" fill="none" stroke="rgba(76,139,201,0.5)" stroke-width="2"/><path d="M10,22 L20,27 L30,32 L40,38 L52,44 L62,48 L70,51 L80,55 L90,59" fill="none" stroke="#C9A84C" stroke-width="2.5"/></svg>`,
+      {svg:`<svg viewBox="0 0 100 80" width="100" height="80"><path d="M10,35 L30,38 L50,40 L70,42 L90,45" fill="none" stroke="rgba(32,70,245,0.6)" stroke-width="2.5" stroke-dasharray="6 2"/><path d="M10,28 L25,32 L35,36 L48,40 L58,44 L72,48 L85,52" fill="none" stroke="rgba(76,139,201,0.5)" stroke-width="2"/><path d="M10,22 L20,27 L30,32 L40,38 L52,44 L62,48 L70,51 L80,55 L90,59" fill="none" stroke="#2046F5" stroke-width="2.5"/></svg>`,
        name:'Price Below VWAP', signal:'bear', signalText:'BEARISH BIAS', desc:'Price trading below VWAP. Sellers in control intraday. Institutions are not net buyers at current price.'},
     ],
     example:{
@@ -823,7 +834,7 @@ function buildLesson(idx){
 
   div.innerHTML=`
     <div class="lesson-hero">
-      <div class="hero-eyebrow">Module V · Lesson ${idx+1} of ${LESSONS.length}</div>
+      <div class="hero-eyebrow">Module IV · Lesson ${idx+1} of ${LESSONS.length}</div>
       <span class="hero-emoji">${l.emoji}</span>
       <div class="hero-title">${l.name}</div>
       <div class="hero-sub">${l.subtitle}</div>
@@ -851,10 +862,10 @@ function buildLesson(idx){
         <div style="display:flex;flex-direction:column;gap:0">
           ${l.concept.map((c,ci)=>`
             <div style="display:flex;gap:20px;padding:18px 0;border-bottom:1px solid var(--border);${ci===l.concept.length-1?'border-bottom:none':''}">
-              <div style="width:34px;height:34px;border:2px solid ${l.color};display:flex;align-items:center;justify-content:center;font-family:Cinzel,serif;font-size:0.78rem;font-weight:700;color:${l.color};flex-shrink:0;">${ci+1}</div>
+              <div style="width:34px;height:34px;border:2px solid ${l.color};display:flex;align-items:center;justify-content:center;font-family:DM Sans,serif;font-size:0.78rem;font-weight:700;color:${l.color};flex-shrink:0;">${ci+1}</div>
               <div>
-                <div style="font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:5px;letter-spacing:0.04em">${c.title}</div>
-                <div style="font-size:0.93rem;line-height:1.65;color:var(--text-dim);font-weight:300">${c.desc}</div>
+                <div style="font-family:DM Sans,serif;font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:5px;letter-spacing:0.04em">${c.title}</div>
+                <div style="font-size:0.93rem;line-height:1.65;color:var(--text-dim);font-weight:400">${c.desc}</div>
               </div>
             </div>`).join('')}
         </div>
@@ -1029,6 +1040,6 @@ document.getElementById('lesson-'+state.current).classList.add('active');
 updateProgress();
 </script>
 <script src="dojo-engine.js"></script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(r=>console.log("SW registered")).catch(e=>console.log("SW failed",e));});}</script>
+<script>if("serviceWorker" in navigator && !["localhost","127.0.0.1"].includes(location.hostname)){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(r=>console.log("SW registered")).catch(e=>console.log("SW failed",e));});}</script>
 </body>
 </html>
