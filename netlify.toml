@@ -1,7 +1,8 @@
 # The Trading Dojo — Netlify Configuration
 
 [build]
-  publish = "."
+  command = "node scripts/build.mjs"
+  publish = "dist"
 
 [[headers]]
   for = "/*"
@@ -11,7 +12,12 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  from = "/trading-dojo.html"
+  to = "/dashboard.html"
+  status = 301

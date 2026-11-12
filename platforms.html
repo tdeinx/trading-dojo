@@ -4,29 +4,29 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Platforms & Tools · The Trading Dojo</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/fonts/fonts.css"/>
 <style>
 :root{
-  --gold:#C9A84C;--gold-light:#F0CC7A;--gold-dim:#7A5E24;
-  --ink:#0A0A0F;--ink-3:#1A1A24;--ink-4:#22222E;
-  --panel:#13131C;--panel-2:#0F0F18;
-  --border:rgba(201,168,76,0.15);--border-b:rgba(201,168,76,0.5);
-  --text:#E8E0CC;--text-dim:#8A8070;--text-faint:#3A3630;
-  --teal:#4CC9A8;--red:#C94C4C;--purple:#8B6FD4;--blue:#4C8BC9;--amber:#C9904C;
+  --gold:#2046F5;--gold-light:#FFF200;--gold-dim:#2046F5;
+  --ink:#F8F6EF;--ink-3:#E9E7DF;--ink-4:#DDDCD5;
+  --panel:#FFFEFA;--panel-2:#F3F1EA;
+  --border:rgba(32,70,245,0.15);--border-b:rgba(32,70,245,0.5);
+  --text:#131313;--text-dim:#51514C;--text-faint:#5B5B55;
+  --teal:#087F70;--red:#CC303D;--purple:#6E3ABD;--blue:#205AC4;--amber:#955A11;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'Rajdhani',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
 .app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;}
 
 /* TOPBAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(10,10,15,0.92);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;}
-.logo{font-family:'Cinzel Decorative',serif;font-size:1rem;color:var(--gold);display:flex;align-items:center;gap:9px;cursor:pointer;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(248,246,239,0.92);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;}
+.logo{font-family:'Barlow Condensed',serif;font-size:1rem;color:var(--gold);display:flex;align-items:center;gap:9px;cursor:pointer;}
 .logo-mark{width:28px;height:28px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.85rem;position:relative;flex-shrink:0;}
-.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,168,76,0.22);}
-.topbar-center{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
-.xp-chip{background:var(--panel);border:1px solid var(--border);padding:6px 14px;font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--gold);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(32,70,245,0.22);}
+.topbar-center{font-family:'DM Sans',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;}
+.xp-chip{background:var(--panel);border:1px solid var(--border);padding:6px 14px;font-family:'DM Sans',serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--gold);clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
 
 /* LAYOUT */
 .body-layout{display:flex;flex:1;min-height:0;}
@@ -34,30 +34,30 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* SIDEBAR */
 .sidebar{width:268px;flex-shrink:0;border-right:1px solid var(--border);background:var(--panel-2);display:flex;flex-direction:column;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
 .sb-header{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
-.sb-title{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;}
-.sb-sub{font-size:0.85rem;color:var(--text-dim);font-weight:300;}
+.sb-title{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:3px;}
+.sb-sub{font-size:0.85rem;color:var(--text-dim);font-weight:400;}
 .sb-progress{margin-top:14px;}
-.sp-row{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:5px;}
+.sp-row{display:flex;justify-content:space-between;font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:5px;}
 .sp-row span{color:var(--gold);}
 .sp-track{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
 .sp-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.6s ease;}
-.sb-section-label{padding:14px 18px 6px;font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.22em;color:var(--text-faint);text-transform:uppercase;}
+.sb-section-label{padding:14px 18px 6px;font-family:'DM Sans',serif;font-size:0.56rem;letter-spacing:0.22em;color:var(--text-faint);text-transform:uppercase;}
 .sb-nav{flex:1;}
 .nav-item{display:flex;align-items:center;gap:11px;padding:11px 18px;cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;}
-.nav-item:hover{background:rgba(201,168,76,0.04);border-left-color:rgba(201,168,76,0.25);}
-.nav-item.active{background:rgba(201,168,76,0.07);border-left-color:var(--gold);}
+.nav-item:hover{background:rgba(32,70,245,0.04);border-left-color:rgba(32,70,245,0.25);}
+.nav-item.active{background:rgba(32,70,245,0.07);border-left-color:var(--gold);}
 .nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .nav-info{flex:1;min-width:0;}
-.nav-name{font-family:'Cinzel',serif;font-size:0.7rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-name{font-family:'DM Sans',serif;font-size:0.7rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nav-item.active .nav-name{color:var(--gold);}
 .nav-meta{font-size:0.62rem;color:var(--text-dim);margin-top:1px;}
-.nav-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.52rem;flex-shrink:0;font-family:'Cinzel',serif;}
+.nav-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.52rem;flex-shrink:0;font-family:'DM Sans',serif;}
 .nb-idle{background:var(--ink-4);color:var(--text-faint);}
 .nb-active{background:var(--gold);color:var(--ink);font-weight:700;animation:pb 2s ease-in-out infinite;}
 .nb-done{background:rgba(76,201,168,0.18);color:var(--teal);border:1px solid rgba(76,201,168,0.35);}
-@keyframes pb{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.4)}50%{box-shadow:0 0 0 5px rgba(201,168,76,0)}}
+@keyframes pb{0%,100%{box-shadow:0 0 0 0 rgba(32,70,245,0.4)}50%{box-shadow:0 0 0 5px rgba(32,70,245,0)}}
 .sb-footer{padding:14px 18px;border-top:1px solid var(--border);}
-.sb-xp{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.14em;color:var(--text-faint);}
+.sb-xp{font-family:'DM Sans',serif;font-size:0.63rem;letter-spacing:0.14em;color:var(--text-faint);}
 .sb-xp span{color:var(--gold);font-size:0.82rem;}
 
 /* CONTENT */
@@ -68,47 +68,47 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 /* MODULE HERO */
 .mod-hero{padding:44px 52px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
-.mod-hero::after{content:'';position:absolute;top:0;right:0;width:320px;height:100%;background:radial-gradient(ellipse at right,var(--page-glow,rgba(201,168,76,0.05)) 0%,transparent 70%);pointer-events:none;}
-.hero-eyebrow{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:14px;}
-.hero-emoji{font-size:3rem;line-height:1;display:block;margin-bottom:14px;filter:drop-shadow(0 0 18px var(--page-color-dim,rgba(201,168,76,0.3)));}
-.hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:900;color:var(--page-color,var(--gold));line-height:1.1;margin-bottom:6px;}
-.hero-sub{font-family:'Cinzel',serif;font-size:0.8rem;letter-spacing:0.18em;color:var(--text-dim);margin-bottom:16px;}
-.hero-desc{font-size:1.05rem;font-weight:300;color:var(--text-dim);line-height:1.68;max-width:580px;}
+.mod-hero::after{content:'';position:absolute;top:0;right:0;width:320px;height:100%;background:radial-gradient(ellipse at right,var(--page-glow,rgba(32,70,245,0.05)) 0%,transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.3em;color:var(--text-faint);text-transform:uppercase;margin-bottom:14px;}
+.hero-emoji{font-size:3rem;line-height:1;display:block;margin-bottom:14px;filter:drop-shadow(0 0 18px var(--page-color-dim,rgba(32,70,245,0.3)));}
+.hero-title{font-family:'Barlow Condensed',serif;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:900;color:var(--page-color,var(--gold));line-height:1.1;margin-bottom:6px;}
+.hero-sub{font-family:'DM Sans',serif;font-size:0.8rem;letter-spacing:0.18em;color:var(--text-dim);margin-bottom:16px;}
+.hero-desc{font-size:1.05rem;font-weight:400;color:var(--text-dim);line-height:1.68;max-width:580px;}
 .hero-desc strong{color:var(--text);font-weight:500;}
 
 /* PLATFORM CARD */
 .platforms-grid{padding:40px 52px;display:flex;flex-direction:column;gap:32px;max-width:960px;}
 .platform-card{background:var(--panel);border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color 0.25s;}
-.platform-card:hover{border-color:rgba(201,168,76,0.28);}
+.platform-card:hover{border-color:rgba(32,70,245,0.28);}
 .platform-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--pc-color,var(--gold)),transparent);opacity:0.6;}
 .pc-header{display:flex;align-items:flex-start;justify-content:space-between;padding:28px 32px 0;gap:20px;flex-wrap:wrap;}
 .pc-left{display:flex;align-items:flex-start;gap:18px;}
-.pc-icon{font-size:2.4rem;line-height:1;flex-shrink:0;filter:drop-shadow(0 0 14px var(--pc-color-dim,rgba(201,168,76,0.25)));}
+.pc-icon{font-size:2.4rem;line-height:1;flex-shrink:0;filter:drop-shadow(0 0 14px var(--pc-color-dim,rgba(32,70,245,0.25)));}
 .pc-id{}
-.pc-name{font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:var(--pc-color,var(--gold));margin-bottom:3px;}
-.pc-type{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--text-dim);text-transform:uppercase;}
-.pc-verdict{padding:8px 14px;background:rgba(201,168,76,0.07);border:1px solid var(--border);font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.1em;color:var(--gold-dim);clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);text-align:center;max-width:180px;line-height:1.4;}
+.pc-name{font-family:'Barlow Condensed',serif;font-size:1.3rem;font-weight:700;color:var(--pc-color,var(--gold));margin-bottom:3px;}
+.pc-type{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.18em;color:var(--text-dim);text-transform:uppercase;}
+.pc-verdict{padding:8px 14px;background:rgba(32,70,245,0.07);border:1px solid var(--border);font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.1em;color:var(--gold-dim);clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);text-align:center;max-width:180px;line-height:1.4;}
 .pc-verdict strong{color:var(--gold);display:block;font-size:0.68rem;margin-bottom:2px;}
 
 /* Rating bars */
 .pc-ratings{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1px;background:var(--border);margin:20px 0 0;}
 .pc-rating-cell{background:var(--panel);padding:14px 18px;}
-.pcr-label{font-family:'Cinzel',serif;font-size:0.54rem;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;margin-bottom:5px;}
-.pcr-val{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+.pcr-label{font-family:'DM Sans',serif;font-size:0.54rem;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;margin-bottom:5px;}
+.pcr-val{font-family:'DM Sans',serif;font-size:0.78rem;font-weight:700;color:var(--text);margin-bottom:6px;}
 .pcr-track{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;}
 .pcr-fill{height:100%;border-radius:2px;background:var(--pc-color,var(--gold));}
 
 /* Tags row */
 .pc-tags{display:flex;flex-wrap:wrap;gap:8px;padding:18px 32px 0;}
-.pc-tag{padding:5px 12px;background:var(--ink-3);border:1px solid var(--border);font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-dim);clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);}
-.pc-tag.best{border-color:rgba(201,168,76,0.3);color:var(--gold-dim);background:rgba(201,168,76,0.05);}
+.pc-tag{padding:5px 12px;background:var(--ink-3);border:1px solid var(--border);font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.1em;color:var(--text-dim);clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);}
+.pc-tag.best{border-color:rgba(32,70,245,0.3);color:var(--gold-dim);background:rgba(32,70,245,0.05);}
 
 /* Body */
 .pc-body{padding:24px 32px 28px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 @media(max-width:600px){.pc-body{grid-template-columns:1fr;}}
-.pc-section-title{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.18em;color:var(--text-faint);text-transform:uppercase;margin-bottom:10px;}
+.pc-section-title{font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.18em;color:var(--text-faint);text-transform:uppercase;margin-bottom:10px;}
 .pc-list{list-style:none;}
-.pc-list li{padding:5px 0;font-size:0.88rem;color:var(--text-dim);border-bottom:1px solid rgba(201,168,76,0.04);display:flex;align-items:flex-start;gap:9px;line-height:1.4;}
+.pc-list li{padding:5px 0;font-size:0.88rem;color:var(--text-dim);border-bottom:1px solid rgba(32,70,245,0.04);display:flex;align-items:flex-start;gap:9px;line-height:1.4;}
 .pc-list li:last-child{border-bottom:none;}
 .pc-list li::before{font-size:0.42rem;flex-shrink:0;margin-top:5px;}
 .list-pros li::before{content:'◆';color:var(--teal);}
@@ -116,48 +116,48 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .list-features li::before{content:'◆';color:var(--pc-color,var(--gold));}
 
 /* Key feature highlight */
-.pc-feature-hl{margin:0 32px 24px;background:rgba(201,168,76,0.04);border:1px solid var(--border);border-left:3px solid var(--pc-color,var(--gold));padding:16px 20px;display:flex;gap:14px;align-items:flex-start;}
+.pc-feature-hl{margin:0 32px 24px;background:rgba(32,70,245,0.04);border:1px solid var(--border);border-left:3px solid var(--pc-color,var(--gold));padding:16px 20px;display:flex;gap:14px;align-items:flex-start;}
 .pf-icon{font-size:1.4rem;line-height:1;flex-shrink:0;}
 .pf-content{}
-.pf-label{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--pc-color,var(--gold));margin-bottom:4px;text-transform:uppercase;}
-.pf-text{font-size:0.9rem;color:var(--text-dim);line-height:1.55;font-weight:300;}
+.pf-label{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.15em;color:var(--pc-color,var(--gold));margin-bottom:4px;text-transform:uppercase;}
+.pf-text{font-size:0.9rem;color:var(--text-dim);line-height:1.55;font-weight:400;}
 .pf-text strong{color:var(--text);font-weight:500;}
 
 /* SECTION DIVIDER */
 .section-divider{padding:36px 52px 20px;display:flex;align-items:center;gap:14px;}
 .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-.sd-label{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);white-space:nowrap;text-transform:uppercase;}
+.sd-label{font-family:'DM Sans',serif;font-size:0.62rem;letter-spacing:0.25em;color:var(--gold-dim);white-space:nowrap;text-transform:uppercase;}
 
 /* DECISION GUIDE */
 .decision-guide{padding:0 52px 52px;max-width:960px;}
-.dg-intro{font-size:1rem;color:var(--text-dim);line-height:1.7;font-weight:300;margin-bottom:32px;}
+.dg-intro{font-size:1rem;color:var(--text-dim);line-height:1.7;font-weight:400;margin-bottom:32px;}
 .dg-intro strong{color:var(--text);font-weight:500;}
 .stack-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
 .stack-card{background:var(--panel);border:1px solid var(--border);padding:22px;position:relative;transition:border-color 0.2s;}
-.stack-card:hover{border-color:rgba(201,168,76,0.3);}
+.stack-card:hover{border-color:rgba(32,70,245,0.3);}
 .stack-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc-color,var(--gold));opacity:0.5;}
-.sc-archetype{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--sc-color,var(--gold));margin-bottom:10px;display:flex;align-items:center;gap:7px;}
-.sc-title{font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:12px;}
+.sc-archetype{font-family:'DM Sans',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--sc-color,var(--gold));margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.sc-title{font-family:'DM Sans',serif;font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:12px;}
 .sc-stack{display:flex;flex-direction:column;gap:5px;}
 .sc-tool{display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--text-dim);}
 .sc-tool-dot{width:5px;height:5px;border-radius:50%;background:var(--sc-color,var(--gold));flex-shrink:0;}
 
 /* QUIZ */
 .quiz-wrap{background:var(--panel-2);border-top:1px solid var(--border);padding:48px 52px;}
-.qz-title{font-family:'Cinzel Decorative',serif;font-size:1.45rem;font-weight:700;color:var(--gold);margin-bottom:6px;}
-.qz-sub{font-size:0.93rem;color:var(--text-dim);font-weight:300;margin-bottom:36px;}
+.qz-title{font-family:'Barlow Condensed',serif;font-size:1.45rem;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.qz-sub{font-size:0.93rem;color:var(--text-dim);font-weight:400;margin-bottom:36px;}
 .qz-block{margin-bottom:26px;}
-.qz-num{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:8px;}
+.qz-num{font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:8px;}
 .qz-q{font-size:1.04rem;font-weight:500;color:var(--text);line-height:1.55;margin-bottom:14px;}
 .qz-q em{color:var(--gold);font-style:normal;font-weight:600;}
 .qz-opts{display:flex;flex-direction:column;gap:8px;}
 .qz-opt{background:var(--panel);border:1px solid var(--border);padding:13px 18px;cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:12px;transition:all 0.17s;width:100%;}
-.qz-opt:hover{border-color:rgba(201,168,76,0.38);background:var(--ink-3);transform:translateX(3px);}
-.qz-opt.sel{border-color:var(--gold);background:rgba(201,168,76,0.07);}
+.qz-opt:hover{border-color:rgba(32,70,245,0.38);background:var(--ink-3);transform:translateX(3px);}
+.qz-opt.sel{border-color:var(--gold);background:rgba(32,70,245,0.07);}
 .qz-opt.ok{border-color:var(--teal)!important;background:rgba(76,201,168,0.07)!important;}
 .qz-opt.no{border-color:var(--red)!important;background:rgba(201,76,76,0.07)!important;}
 .qz-opt:disabled{cursor:default;transform:none!important;}
-.qz-dot{width:22px;height:22px;border:1px solid var(--border-b);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.54rem;font-family:'Cinzel',serif;transition:all 0.17s;margin-top:1px;}
+.qz-dot{width:22px;height:22px;border:1px solid var(--border-b);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.54rem;font-family:'DM Sans',serif;transition:all 0.17s;margin-top:1px;}
 .qz-opt.sel .qz-dot{background:var(--gold);border-color:var(--gold);color:var(--ink);}
 .qz-opt.ok .qz-dot{background:var(--teal);border-color:var(--teal);color:var(--ink);}
 .qz-opt.no .qz-dot{background:var(--red);border-color:var(--red);color:#fff;}
@@ -168,22 +168,22 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .qz-fb.ok{background:rgba(76,201,168,0.07);border:1px solid rgba(76,201,168,0.22);color:var(--teal);}
 .qz-fb.no{background:rgba(201,76,76,0.07);border:1px solid rgba(201,76,76,0.22);color:#E87878;}
 .qz-nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px;}
-.btn-sub{font-family:'Cinzel',serif;font-size:0.73rem;font-weight:700;letter-spacing:0.18em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 34px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;opacity:0.38;pointer-events:none;}
+.btn-sub{font-family:'DM Sans',serif;font-size:0.73rem;font-weight:700;letter-spacing:0.18em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 34px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;opacity:0.38;pointer-events:none;}
 .btn-sub.rdy{opacity:1;pointer-events:all;}
-.btn-sub.rdy:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(201,168,76,0.22);}
-.btn-done{font-family:'Cinzel',serif;font-size:0.73rem;font-weight:700;letter-spacing:0.16em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 34px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;display:none;}
+.btn-sub.rdy:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(32,70,245,0.22);}
+.btn-done{font-family:'DM Sans',serif;font-size:0.73rem;font-weight:700;letter-spacing:0.16em;color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:13px 34px;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.24s;display:none;}
 .btn-done:hover{transform:translateY(-2px);}
-.btn-ghost{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);background:transparent;border:1px solid var(--border-b);padding:12px 26px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;}
-.btn-ghost:hover{background:rgba(201,168,76,0.06);}
+.btn-ghost{font-family:'DM Sans',serif;font-size:0.7rem;letter-spacing:0.13em;color:var(--gold);background:transparent;border:1px solid var(--border-b);padding:12px 26px;cursor:pointer;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all 0.22s;}
+.btn-ghost:hover{background:rgba(32,70,245,0.06);}
 .score-box{display:none;background:var(--panel);border:1px solid var(--border);padding:26px 30px;margin-top:26px;text-align:center;animation:fu 0.38s ease;}
 .score-box.show{display:block;}
-.score-big{font-family:'Cinzel Decorative',serif;font-size:2.8rem;font-weight:900;color:var(--gold);line-height:1;}
-.score-lbl{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.18em;color:var(--text-dim);margin-top:5px;}
-.score-xp{display:inline-block;margin-top:12px;padding:7px 18px;background:rgba(201,168,76,0.09);border:1px solid var(--border-b);font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.14em;color:var(--gold);}
-.score-msg{margin-top:14px;font-size:0.93rem;color:var(--text-dim);font-weight:300;line-height:1.5;}
+.score-big{font-family:'Barlow Condensed',serif;font-size:2.8rem;font-weight:900;color:var(--gold);line-height:1;}
+.score-lbl{font-family:'DM Sans',serif;font-size:0.65rem;letter-spacing:0.18em;color:var(--text-dim);margin-top:5px;}
+.score-xp{display:inline-block;margin-top:12px;padding:7px 18px;background:rgba(32,70,245,0.09);border:1px solid var(--border-b);font-family:'DM Sans',serif;font-size:0.72rem;letter-spacing:0.14em;color:var(--gold);}
+.score-msg{margin-top:14px;font-size:0.93rem;color:var(--text-dim);font-weight:400;line-height:1.5;}
 .ornament{display:flex;align-items:center;gap:12px;margin:28px 0;}
 .ornament::before,.ornament::after{content:'';flex:1;height:1px;background:var(--border);}
-.ornament span{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.2em;color:var(--text-faint);}
+.ornament span{font-family:'DM Sans',serif;font-size:0.56rem;letter-spacing:0.2em;color:var(--text-faint);}
 
 @media(max-width:768px){
   .sidebar{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);}
@@ -193,9 +193,20 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--ink);}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
 </style>
 <link rel="stylesheet" href="dojo-theme.css"/>
-<link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#C9A84C"/><link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+<link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#2046F5"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+<script src="dojo-ui.js" defer></script>
+<link rel="icon" href="/favicon.ico" sizes="any"/>
+<meta name="description" content="Learn trading instruments, chart reading, trading styles and risk management at Trading Dojo."/>
+<meta property="og:title" content="Trading Dojo — Put in the reps."/>
+<meta property="og:description" content="Lessons, knowledge checks and deliberate practice for better trading decisions."/>
+<meta property="og:image" content="https://trading-dojo.netlify.app/og-image.png"/>
+<meta property="og:url" content="https://trading-dojo.netlify.app/platforms.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Trading Dojo"/>
+<meta name="twitter:description" content="Learn the market. Learn yourself."/>
+<meta name="twitter:image" content="https://trading-dojo.netlify.app/og-image.png"/>
 </head>
-<body>
+<body class="page-platforms">
 <div class="app">
   <div class="topbar">
     <div class="logo"><div class="logo-mark">⚔</div>The Trading Dojo</div>
@@ -229,7 +240,7 @@ const BROKERS = [
   {
     id:'robinhood', icon:'🟢', name:'Robinhood',
     type:'Commission-Free Broker · Mobile-First',
-    color:'#4CC9A8', colorDim:'rgba(76,201,168,0.25)',
+    color:'#087F70', colorDim:'rgba(76,201,168,0.25)',
     verdict:{label:'Best For', value:'Complete beginners making their first trades'},
     ratings:[
       {label:'Ease of Use',val:'Excellent',pct:95},
@@ -247,7 +258,7 @@ const BROKERS = [
   {
     id:'webull', icon:'📊', name:'WeBull',
     type:'Commission-Free Broker · Technical Traders',
-    color:'#4C8BC9', colorDim:'rgba(76,139,201,0.25)',
+    color:'#205AC4', colorDim:'rgba(76,139,201,0.25)',
     verdict:{label:'Best For', value:'Intermediate traders who want real charts for free'},
     ratings:[
       {label:'Ease of Use',val:'Moderate',pct:58},
@@ -265,7 +276,7 @@ const BROKERS = [
   {
     id:'thinkorswim', icon:'🖥️', name:'ThinkorSwim (ToS)',
     type:'Professional Platform · TD Ameritrade / Schwab',
-    color:'#C9A84C', colorDim:'rgba(201,168,76,0.25)',
+    color:'#2046F5', colorDim:'rgba(32,70,245,0.25)',
     verdict:{label:'Best For', value:'Serious active traders and options specialists'},
     ratings:[
       {label:'Ease of Use',val:'Complex',pct:28},
@@ -283,7 +294,7 @@ const BROKERS = [
   {
     id:'ibkr', icon:'🏦', name:'Interactive Brokers',
     type:'Professional Broker · Global Markets',
-    color:'#8B6FD4', colorDim:'rgba(139,111,212,0.25)',
+    color:'#6E3ABD', colorDim:'rgba(139,111,212,0.25)',
     verdict:{label:'Best For', value:'Advanced traders, algo traders, international access'},
     ratings:[
       {label:'Ease of Use',val:'Difficult',pct:18},
@@ -301,7 +312,7 @@ const BROKERS = [
   {
     id:'coinbase', icon:'₿', name:'Coinbase',
     type:'Crypto Exchange · Beginner to Intermediate',
-    color:'#C9904C', colorDim:'rgba(201,144,76,0.25)',
+    color:'#955A11', colorDim:'rgba(201,144,76,0.25)',
     verdict:{label:'Best For', value:'Getting started with crypto safely and simply'},
     ratings:[
       {label:'Ease of Use',val:'Excellent',pct:90},
@@ -325,7 +336,7 @@ const TOOLS = [
   {
     id:'tradingview', icon:'📈', name:'TradingView',
     type:'Charting Platform · Community · Screener',
-    color:'#4CC9A8', colorDim:'rgba(76,201,168,0.25)',
+    color:'#087F70', colorDim:'rgba(76,201,168,0.25)',
     verdict:{label:'Best For', value:'The go-to charting tool for 90% of retail traders'},
     ratings:[
       {label:'Chart Quality',val:'Best in Class',pct:100},
@@ -343,7 +354,7 @@ const TOOLS = [
   {
     id:'finviz', icon:'🔍', name:'Finviz',
     type:'Stock Screener · Market Heatmap · News',
-    color:'#C9A84C', colorDim:'rgba(201,168,76,0.25)',
+    color:'#2046F5', colorDim:'rgba(32,70,245,0.25)',
     verdict:{label:'Best For', value:'Finding trade ideas fast with visual stock screening'},
     ratings:[
       {label:'Screener Power',val:'Excellent',pct:90},
@@ -361,7 +372,7 @@ const TOOLS = [
   {
     id:'benzinga', icon:'⚡', name:'Benzinga Pro',
     type:'Real-Time News · Squawk · Catalyst Scanner',
-    color:'#C94C4C', colorDim:'rgba(201,76,76,0.25)',
+    color:'#CC303D', colorDim:'rgba(201,76,76,0.25)',
     verdict:{label:'Best For', value:'Day and momentum traders who live off news catalysts'},
     ratings:[
       {label:'News Speed',val:'Fastest Retail',pct:98},
@@ -379,7 +390,7 @@ const TOOLS = [
   {
     id:'tradeideas', icon:'🤖', name:'Trade Ideas',
     type:'AI Scanner · Real-Time Alerts · Day Trading',
-    color:'#8B6FD4', colorDim:'rgba(139,111,212,0.25)',
+    color:'#6E3ABD', colorDim:'rgba(139,111,212,0.25)',
     verdict:{label:'Best For', value:'Advanced day traders who want AI-powered scanning'},
     ratings:[
       {label:'Scanner Power',val:'Best in Class',pct:100},
@@ -400,17 +411,17 @@ const TOOLS = [
 // DATA — STACK GUIDE
 // ═══════════════════════════════════════════
 const STACKS = [
-  {dna:'🥷 The Sniper',color:'#8B6FD4',title:'Sniper / Strategist Stack',
+  {dna:'🥷 The Sniper',color:'#6E3ABD',title:'Sniper / Strategist Stack',
    tools:['TradingView (daily chart analysis)','Finviz (find setups by sector/pattern)','WeBull or ToS (execution + watchlist)','Earnings calendar (Yahoo Finance / Earnings Whispers)']},
-  {dna:'🐺 The Momentum Rider',color:'#C94C4C',title:'Momentum / Day Trader Stack',
+  {dna:'🐺 The Momentum Rider',color:'#CC303D',title:'Momentum / Day Trader Stack',
    tools:['ThinkorSwim (execution + scanner)','Benzinga Pro (catalyst news feed)','TradingView (charts)','Trade Ideas (optional — for advanced scanning)']},
-  {dna:'🦉 The Strategist',color:'#C9A84C',title:'Strategist / Options Stack',
+  {dna:'🦉 The Strategist',color:'#2046F5',title:'Strategist / Options Stack',
    tools:['ThinkorSwim (options analysis — best-in-class)','TradingView (chart analysis)','Finviz (sector screening)','WeBull (backup broker with paper trading)']},
-  {dna:'🤖 The Quant',color:'#4C8BC9',title:'Algorithmic / Systematic Stack',
+  {dna:'🤖 The Quant',color:'#205AC4',title:'Algorithmic / Systematic Stack',
    tools:['Interactive Brokers (API access)','Python + QuantConnect (strategy building)','TradingView + Pine Script (indicator testing)','Alpaca API (commission-free algo execution)']},
-  {dna:'🐉 The Hodler',color:'#4CC9A8',title:'Long-Term Investor Stack',
+  {dna:'🐉 The Hodler',color:'#087F70',title:'Long-Term Investor Stack',
    tools:['Robinhood or WeBull (simple execution)','TradingView (monthly/weekly charts)','Finviz (fundamental screening)','Coinbase (for crypto holdings)']},
-  {dna:'🦊 The Degen',color:'#C9904C',title:'High-Volatility Stack',
+  {dna:'🦊 The Degen',color:'#955A11',title:'High-Volatility Stack',
    tools:['WeBull (charts + free options tools)','Coinbase Advanced Trade (crypto)','Benzinga Pro (catalyst alerts — essential)','TradingView (charts — free tier works)']},
 ];
 
@@ -497,10 +508,10 @@ function buildSidebar(){
 
   // Pages
   addSbSection(nav, 'Guides');
-  const stackEl = makeNavItem('pickstack', '🎯 Build Your Stack', 'By Trader DNA', '#C9A84C', 'page-pickstack');
+  const stackEl = makeNavItem('pickstack', '🎯 Build Your Stack', 'By Trader DNA', '#2046F5', 'page-pickstack');
   nav.appendChild(stackEl);
 
-  const quizEl = makeNavItem('quiz', '📝 Knowledge Quiz', '8 questions · 400 XP', '#4CC9A8', 'page-quiz');
+  const quizEl = makeNavItem('quiz', '📝 Knowledge Quiz', '8 questions · 400 XP', '#087F70', 'page-quiz');
   nav.appendChild(quizEl);
 
   markActive();
@@ -643,7 +654,7 @@ function showBrokers(highlight){
   const {el, fresh} = getOrCreate('brokers');
   if(fresh){
     el.innerHTML = `
-      <div class="mod-hero" style="--page-color:#4CC9A8;--page-color-dim:rgba(76,201,168,0.25)">
+      <div class="mod-hero" style="--page-color:#087F70;--page-color-dim:rgba(76,201,168,0.25)">
         <div class="hero-eyebrow">Module III · Section 1</div>
         <span class="hero-emoji">🏦</span>
         <div class="hero-title">Brokers &amp; Apps</div>
@@ -672,7 +683,7 @@ function showToolsPage(highlight){
   const {el, fresh} = getOrCreate('tools');
   if(fresh){
     el.innerHTML = `
-      <div class="mod-hero" style="--page-color:#C9A84C;--page-color-dim:rgba(201,168,76,0.25)">
+      <div class="mod-hero" style="--page-color:#2046F5;--page-color-dim:rgba(32,70,245,0.25)">
         <div class="hero-eyebrow">Module III · Section 2</div>
         <span class="hero-emoji">📊</span>
         <div class="hero-title">Charting &amp; Research</div>
@@ -694,7 +705,7 @@ function showStackGuide(){
   const {el, fresh} = getOrCreate('pickstack');
   if(fresh){
     el.innerHTML = `
-      <div class="mod-hero" style="--page-color:#C9A84C;--page-color-dim:rgba(201,168,76,0.25)">
+      <div class="mod-hero" style="--page-color:#2046F5;--page-color-dim:rgba(32,70,245,0.25)">
         <div class="hero-eyebrow">Module III · Stack Guide</div>
         <span class="hero-emoji">🎯</span>
         <div class="hero-title">Build Your Stack</div>
@@ -719,8 +730,8 @@ function showStackGuide(){
         </div>
 
         <div style="margin-top:40px;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--gold);padding:24px 28px;">
-          <div style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--gold-dim);margin-bottom:8px;text-transform:uppercase">The Golden Rule</div>
-          <div style="font-size:1rem;color:var(--text-dim);line-height:1.7;font-weight:300">
+          <div style="font-family:'DM Sans',serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--gold-dim);margin-bottom:8px;text-transform:uppercase">The Golden Rule</div>
+          <div style="font-size:1rem;color:var(--text-dim);line-height:1.7;font-weight:400">
             <strong style="color:var(--text)">Free stack for beginners:</strong> WeBull (broker + charts) + TradingView free (charting) + Finviz free (screening). That is $0/month and covers 90% of what a new trader needs. Only add paid tools when your account size and skill level justify the cost.
           </div>
         </div>
@@ -740,7 +751,7 @@ function showQuiz(){
   const {el, fresh} = getOrCreate('quiz');
   if(fresh){
     el.innerHTML = `
-      <div class="mod-hero" style="--page-color:#C9A84C">
+      <div class="mod-hero" style="--page-color:#2046F5">
         <div class="hero-eyebrow">Module III · Final Assessment</div>
         <span class="hero-emoji">📝</span>
         <div class="hero-title">Knowledge Quiz</div>
@@ -860,6 +871,6 @@ showBrokers();
 document.getElementById('page-brokers').classList.add('active');
 </script>
 <script src="dojo-engine.js"></script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(r=>console.log("SW registered")).catch(e=>console.log("SW failed",e));});}</script>
+<script>if("serviceWorker" in navigator && !["localhost","127.0.0.1"].includes(location.hostname)){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(r=>console.log("SW registered")).catch(e=>console.log("SW failed",e));});}</script>
 </body>
 </html>

@@ -4,14 +4,14 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Enter the Market · The Trading Dojo</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/fonts/fonts.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;overflow:hidden;}
 body{
-  font-family:'Rajdhani',sans-serif;
-  background:#0A0A0F;
-  color:#E8E0CC;
+  font-family:'DM Sans',sans-serif;
+  background:#F8F6EF;
+  color:#131313;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -24,8 +24,8 @@ body::before{
   content:'';
   position:fixed;inset:0;
   background-image:
-    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    linear-gradient(rgba(32,70,245,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(32,70,245,0.03) 1px, transparent 1px);
   background-size:60px 60px;
   animation:grid-scroll 20s linear infinite;
   pointer-events:none;
@@ -39,7 +39,7 @@ body::before{
 body::after{
   content:'';
   position:fixed;inset:0;
-  background:radial-gradient(ellipse at center, transparent 30%, rgba(10,10,15,0.85) 100%);
+  background:radial-gradient(ellipse at center, transparent 30%, rgba(248,246,239,0.85) 100%);
   pointer-events:none;
 }
 
@@ -59,8 +59,8 @@ body::after{
 /* Ticker tape at top */
 .ticker-tape{
   position:fixed;top:0;left:0;right:0;
-  background:rgba(201,168,76,0.06);
-  border-bottom:1px solid rgba(201,168,76,0.15);
+  background:rgba(32,70,245,0.06);
+  border-bottom:1px solid rgba(32,70,245,0.15);
   padding:8px 0;
   overflow:hidden;
   white-space:nowrap;
@@ -71,7 +71,7 @@ body::after{
   animation:ticker 18s linear infinite;
   font-family:'Share Tech Mono',monospace;
   font-size:0.72rem;
-  color:rgba(201,168,76,0.5);
+  color:rgba(32,70,245,0.5);
   letter-spacing:0.08em;
 }
 @keyframes ticker{
@@ -82,37 +82,37 @@ body::after{
 /* Status bar at bottom */
 .status-bar{
   position:fixed;bottom:0;left:0;right:0;
-  background:rgba(10,10,15,0.9);
-  border-top:1px solid rgba(201,168,76,0.12);
+  background:rgba(248,246,239,0.9);
+  border-top:1px solid rgba(32,70,245,0.12);
   padding:8px 24px;
   display:flex;align-items:center;justify-content:space-between;
   font-family:'Share Tech Mono',monospace;
   font-size:0.62rem;
-  color:rgba(201,168,76,0.35);
+  color:rgba(32,70,245,0.35);
   z-index:10;
 }
-.sb-dot{width:5px;height:5px;border-radius:50%;background:#3DBA72;animation:blink 1.5s ease-in-out infinite;margin-right:5px;display:inline-block;}
+.sb-dot{width:5px;height:5px;border-radius:50%;background:#13884F;animation:blink 1.5s ease-in-out infinite;margin-right:5px;display:inline-block;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
 
 /* Main content */
 .entry-logo{
-  font-family:'Cinzel Decorative',serif;
+  font-family:'Barlow Condensed',serif;
   font-size:0.85rem;
-  color:rgba(201,168,76,0.4);
+  color:rgba(32,70,245,0.4);
   letter-spacing:0.25em;
   margin-bottom:40px;
   display:flex;align-items:center;justify-content:center;gap:10px;
 }
 .entry-logo-mark{
   width:22px;height:22px;
-  border:1.5px solid rgba(201,168,76,0.4);
+  border:1.5px solid rgba(32,70,245,0.4);
   display:flex;align-items:center;justify-content:center;
   font-size:0.7rem;
 }
 
 .entry-warning{
   display:inline-block;
-  font-family:'Cinzel',serif;
+  font-family:'DM Sans',serif;
   font-size:0.58rem;
   letter-spacing:0.25em;
   color:rgba(224,82,82,0.6);
@@ -123,17 +123,17 @@ body::after{
 }
 
 .entry-title{
-  font-family:'Cinzel Decorative',serif;
+  font-family:'Barlow Condensed',serif;
   font-size:clamp(2.4rem,6vw,4rem);
   font-weight:900;
-  color:#C9A84C;
+  color:#2046F5;
   line-height:1.05;
   margin-bottom:8px;
-  text-shadow:0 0 60px rgba(201,168,76,0.2);
+  text-shadow:0 0 60px rgba(32,70,245,0.2);
 }
 
 .entry-sub{
-  font-family:'Cinzel',serif;
+  font-family:'DM Sans',serif;
   font-size:0.82rem;
   letter-spacing:0.2em;
   color:rgba(138,128,112,0.7);
@@ -143,24 +143,24 @@ body::after{
 /* Stats row */
 .entry-stats{
   display:flex;justify-content:center;gap:0;
-  border:1px solid rgba(201,168,76,0.12);
+  border:1px solid rgba(32,70,245,0.12);
   margin-bottom:36px;
 }
 .es-item{
   padding:14px 28px;
-  border-right:1px solid rgba(201,168,76,0.08);
+  border-right:1px solid rgba(32,70,245,0.08);
   text-align:center;
 }
 .es-item:last-child{border-right:none;}
 .es-val{
   font-family:'Share Tech Mono',monospace;
   font-size:1.1rem;
-  color:#C9A84C;
+  color:#2046F5;
   display:block;
   line-height:1;
 }
 .es-label{
-  font-family:'Cinzel',serif;
+  font-family:'DM Sans',serif;
   font-size:0.52rem;
   letter-spacing:0.15em;
   color:rgba(138,128,112,0.5);
@@ -171,15 +171,15 @@ body::after{
 
 /* Rules */
 .entry-rules{
-  background:rgba(201,168,76,0.03);
-  border:1px solid rgba(201,168,76,0.1);
+  background:rgba(32,70,245,0.03);
+  border:1px solid rgba(32,70,245,0.1);
   border-left:3px solid rgba(224,82,82,0.5);
   padding:16px 22px;
   text-align:left;
   margin-bottom:32px;
 }
 .er-title{
-  font-family:'Cinzel',serif;
+  font-family:'DM Sans',serif;
   font-size:0.6rem;
   letter-spacing:0.2em;
   color:rgba(224,82,82,0.6);
@@ -192,21 +192,21 @@ body::after{
   line-height:1.5;
   display:flex;align-items:flex-start;gap:8px;
   margin-bottom:5px;
-  font-weight:300;
+  font-weight:400;
 }
 .er-rule:last-child{margin-bottom:0;}
-.er-rule::before{content:'◆';font-size:0.4rem;color:rgba(201,168,76,0.4);flex-shrink:0;margin-top:5px;}
-.er-rule strong{color:#E8E0CC;font-weight:500;}
+.er-rule::before{content:'◆';font-size:0.4rem;color:rgba(32,70,245,0.4);flex-shrink:0;margin-top:5px;}
+.er-rule strong{color:#131313;font-weight:500;}
 
 /* CTA Button */
 .entry-btn{
-  font-family:'Cinzel',serif;
+  font-family:'DM Sans',serif;
   font-size:0.88rem;
   font-weight:700;
   letter-spacing:0.2em;
   text-transform:uppercase;
-  color:#0A0A0F;
-  background:linear-gradient(135deg,#C9A84C,#F0CC7A);
+  color:#F8F6EF;
+  background:linear-gradient(135deg,#2046F5,#FFF200);
   border:none;
   padding:18px 60px;
   cursor:pointer;
@@ -227,7 +227,7 @@ body::after{
 .entry-btn:hover::after{transform:translateX(100%);}
 .entry-btn:hover{
   transform:translateY(-3px);
-  box-shadow:0 12px 40px rgba(201,168,76,0.3);
+  box-shadow:0 12px 40px rgba(32,70,245,0.3);
 }
 .entry-btn.launching{
   pointer-events:none;
@@ -235,26 +235,26 @@ body::after{
   animation:btn-pulse 0.4s ease infinite alternate;
 }
 @keyframes btn-pulse{
-  from{box-shadow:0 0 0 0 rgba(201,168,76,0.4);}
-  to{box-shadow:0 0 0 12px rgba(201,168,76,0);}
+  from{box-shadow:0 0 0 0 rgba(32,70,245,0.4);}
+  to{box-shadow:0 0 0 12px rgba(32,70,245,0);}
 }
 
 .entry-back{
   display:block;
   margin-top:18px;
-  font-family:'Cinzel',serif;
+  font-family:'DM Sans',serif;
   font-size:0.62rem;
   letter-spacing:0.15em;
   color:rgba(138,128,112,0.4);
   text-decoration:none;
   transition:color 0.2s;
 }
-.entry-back:hover{color:rgba(201,168,76,0.5);}
+.entry-back:hover{color:rgba(32,70,245,0.5);}
 
 /* Loading overlay */
 .loading-overlay{
   position:fixed;inset:0;
-  background:#0A0A0F;
+  background:#F8F6EF;
   z-index:100;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;
@@ -262,15 +262,15 @@ body::after{
 }
 .loading-overlay.show{opacity:1;pointer-events:all;}
 .lo-title{
-  font-family:'Cinzel Decorative',serif;
+  font-family:'Barlow Condensed',serif;
   font-size:1.2rem;
-  color:#C9A84C;
+  color:#2046F5;
   margin-bottom:16px;
   animation:lo-pulse 1s ease-in-out infinite;
 }
 @keyframes lo-pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.lo-bar-wrap{width:240px;height:3px;background:rgba(201,168,76,0.1);border-radius:2px;overflow:hidden;}
-.lo-bar{height:100%;background:linear-gradient(90deg,#7A5E24,#C9A84C,#F0CC7A);border-radius:2px;width:0%;transition:width 0.1s;}
+.lo-bar-wrap{width:240px;height:3px;background:rgba(32,70,245,0.1);border-radius:2px;overflow:hidden;}
+.lo-bar{height:100%;background:linear-gradient(90deg,#2046F5,#2046F5,#FFF200);border-radius:2px;width:0%;transition:width 0.1s;}
 .lo-msg{
   margin-top:14px;
   font-family:'Share Tech Mono',monospace;
@@ -282,26 +282,35 @@ body::after{
 /* Rank display */
 .entry-rank{
   display:inline-flex;align-items:center;gap:8px;
-  background:rgba(201,168,76,0.05);
-  border:1px solid rgba(201,168,76,0.12);
+  background:rgba(32,70,245,0.05);
+  border:1px solid rgba(32,70,245,0.12);
   padding:7px 16px;
   margin-bottom:28px;
-  font-family:'Cinzel',serif;
+  font-family:'DM Sans',serif;
 }
 .er-emoji{font-size:1.1rem;line-height:1;}
-.er-name{font-size:0.68rem;letter-spacing:0.12em;color:#C9A84C;}
-.er-xp{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#8A8070;margin-left:6px;}
+.er-name{font-size:0.68rem;letter-spacing:0.12em;color:#2046F5;}
+.er-xp{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:#51514C;margin-left:6px;}
 </style>
 <link rel="stylesheet" href="dojo-theme.css"/>
-<link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#C9A84C"/><link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+<link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#2046F5"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+<script src="dojo-ui.js" defer></script>
+<link rel="icon" href="/favicon.ico" sizes="any"/>
+<meta name="description" content="Learn trading instruments, chart reading, trading styles and risk management at Trading Dojo."/>
+<meta property="og:title" content="Trading Dojo — Put in the reps."/>
+<meta property="og:description" content="Lessons, knowledge checks and deliberate practice for better trading decisions."/>
+<meta property="og:image" content="https://trading-dojo.netlify.app/og-image.png"/>
+<meta property="og:url" content="https://trading-dojo.netlify.app/sim-entry.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Trading Dojo"/>
+<meta name="twitter:description" content="Learn the market. Learn yourself."/>
+<meta name="twitter:image" content="https://trading-dojo.netlify.app/og-image.png"/>
 </head>
-<body>
+<body class="page-sim-entry">
 
 <!-- TICKER -->
 <div class="ticker-tape">
-  <span class="ticker-inner">
-    AAPL $187.32 +1.24% &nbsp;·&nbsp; TSLA $241.15 -0.87% &nbsp;·&nbsp; NVDA $875.40 +3.12% &nbsp;·&nbsp; BTC $67,420 +2.34% &nbsp;·&nbsp; EUR/USD 1.08420 &nbsp;·&nbsp; SPY $523.18 +0.45% &nbsp;·&nbsp; AMZN $198.76 +1.89% &nbsp;·&nbsp; GBP/USD 1.26540 &nbsp;·&nbsp; MSFT $415.32 +0.92% &nbsp;·&nbsp; ETH $3,241 +1.76% &nbsp;·&nbsp; GOOGL $175.44 +0.61% &nbsp;·&nbsp; USD/JPY 149.820 &nbsp;·&nbsp; META $521.30 +2.44%
-  </span>
+  <span class="ticker-inner">PAPER TRADING / VIRTUAL FUNDS / LEARN THE TOOLS / MANAGE YOUR RISK / PRACTICE YOUR PROCESS</span>
 </div>
 
 <!-- MAIN -->
@@ -311,7 +320,7 @@ body::after{
   <div class="entry-warning">⚠ Paper Trading — Virtual Currency Only</div>
 
   <div class="entry-title">Enter<br>the Market</div>
-  <div class="entry-sub">Real prices. Zero real risk. Real lessons.</div>
+  <div class="entry-sub">Virtual funds. Deliberate practice. Real lessons.</div>
 
   <!-- Rank -->
   <div class="entry-rank" id="entry-rank-display">
@@ -346,19 +355,19 @@ body::after{
   </div>
 
   <button class="entry-btn" id="entry-btn" onclick="launchSim()">Begin Session</button>
-  <a href="index.html" class="entry-back">← Return to Hub</a>
+  <a href="dashboard.html" class="entry-back">← Return to dashboard</a>
 </div>
 
 <!-- STATUS BAR -->
 <div class="status-bar">
-  <span><span class="sb-dot"></span>LIVE DATA FEED ACTIVE</span>
+  <span><span class="sb-dot"></span>PRACTICE ACCOUNT</span>
   <span id="sb-time"></span>
   <span>PAPER TRADING MODE</span>
 </div>
 
 <!-- LOADING OVERLAY -->
 <div class="loading-overlay" id="loading-overlay">
-  <div class="lo-title">Connecting to Markets</div>
+  <div class="lo-title">Opening Practice Lab</div>
   <div class="lo-bar-wrap"><div class="lo-bar" id="lo-bar"></div></div>
   <div class="lo-msg" id="lo-msg">Initializing price feeds...</div>
 </div>
@@ -380,7 +389,7 @@ function loadSimState(){
     const sign = pnl >= 0 ? '+' : '';
 
     document.getElementById('entry-prev-pnl').textContent = sign+'$'+pnl.toFixed(2);
-    document.getElementById('entry-prev-pnl').style.color = pnl >= 0 ? '#3DBA72' : '#E05252';
+    document.getElementById('entry-prev-pnl').style.color = pnl >= 0 ? '#13884F' : '#CC303D';
     document.getElementById('entry-trades').textContent = trades;
   }catch(e){}
 }
@@ -425,14 +434,7 @@ setInterval(updateClock,1000);
 updateClock();
 
 // Launch
-const LOADING_MSGS = [
-  'Initializing price feeds...',
-  'Fetching live market data...',
-  'Loading order book...',
-  'Syncing portfolio state...',
-  'Connecting to exchanges...',
-  'Ready. Entering the market.',
-];
+const LOADING_MSGS = ['Opening your practice workspace...', 'Loading your saved portfolio...', 'Preparing order controls...', 'Ready to practice.'];
 
 function launchSim(){
   const btn = document.getElementById('entry-btn');
@@ -463,6 +465,6 @@ function launchSim(){
 loadSimState();
 loadRank();
 </script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(r=>console.log("SW registered")).catch(e=>console.log("SW failed",e));});}</script>
+<script>if("serviceWorker" in navigator && !["localhost","127.0.0.1"].includes(location.hostname)){window.addEventListener("load",()=>{navigator.serviceWorker.register("/sw.js").then(r=>console.log("SW registered")).catch(e=>console.log("SW failed",e));});}</script>
 </body>
 </html>

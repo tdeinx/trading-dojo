@@ -2,14 +2,17 @@
   "name": "The Trading Dojo",
   "short_name": "Trading Dojo",
   "description": "Master the markets. Learn stocks, options, crypto, forex and futures. Earn ranks. Build your legacy.",
-  "start_url": "/index.html",
+  "start_url": "/dashboard.html",
   "display": "standalone",
-  "background_color": "#0A0A0F",
-  "theme_color": "#C9A84C",
+  "background_color": "#F8F6EF",
+  "theme_color": "#2046F5",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
-  "categories": ["education", "finance"],
+  "categories": [
+    "education",
+    "finance"
+  ],
   "icons": [
     {
       "src": "icons/icon-72.png",
@@ -66,21 +69,36 @@
       "short_name": "Train",
       "description": "Jump into Module I",
       "url": "/instruments.html",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Paper Trader",
       "short_name": "Trade",
       "description": "Open the paper trading simulator",
       "url": "/sim-entry.html",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Trader DNA",
       "short_name": "DNA",
       "description": "Take the Trader DNA quiz",
       "url": "/dna-quiz.html",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ]
 }
