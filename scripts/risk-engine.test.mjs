@@ -9,6 +9,16 @@ const eu=R.spec('EUR/USD','forex'),uj=R.spec('USD/JPY','forex'),eg=R.spec('EUR/G
 assert.equal(eu.pip,0.0001);assert.equal(uj.pip,0.01);assert.equal(au.kind,'metal');assert.equal(st.kind,'stock');
 near(eu.spread,0.0001);
 
+// Futures and crypto
+const mes=R.spec('MES'),mcl=R.spec('MCL'),btc=R.spec('BTC/USD','crypto',60000);
+assert.equal(mes.kind,'future');assert.equal(R.usdPerUnitMove(mes,5000),5);assert.equal(R.usdPerUnitMove(mcl,70),100);
+// MES 1% of $10,000 with a 10-point stop: $100 / ($5*10) = 2 contracts
+assert.equal(R.sizePosition({equity:10000,riskPct:1,entry:5000,stop:4990,usdPerMove:5}).lots,2);
+assert.equal(btc.kind,'crypto');near(btc.spread,30);assert.equal(btc.step,0.0001);
+// BTC $1,500 stop, $100 risk -> 0.0666 coins, rounded down to the step
+const sb=R.sizePosition({equity:10000,riskPct:1,entry:60000,stop:58500,usdPerMove:1,step:btc.step});near(sb.lots,0.0666,1e-9);assert.ok(sb.riskUSD<=100);
+assert.equal(R.notionalUSD(mes,2,5000),50000);
+
 // Value of a move: 1 micro lot EUR/USD is $0.10 per pip
 near(R.usdPerUnitMove(eu,1.08)*eu.pip,0.10);
 // USD/JPY micro lot at 150: 1000 * 0.01 / 150 = $0.0667 per pip

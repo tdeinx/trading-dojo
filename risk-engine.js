@@ -13,9 +13,23 @@
   'EUR/GBP':{spreadPips:1.5,leverage:50},
  };
  const GOLD={kind:'metal',unit:'oz',lotUnits:1,step:1,leverage:20,decimals:2,spread:0.30,pip:0.01};
+ /* Micro futures: lotUnits is the contract multiplier (dollars per 1.0 point).
+    leverage only estimates margin for the practice account; real margins are set by exchange and broker. */
+ const FUTURES={
+  'MES':{name:'Micro E-mini S&P 500',feed:'ES=F',lotUnits:5,tick:0.25,decimals:2,leverage:20},
+  'MNQ':{name:'Micro E-mini Nasdaq-100',feed:'NQ=F',lotUnits:2,tick:0.25,decimals:2,leverage:20},
+  'MGC':{name:'Micro Gold',feed:'GC=F',lotUnits:10,tick:0.1,decimals:1,leverage:20},
+  'MCL':{name:'Micro WTI Crude Oil',feed:'CL=F',lotUnits:100,tick:0.01,decimals:2,leverage:10}
+ };
+ const CRYPTO_SPREAD=0.0005; // 0.05% of price as a round, liquid-major estimate
 
- function spec(symbol,type){
+ function spec(symbol,type,price){
   if(symbol==='XAU/USD')return {...GOLD,base:'XAU',quote:'USD'};
+  if(FUTURES[symbol]){const f=FUTURES[symbol];return {kind:'future',unit:'contracts',lotUnits:f.lotUnits,step:1,leverage:f.leverage,decimals:f.decimals,pip:f.tick,spread:f.tick,name:f.name,feed:f.feed};}
+  if(type==='crypto'||/^(BTC|ETH|SOL)\/USD$/.test(symbol)){
+   const p=Number.isFinite(price)&&price>0?price:1;
+   return {kind:'crypto',unit:'coins',lotUnits:1,step:p>1000?0.0001:p>10?0.001:1,leverage:1,decimals:2,pip:0.01,spread:p*CRYPTO_SPREAD};
+  }
   if(type==='forex'||PAIRS[symbol]){
    const [base,quote]=symbol.split('/');const jpy=quote==='JPY';const pip=jpy?0.01:0.0001;const cfg=PAIRS[symbol]||{spreadPips:2,leverage:20};
    return {kind:'forex',unit:'micro lots',lotUnits:1000,step:1,leverage:cfg.leverage,decimals:jpy?3:5,pip,spread:cfg.spreadPips*pip,base,quote};
@@ -27,7 +41,7 @@
     quoteToUSD converts the quote currency to dollars: 1 for EUR/USD or gold,
     1/price for USD/JPY, the GBP/USD rate for EUR/GBP. */
  function usdPerUnitMove(s,price,quoteToUSD){
-  if(s.kind==='stock'||s.kind==='metal')return s.lotUnits;
+  if(s.kind==='stock'||s.kind==='metal'||s.kind==='future'||s.kind==='crypto')return s.lotUnits;
   if(s.quote==='USD')return s.lotUnits;
   if(s.base==='USD')return s.lotUnits/price;
   return s.lotUnits*(quoteToUSD||NaN);
@@ -64,7 +78,7 @@
  function sizePosition({equity,riskPct,entry,stop,usdPerMove,step=1}){
   const budget=equity*riskPct/100;const perLot=Math.abs(entry-stop)*usdPerMove;
   if(!(budget>0)||!(perLot>0)||!Number.isFinite(perLot))return {lots:0,riskUSD:0,budget};
-  const lots=Math.floor(budget/perLot/step+1e-9)*step;
+  const lots=Number((Math.floor(budget/perLot/step+1e-9)*step).toFixed(8));
   return {lots,riskUSD:lots*perLot,budget};
  }
 
@@ -124,7 +138,7 @@
  function lossesToday(journal,now=Date.now()){return journal.filter(t=>!t.source&&t.pnl<0&&sameDay(t.closed,now)).length;}
 
  function rulesAtEntry({riskPct,rr}){
-  return {stop:true,risk:riskPct<=RULES.maxRiskPct+1e-9,rr:rr>=RULES.minRR-1e-9};
+  return {stop:true,risk:riskPct<=RULES.maxRiskPct+1e-9,rr:rr>=RULES.minRR-0.005};
  }
 
  function stats(journal){
@@ -144,7 +158,7 @@
    maxDrawdownR:maxDD,adherence,grad};
  }
 
- const api={RULES,spec,usdPerUnitMove,notionalUSD,bidAsk,entryFill,exitMark,validatePlan,sizePosition,canMoveStop,checkExit,checkBarExit,pnlUSD,lossesToday,rulesAtEntry,stats};
+ const api={RULES,FUTURES,spec,usdPerUnitMove,notionalUSD,bidAsk,entryFill,exitMark,validatePlan,sizePosition,canMoveStop,checkExit,checkBarExit,pnlUSD,lossesToday,rulesAtEntry,stats};
  if(typeof window!=='undefined')window.DojoRisk=api;
  if(typeof globalThis!=='undefined')globalThis.DojoRisk=api;
 })();

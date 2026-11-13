@@ -668,7 +668,8 @@ function suggestTarget(){
   const s = specOf(sym), entry = R.entryFill(s, side, m), stop = parseFloat(document.getElementById('stop-input').value);
   if(!Number.isFinite(stop)){ showMsg('Set your stop first. The target is measured from it.','err'); return; }
   const t = side==='long' ? entry + 2*(entry-stop) : entry - 2*(stop-entry);
-  document.getElementById('target-input').value = t.toFixed(s.decimals);
+  const f = 10**s.decimals;
+  document.getElementById('target-input').value = ((side==='long'?Math.ceil(t*f):Math.floor(t*f))/f).toFixed(s.decimals);
   updatePlan();
 }
 function equity(){

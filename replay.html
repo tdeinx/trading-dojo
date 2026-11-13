@@ -375,22 +375,30 @@ a.mode-tab{text-decoration:none;display:inline-flex;align-items:center;}
 const R = window.DojoRisk;
 const DRILL_CASH = 10000, WARMUP = 80, AHEAD = 240;
 const MARKETS = [
-  {symbol:'XAU/USD', feed:'GC=F',     name:'Gold / US Dollar'},
-  {symbol:'EUR/USD', feed:'EURUSD=X', name:'Euro / US Dollar'},
-  {symbol:'GBP/USD', feed:'GBPUSD=X', name:'British Pound / USD'},
-  {symbol:'USD/JPY', feed:'USDJPY=X', name:'US Dollar / Yen'},
-  {symbol:'AUD/USD', feed:'AUDUSD=X', name:'Australian Dollar'},
-  {symbol:'SPY',  feed:'SPY',  name:'S&P 500 ETF'},
-  {symbol:'AAPL', feed:'AAPL', name:'Apple Inc.'},
-  {symbol:'NVDA', feed:'NVDA', name:'NVIDIA Corp.'},
-  {symbol:'TSLA', feed:'TSLA', name:'Tesla Inc.'},
+  {symbol:'XAU/USD', feed:'GC=F',     name:'Gold / US Dollar', type:'forex'},
+  {symbol:'EUR/USD', feed:'EURUSD=X', name:'Euro / US Dollar', type:'forex'},
+  {symbol:'GBP/USD', feed:'GBPUSD=X', name:'British Pound / USD', type:'forex'},
+  {symbol:'USD/JPY', feed:'USDJPY=X', name:'US Dollar / Yen', type:'forex'},
+  {symbol:'AUD/USD', feed:'AUDUSD=X', name:'Australian Dollar', type:'forex'},
+  {symbol:'MES', feed:'ES=F', name:'Micro E-mini S&P 500 futures', type:'futures'},
+  {symbol:'MNQ', feed:'NQ=F', name:'Micro E-mini Nasdaq-100 futures', type:'futures'},
+  {symbol:'MGC', feed:'GC=F', name:'Micro Gold futures', type:'futures'},
+  {symbol:'MCL', feed:'CL=F', name:'Micro WTI Crude Oil futures', type:'futures'},
+  {symbol:'SPY',  feed:'SPY',  name:'S&P 500 ETF', type:'stocks'},
+  {symbol:'AAPL', feed:'AAPL', name:'Apple Inc.', type:'stocks'},
+  {symbol:'NVDA', feed:'NVDA', name:'NVIDIA Corp.', type:'stocks'},
+  {symbol:'TSLA', feed:'TSLA', name:'Tesla Inc.', type:'stocks'},
+  {symbol:'BTC/USD', feed:'BTC-USD', name:'Bitcoin', type:'crypto'},
+  {symbol:'ETH/USD', feed:'ETH-USD', name:'Ether', type:'crypto'},
+  {symbol:'SOL/USD', feed:'SOL-USD', name:'Solana', type:'crypto'},
 ];
 const FX = new Set(['XAU/USD','EUR/USD','GBP/USD','USD/JPY','AUD/USD']);
 let drill = null, side = 'long', playTimer = null, portTab = 'drill';
 
 const esc = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const specOf = sym => R.spec(sym, FX.has(sym)?'forex':'stocks');
-const fmtPrice = (sym,v) => { if(!Number.isFinite(v)) return '—'; const s=specOf(sym); return (s.kind!=='forex'?'$':'')+v.toFixed(s.decimals); };
+const typeOf = sym => (MARKETS.find(m=>m.symbol===sym)||{}).type || 'stocks';
+const specOf = sym => R.spec(sym, typeOf(sym), drill ? drill.bars[drill.cursor].c : undefined);
+const fmtPrice = (sym,v) => { if(!Number.isFinite(v)) return '—'; const s=specOf(sym); return (s.kind==='forex'||s.kind==='future'?'':'$')+v.toFixed(s.decimals); };
 const fmtUSD = v => (v<0?'-':'')+'$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtR = v => Number.isFinite(v) ? (v>=0?'+':'')+v.toFixed(2)+'R' : '—';
 const usdPerMove = (sym,price) => R.usdPerUnitMove(specOf(sym), price, 1);
@@ -472,7 +480,8 @@ function setSide(s){ side=s; document.getElementById('side-long').classList.togg
 function suggestTarget(){
   if(!drill) return; const s=specOf(drill.sym), entry=R.entryFill(s,side,current().c), stop=parseFloat(document.getElementById('stop-input').value);
   if(!Number.isFinite(stop)){ showMsg('Set your stop first. The target is measured from it.','err'); return; }
-  document.getElementById('target-input').value = (side==='long'? entry+2*(entry-stop) : entry-2*(stop-entry)).toFixed(s.decimals); updatePlan();
+  const raw=side==='long'? entry+2*(entry-stop) : entry-2*(stop-entry), f=10**s.decimals;
+  document.getElementById('target-input').value = ((side==='long'?Math.ceil(raw*f):Math.floor(raw*f))/f).toFixed(s.decimals); updatePlan();
 }
 function buildPlan(){
   if(!drill) return {error:'Start a drill first.'};
@@ -503,7 +512,7 @@ function placeTrade(){
   const plan=buildPlan(); if(plan.error){ showMsg(plan.error,'err'); return; }
   const broken=[!plan.rules.risk&&'risk above 1%',!plan.rules.rr&&'reward less than 2× risk'].filter(Boolean);
   if(broken.length && !confirm(`This plan breaks a Dojo rule: ${broken.join(' and ')}.\n\nYou can take it, but it will be logged as a rule break.`)) return;
-  drill.position={id:'r'+Date.now().toString(36), symbol:drill.sym, type:FX.has(drill.sym)?'forex':'stocks', side, lots:plan.lots, entry:plan.entry, stop:plan.stop, initialStop:plan.stop,
+  drill.position={id:'r'+Date.now().toString(36), symbol:drill.sym, type:typeOf(drill.sym), side, lots:plan.lots, entry:plan.entry, stop:plan.stop, initialStop:plan.stop,
     target:plan.target, riskUSD:plan.riskUSD, riskPct:plan.riskPct, rr:plan.rr, setup:document.getElementById('setup-select').value,
     note:document.getElementById('note-input').value.trim().slice(0,140), opened:new Date().toISOString(), rules:plan.rules, stopMoves:0, barOpened:drill.cursor};
   ['stop-input','target-input','note-input'].forEach(id=>document.getElementById(id).value='');
