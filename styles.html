@@ -199,7 +199,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 </style>
 <link rel="stylesheet" href="dojo-theme.css"/>
 <link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#2046F5"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
-<script src="dojo-ui.js" defer></script>
+<script src="academy-data.js" defer></script><script src="dojo-ui.js" defer></script>
 <link rel="icon" href="/favicon.ico" sizes="any"/>
 <meta name="description" content="Learn trading instruments, chart reading, trading styles and risk management at Trading Dojo."/>
 <meta property="og:title" content="Trading Dojo — Put in the reps."/>
@@ -210,7 +210,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <meta name="twitter:title" content="Trading Dojo"/>
 <meta name="twitter:description" content="Learn the market. Learn yourself."/>
 <meta name="twitter:image" content="https://trading-dojo.netlify.app/og-image.png"/>
-</head>
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."><meta property="og:site_name" content="Trading Dojo"><meta name="twitter:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."></head>
 <body class="page-styles">
 <div class="app">
 
@@ -266,7 +266,7 @@ const STYLES = [
       {label:'Screen Time',value:'Full Day',pct:95},
       {label:'Stress Level',value:'Very High',pct:90},
       {label:'Trade Frequency',value:'5–20 per day',pct:80},
-      {label:'Capital Needed',value:'$25,000+ (PDT)',pct:70},
+      {label:'Capital Needed',value:'Broker-dependent',pct:70},
       {label:'Skill Barrier',value:'High',pct:78},
     ],
     analogy:{icon:'🏟️',text:'Day trading is like being a <strong>professional athlete who competes every single day</strong>. The game starts at 9:30am and ends at 4pm. You train hard, execute your game plan, and then go home. No carrying stress into the next day — but you need to show up sharp every morning or the market will punish you.'},
@@ -280,12 +280,12 @@ const STYLES = [
       {time:'4:00 PM — CLOSE',icon:'✅',title:'Flat and Done',desc:'All positions are closed. <strong>Journal every trade</strong>: what worked, what didn\'t, emotional state, execution quality. The journal is how you compound knowledge over time.',highlight:false},
     ],
     pros:['No overnight risk — you sleep with zero exposure','High number of opportunities daily','Skill improves fast with high repetition','Can profit in both bull and bear markets'],
-    cons:['Pattern Day Trader rule: $25,000 min for US accounts','Extremely time-intensive — full-day screen time','Emotionally demanding — losses compound fast','Transaction costs add up with high frequency'],
+    cons:['Margin requirements vary by broker during the 2026–2027 rule transition','Extremely time-intensive — full-day screen time','Emotionally demanding — losses compound fast','Transaction costs add up with high frequency'],
     tools:['ThinkorSwim (ToS)','WeBull','TradingView','Level 2 / Order Flow','Scanner (Trade Ideas, Finviz)'],
     whoFor:'Day trading is for people who want to be <strong>fully engaged with the market</strong> every day. It rewards discipline, speed, and emotional control above all else. This style is NOT recommended as a starting point — build your foundation first.',
     quiz:[
       {q:'What is the key rule that defines day trading?',opts:['You must trade at least 10 times per day','All positions are opened and closed within the same trading session','You can only trade stocks under $10','Trades must last at least 1 hour'],correct:1,feedback:'Day trading\'s defining rule: no overnight positions. Every trade is opened and closed within the same trading day, eliminating overnight risk.'},
-      {q:'The Pattern Day Trader (PDT) rule requires a minimum account balance of how much?',opts:['$5,000','$10,000','$25,000','$50,000'],correct:2,feedback:'The PDT rule requires US traders to maintain at least $25,000 in their margin account if they make 4+ day trades in a 5-business-day period. This is why many beginners start with swing trading instead.'},
+      {q:'Under the legacy US Pattern Day Trader rules, which some brokers may still use during the transition, what is the minimum equity requirement?',opts:['$5,000','$10,000','$25,000','$50,000'],correct:2,feedback:'The legacy PDT minimum is $25,000. New intraday margin standards took effect June 4, 2026, with a broker transition through October 20, 2027. The new framework removes that fixed PDT minimum. Ask your broker which framework applies.'},
       {q:'Why do experienced day traders often avoid trading between 12pm–2pm?',opts:['The SEC prohibits trading during lunch hours','Volume dries up and price action becomes choppy and unreliable','Brokers charge higher fees during this window','Options contracts cannot be traded at this time'],correct:1,feedback:'Lunch hours are called "the dead zone" — volume disappears, spreads widen, and price chops in tight ranges. Trading during this window is a common beginner mistake that leads to unnecessary losses.'},
       {q:'Which time window is typically considered the BEST for day trading?',opts:['8:00 AM – 9:30 AM pre-market','10:00 AM – 11:30 AM','12:00 PM – 2:00 PM','3:00 PM – 4:00 PM only'],correct:1,feedback:'10:00–11:30 AM (after the wild open settles) is prime time for day traders. Clear trends form, volume is strong, and breakout setups are more reliable than at the chaotic open.'},
       {q:'Why is journaling trades considered essential for day traders?',opts:['It is required by the SEC for regulatory purposes','It helps identify patterns in what works and what doesn\'t, compounding skill over time','Brokers require a journal to open a margin account','It reduces commission costs'],correct:1,feedback:'A trade journal is how good traders become great traders. Reviewing every trade — entries, exits, emotions, mistakes — reveals patterns in your own behavior and helps you systematically improve.'},
@@ -319,13 +319,13 @@ const STYLES = [
       {time:'Daily — End of Day',icon:'📋',title:'Position Review',desc:'Check open positions vs. your original thesis. <strong>Is the trade still valid?</strong> Adjust trailing stops on winning trades. Journal any notes. Full review takes 20–30 minutes.',highlight:true},
       {time:'Target Hit or Stop Hit',icon:'✅',title:'Exit Cleanly',desc:'When price reaches your target or stops you out, <strong>close the position without hesitation</strong>. Do not move stops lower to avoid a loss. Discipline is the swing trader\'s greatest weapon.',highlight:false},
     ],
-    pros:['No PDT rule concerns — works with smaller accounts','Much less screen time than day trading','Can hold through minor noise and volatility','Works well with a full-time job or school schedule'],
+    pros:['Less intraday activity; capital and margin needs still depend on the account','Much less screen time than day trading','Can hold through minor noise and volatility','Works well with a full-time job or school schedule'],
     cons:['Overnight and weekend gap risk','Requires holding through drawdowns without panic','Slower feedback loop — setups take days to play out','Need patience to wait for high-quality setups'],
     tools:['TradingView','Finviz (scanner)','WeBull / Robinhood','Daily Chart Focus','Earnings Calendar'],
     whoFor:'Swing trading is the <strong>most beginner-friendly active style</strong>. It gives you time to think, does not require constant screen time, and works with virtually any account size. It is the style most Dojo members should start with.',
     quiz:[
       {q:'What is the typical hold time for a swing trade?',opts:['Seconds to minutes','Hours — closed same day','Days to weeks','Months to years'],correct:2,feedback:'Swing trades are held for days to weeks — long enough to capture a meaningful price "swing" within a trend, but not long-term like position trading.'},
-      {q:'Why is swing trading considered more accessible than day trading for beginners?',opts:['It requires no technical analysis skills','There is no PDT rule, it needs less screen time, and works with smaller accounts','Swing trading is guaranteed to be profitable','Swing traders do not need stop losses'],correct:1,feedback:'Swing trading doesn\'t trigger the PDT rule (which requires $25K), needs only 1–2 hours of attention per day, and can be done with a small account. This makes it the recommended starting style for most beginners.'},
+      {q:'Why is swing trading considered more accessible than day trading for beginners?',opts:['It requires no technical analysis skills','It generally needs less screen time and does not require every position to close the same day','Swing trading is guaranteed to be profitable','Swing traders do not need stop losses'],correct:1,feedback:'Swing trading holds positions across sessions and can require less continuous screen time. Account size, leverage, and any day-trading restrictions still depend on the broker and account. It is not a guarantee of lower risk or profitability.'},
       {q:'A swing trader has an open position. Price is moving against them but has not hit their stop loss yet. What should they do?',opts:['Move the stop loss lower to give the trade more room','Add to the position to lower the average','Hold the position and trust the original plan — if stop is not hit, thesis still stands','Close immediately at any sign of weakness'],correct:2,feedback:'If the stop loss hasn\'t been hit, the original thesis is still intact. Moving stops lower (the classic "hope trade") is one of the most destructive habits a trader can develop.'},
       {q:'Swing traders primarily use which chart timeframe for their main analysis?',opts:['1-minute charts','5-minute charts','Daily charts (with weekly for context)','Monthly charts only'],correct:2,feedback:'Swing traders work primarily on daily charts, using weekly charts for broader trend context. This is very different from day traders who focus on 1, 5, and 15-minute charts.'},
       {q:'A swing trader is working a full-time job. They notice the market is moving strongly during their workday. What is the correct approach?',opts:['Quit the job to watch the market full time','Check positions during lunch and after close — pre-set alerts and limit orders handle the rest','Trade on their phone during meetings to not miss moves','Day trade on their lunch break to catch intraday moves'],correct:1,feedback:'Swing trading is specifically designed to work around a schedule. Pre-setting alerts, limit orders, and stop losses means the market can move while you are busy — your plan executes automatically.'},
@@ -347,7 +347,7 @@ const STYLES = [
       {label:'Screen Time',value:'Entire Session',pct:100},
       {label:'Stress Level',value:'Extreme',pct:98},
       {label:'Trade Frequency',value:'20–100+ per day',pct:100},
-      {label:'Capital Needed',value:'$25,000+ (PDT)',pct:70},
+      {label:'Capital Needed',value:'Broker-dependent',pct:70},
       {label:'Skill Barrier',value:'Very High',pct:90},
     ],
     analogy:{icon:'🎮',text:'Scalping is like playing a <strong>fighting game at the highest difficulty level</strong>. Every input matters, your reaction time must be near-instant, and one mistake costs you the round. The reward is a stream of small victories — but the mental energy required is extraordinary. Only a specific type of trader thrives here.'},
@@ -360,7 +360,7 @@ const STYLES = [
       {time:'End of Day',icon:'✅',title:'Calculate Net P&L',desc:'With 50–100 trades per day, commissions and fees are significant. Scalpers must track <strong>net P&L after all fees</strong>. Many scalpers look profitable on gross but are negative net. This is a critical calculation.',highlight:false},
     ],
     pros:['No overnight risk whatsoever','Profit opportunities even in sideways/low-trend markets','Extremely fast skill development through repetition','Small per-trade risk means no single trade kills you'],
-    cons:['Extremely mentally exhausting — unsustainable for most','Commission and fee drag is significant','Requires the fastest execution tools available','PDT rule applies — need $25K+ for US margin accounts'],
+    cons:['Extremely mentally exhausting — unsustainable for most','Commission and fee drag is significant','Requires the fastest execution tools available','Confirm current intraday margin rules and buying power with your broker'],
     tools:['Direct Access Broker (Cobra, Lightspeed)','Level 2 / DOM','Hot Keys for instant execution','Tick Charts (1-min / 2-min max)','Time & Sales tape reading'],
     whoFor:'Scalping is for traders with <strong>extraordinary focus, lightning-fast execution, and ironclad emotional control</strong>. It is the highest-intensity style and burns out most people who try it. Not recommended until you have significant trading experience.',
     quiz:[
@@ -493,9 +493,9 @@ const STYLES = [
 
 // ── COMPARISON TABLE DATA ──
 const COMPARE_ROWS = [
-  ['Day Trading','⚡','#2046F5','Seconds–Hours','Full day','Very High','$25,000 (PDT)'],
+  ['Day Trading','⚡','#2046F5','Seconds–Hours','Full day','Very High','Broker-dependent'],
   ['Swing Trading','🌊','#087F70','Days–Weeks','1–2 hrs/day','Moderate','$1,000+'],
-  ['Scalping','⚔️','#CC303D','Seconds–5 Min','Full day','Extreme','$25,000 (PDT)'],
+  ['Scalping','⚔️','#CC303D','Seconds–5 Min','Full day','Extreme','Broker-dependent'],
   ['Sniper/Position','🥷','#6E3ABD','Days–Months','30–60 min/day','Low–Moderate','$500+'],
   ['Momentum','🔥','#955A11','Hours–3 Days','2–5 hrs/day','Moderate–High','$2,000+'],
   ['Algorithmic','🤖','#205AC4','System Defined','Monitor only','Low (live)','$500+'],
@@ -603,7 +603,7 @@ function buildLesson(idx){
     </div>
 
     <!-- BODY -->
-    <div class="lesson-body">
+    <div class="lesson-body"><aside class="content-source"><strong>US margin rules · reviewed November 2026</strong><p>New intraday margin standards became effective June 4, 2026. Firms may transition through October 20, 2027, so legacy PDT rules may still apply at some brokers. Verify the rules for your account.</p><a href="https://www.finra.org/investors/insights/intraday-margin-requirements" target="_blank" rel="noopener noreferrer">FINRA: intraday margin requirements ↗</a></aside>
 
       <!-- ANALOGY -->
       <div class="section-block">

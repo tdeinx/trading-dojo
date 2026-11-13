@@ -24,7 +24,10 @@ document.addEventListener('DOMContentLoaded',()=>{
  const lesson=new URLSearchParams(location.search).get('lesson');
  if(lesson!==null&&/^\d+$/.test(lesson)){
   const idx=Number(lesson);const total=document.querySelectorAll('.sidebar .nav-item').length;
-  if(idx<total){if(typeof selectLesson==='function')selectLesson(idx);else if(typeof selectStyle==='function')selectStyle(idx);}
+  if(idx<total){if(typeof selectLesson==='function')selectLesson(idx);else if(typeof selectStyle==='function')selectStyle(idx);if(typeof buildSidebar==='function')buildSidebar();}
  }
  const theme=document.getElementById('dojo-theme-btn');if(theme)theme.setAttribute('aria-label','Switch light and dark appearance');
+ const module=window.ACADEMY_MODULES?.find(m=>m.href.replace('.html','')===location.pathname.split('/').pop().replace('.html',''));
+ const showLevels=()=>{if(!module)return;document.querySelectorAll('.lesson-hero,.mod-hero').forEach(hero=>{if(hero.querySelector('.content-level'))return;const label=document.createElement('span');label.className='content-level';label.textContent='Course depth: '+module.level;hero.appendChild(label);});};
+ showLevels();if(lessonArea)new MutationObserver(showLevels).observe(lessonArea,{childList:true,subtree:true});
 });

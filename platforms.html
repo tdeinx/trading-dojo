@@ -194,7 +194,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 </style>
 <link rel="stylesheet" href="dojo-theme.css"/>
 <link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#2046F5"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
-<script src="dojo-ui.js" defer></script>
+<script src="academy-data.js" defer></script><script src="dojo-ui.js" defer></script>
 <link rel="icon" href="/favicon.ico" sizes="any"/>
 <meta name="description" content="Learn trading instruments, chart reading, trading styles and risk management at Trading Dojo."/>
 <meta property="og:title" content="Trading Dojo — Put in the reps."/>
@@ -205,7 +205,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <meta name="twitter:title" content="Trading Dojo"/>
 <meta name="twitter:description" content="Learn the market. Learn yourself."/>
 <meta name="twitter:image" content="https://trading-dojo.netlify.app/og-image.png"/>
-</head>
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."><meta property="og:site_name" content="Trading Dojo"><meta name="twitter:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."></head>
 <body class="page-platforms">
 <div class="app">
   <div class="topbar">
@@ -313,7 +313,7 @@ const BROKERS = [
     id:'coinbase', icon:'₿', name:'Coinbase',
     type:'Crypto Exchange · Beginner to Intermediate',
     color:'#955A11', colorDim:'rgba(201,144,76,0.25)',
-    verdict:{label:'Best For', value:'Getting started with crypto safely and simply'},
+    verdict:{label:'Best For', value:'Learning retail crypto tools'},
     ratings:[
       {label:'Ease of Use',val:'Excellent',pct:90},
       {label:'Security',val:'Industry Leader',pct:96},
@@ -322,9 +322,9 @@ const BROKERS = [
       {label:'Advanced Tools',val:'Coinbase Adv.',pct:75},
     ],
     tags:['₿ Crypto Specialist','🔐 Top Security','📱 Easy Onboarding','💸 Higher Fees','🏛️ Publicly Traded'],
-    featureHighlight:{icon:'🔐',label:'The Key Feature',text:'<strong>Regulated and insured</strong> — Coinbase is a publicly traded company (NASDAQ: COIN) and one of the most regulated crypto exchanges globally. USD balances are FDIC-insured up to $250K. For beginners entering crypto, this level of <strong>trust and security matters more than fees</strong>. Use <strong>Coinbase Advanced Trade</strong> (same account, lower fees) for active trading.'},
-    pros:['Most trusted and regulated US crypto exchange','Simple onboarding — verified and trading in minutes','FDIC insurance on USD balances','Strong security track record','Coinbase Advanced Trade has competitive maker/taker fees'],
-    cons:['Standard Coinbase fees are among the highest (up to 1.49%)','Smaller coin selection vs Binance or Kraken','Has experienced outages during peak market volatility','Not suitable for stock or options trading','Coinbase Advanced Trade interface less intuitive than standard'],
+    featureHighlight:{icon:'🔐',label:'Cash and crypto protection',text:'<strong>Coinbase is not an FDIC-insured bank.</strong> Crypto is not FDIC-insured. Eligible cash held at insured institutions may qualify for conditional pass-through coverage; this does not insure a Coinbase failure or investment losses. <a href="https://help.coinbase.com/en/coinbase/other-topics/legal-policies/how-is-coinbase-insured" target="_blank" rel="noopener noreferrer">Read the current Coinbase policy ↗</a>'},
+    pros:['Beginner-accessible crypto interface','Simple onboarding — verified and trading in minutes','Published cash custody and insurance information','Strong security track record','Coinbase Advanced Trade has competitive maker/taker fees'],
+    cons:['Standard Coinbase fees are among the highest (up to 1.49%)','Smaller coin selection vs Binance or Kraken','Has experienced outages during peak market volatility','Product availability varies by region; check current offerings','Coinbase Advanced Trade interface less intuitive than standard'],
     features:['200+ cryptocurrencies','Simple buy/sell interface for beginners','Coinbase Advanced Trade (lower fees, full charts)','Earn crypto rewards on holdings','Coinbase Wallet (self-custody option)','Recurring buys for DCA strategy','Staking rewards on eligible assets'],
   },
 ];
@@ -450,9 +450,9 @@ const QUIZ = [
   {q:'TradingView\'s Pine Script is best described as:',
    opts:['A mobile app for monitoring your portfolio','A built-in programming language for creating custom indicators, strategies, and alerts on TradingView charts','A type of options strategy used for income generation','The name of TradingView\'s AI scanning feature'],
    correct:1,feedback:'Pine Script is TradingView\'s scripting language. It lets you write custom indicators, backtest strategies, and build alert conditions. The community has published over 100,000 free Pine Script tools — this is one of TradingView\'s most powerful features.'},
-  {q:'A trader is just getting into crypto and wants the safest, most regulated exchange for a beginner. Which is most appropriate?',
-   opts:['Trade Ideas — best AI for crypto scanning','Coinbase — publicly traded, regulated, FDIC-insured USD balances, beginner-friendly','Interactive Brokers — offers crypto futures','Finviz — has crypto screening tools'],
-   correct:1,feedback:'Coinbase is the most trusted and regulated US crypto exchange — publicly traded on NASDAQ, with FDIC-insured USD balances and a clean onboarding process. For a crypto beginner prioritizing safety over fees, Coinbase is the right starting point.'},
+  {q:'Which statement about Coinbase and deposit insurance is accurate?',
+   opts:['All crypto held on Coinbase is FDIC-insured','Coinbase is not an FDIC-insured bank; eligible cash at insured institutions may qualify for conditional pass-through coverage','FDIC insurance protects against crypto price declines','Every Coinbase cash balance is automatically FDIC-insured regardless of how it is held'],
+   correct:1,feedback:'Crypto has no FDIC protection. Conditional pass-through coverage for eligible cash concerns a custodial institution failing, not a Coinbase failure or investment losses. Review the current policy before relying on coverage.'},
 ];
 
 // ═══════════════════════════════════════════
