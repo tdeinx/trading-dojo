@@ -2,6 +2,9 @@ import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:asser
 const dir=new URL('../tracks/',import.meta.url);
 const reg={window:{}};vm.runInNewContext(fs.readFileSync(new URL('index.js',dir),'utf8'),reg);
 let total=0;
+const replaySyms=[...fs.readFileSync(new URL('../replay.html',import.meta.url),'utf8').matchAll(/\{symbol:'([^']+)', *feed:/g)].map(m=>m[1]);
+const optionSyms=[...fs.readFileSync(new URL('../options-lab.html',import.meta.url),'utf8').matchAll(/\{symbol:'([^']+)',name:/g)].map(m=>m[1]);
+assert.ok(replaySyms.length>10&&optionSyms.length>5,'found lab market lists');
 for(const meta of reg.window.DOJO_TRACKS){
  const file=new URL(meta.id+'.js',dir);
  if(!meta.ready){continue;}
@@ -15,7 +18,7 @@ for(const meta of reg.window.DOJO_TRACKS){
   n++;assert.ok(!ids.has(l.id),`duplicate lesson id ${l.id}`);ids.add(l.id);
   assert.ok(l.blocks.length,`${l.id} has content`);assert.ok(l.quiz.length>=4,`${l.id} has 4+ questions`);
   for(const q of l.quiz){assert.ok(q.correct>=0&&q.correct<q.opts.length,`${l.id}: answer index`);assert.ok(q.why,`${l.id}: explanation`);}
-  for(const b of l.blocks){if(b.drill){if(b.drill.lab==='options')assert.ok(['long_call','long_put','bull_call_spread','bear_put_spread','bull_put_spread','iron_condor'].includes(b.drill.strategy),`${l.id}: options strategy`);else assert.ok(['5m','15m','1h','1d'].includes(b.drill.interval));assert.ok(b.drill.rules.length);}
+  for(const b of l.blocks){if(b.drill){assert.ok((b.drill.lab==='options'?optionSyms:replaySyms).includes(b.drill.symbol),`${l.id}: drill market ${b.drill.symbol} exists in its lab`);if(b.drill.lab==='options')assert.ok(['long_call','long_put','bull_call_spread','bear_put_spread','bull_put_spread','iron_condor'].includes(b.drill.strategy),`${l.id}: options strategy`);else assert.ok(['5m','15m','1h','1d'].includes(b.drill.interval));assert.ok(b.drill.rules.length);}
    if(b.decision)assert.equal(b.decision.opts.filter(o=>o.ok).length,1,`${l.id}: one right decision`);}
  }
  assert.equal(n,meta.lessons,`${meta.id}: registry lesson count matches`);total+=n;
