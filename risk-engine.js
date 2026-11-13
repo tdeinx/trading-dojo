@@ -95,12 +95,33 @@
   return null;
  }
 
+ /* Replay exits use a whole candle. If a candle opens past the stop it fills at the open (gap).
+    If one candle touches both stop and target, we can't know which came first, so the
+    stop wins. That keeps replay results honest instead of flattering. */
+ function checkBarExit(pos,bar,spread=0){
+  const half=spread/2;
+  if(pos.side==='long'){
+   const lo=bar.l-half,hi=bar.h-half,op=bar.o-half;
+   if(op<=pos.stop)return {reason:'gap',price:op};
+   if(lo<=pos.stop)return {reason:'stop',price:pos.stop};
+   if(op>=pos.target)return {reason:'target',price:op};
+   if(hi>=pos.target)return {reason:'target',price:pos.target};
+  }else{
+   const lo=bar.l+half,hi=bar.h+half,op=bar.o+half;
+   if(op>=pos.stop)return {reason:'gap',price:op};
+   if(hi>=pos.stop)return {reason:'stop',price:pos.stop};
+   if(op<=pos.target)return {reason:'target',price:op};
+   if(lo<=pos.target)return {reason:'target',price:pos.target};
+  }
+  return null;
+ }
+
  function pnlUSD(pos,exitPrice,usdPerMove){
   const dir=pos.side==='long'?1:-1;return (exitPrice-pos.entry)*dir*pos.lots*usdPerMove;
  }
 
  function sameDay(a,b){const x=new Date(a),y=new Date(b);return x.getFullYear()===y.getFullYear()&&x.getMonth()===y.getMonth()&&x.getDate()===y.getDate();}
- function lossesToday(journal,now=Date.now()){return journal.filter(t=>t.pnl<0&&sameDay(t.closed,now)).length;}
+ function lossesToday(journal,now=Date.now()){return journal.filter(t=>t.source!=="replay"&&t.pnl<0&&sameDay(t.closed,now)).length;}
 
  function rulesAtEntry({riskPct,rr}){
   return {stop:true,risk:riskPct<=RULES.maxRiskPct+1e-9,rr:rr>=RULES.minRR-1e-9};
@@ -123,7 +144,7 @@
    maxDrawdownR:maxDD,adherence,grad};
  }
 
- const api={RULES,spec,usdPerUnitMove,notionalUSD,bidAsk,entryFill,exitMark,validatePlan,sizePosition,canMoveStop,checkExit,pnlUSD,lossesToday,rulesAtEntry,stats};
+ const api={RULES,spec,usdPerUnitMove,notionalUSD,bidAsk,entryFill,exitMark,validatePlan,sizePosition,canMoveStop,checkExit,checkBarExit,pnlUSD,lossesToday,rulesAtEntry,stats};
  if(typeof window!=='undefined')window.DojoRisk=api;
  if(typeof globalThis!=='undefined')globalThis.DojoRisk=api;
 })();

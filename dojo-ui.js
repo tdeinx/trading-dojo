@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const nav=document.createElement('nav');nav.className='academy-nav';nav.setAttribute('aria-label','Academy modules');
   const pages=[['dashboard.html','Dashboard'],['instruments.html','01 Instruments'],['styles.html','02 Styles'],['platforms.html','03 Platforms'],['charts-module.html','04 Charts'],['risk-module.html','05 Risk'],['dna-quiz.html','06 Trader DNA'],['sim-entry.html','07 Practice']];
   const current=location.pathname.split('/').pop().replace('.html','');
-  nav.innerHTML=pages.map(([url,label])=>`<a href="${url}"${(url.replace('.html','')===current||(current==='simulator'&&url==='sim-entry.html'))?' aria-current="page"':''}>${label}</a>`).join('');bar.after(nav);
+  nav.innerHTML=pages.map(([url,label])=>`<a href="${url}"${(url.replace('.html','')===current||((current==='simulator'||current==='replay')&&url==='sim-entry.html'))?' aria-current="page"':''}>${label}</a>`).join('');bar.after(nav);
  }
  // Existing div-based lesson selectors become keyboard accessible, including lazy-built rows.
  const accessible=()=>document.querySelectorAll('.nav-item[onclick],.nav-item:not([role]),.ticker-row[onclick],.logo[onclick]').forEach(el=>{

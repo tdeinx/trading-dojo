@@ -56,6 +56,17 @@ assert.equal(R.checkExit(lp,101,100),null);
 assert.deepEqual({...R.checkExit(sp,102.1,101.5)},{reason:'stop',price:102});
 assert.deepEqual({...R.checkExit(sp,93.5,95)},{reason:'target',price:94});
 
+// Bar exits (replay)
+assert.equal(R.checkBarExit(lp,{o:100,h:101,l:99,c:100.5}),null);
+assert.deepEqual({...R.checkBarExit(lp,{o:100,h:107,l:97,c:104})},{reason:'stop',price:98},'both touched in one bar: stop wins');
+assert.deepEqual({...R.checkBarExit(lp,{o:100,h:107,l:99,c:106})},{reason:'target',price:106});
+assert.deepEqual({...R.checkBarExit(lp,{o:96,h:97,l:95,c:96})},{reason:'gap',price:96},'gap open below stop fills at open');
+assert.deepEqual({...R.checkBarExit(lp,{o:108,h:109,l:107,c:108})},{reason:'target',price:108},'gap open beyond target fills at open');
+assert.deepEqual({...R.checkBarExit(sp,{o:100,h:102.5,l:99,c:101})},{reason:'stop',price:102});
+assert.deepEqual({...R.checkBarExit(sp,{o:99,h:99.5,l:93,c:94})},{reason:'target',price:94});
+// spread: long exits on the bid, so a bar low exactly at the stop still triggers once spread is included
+assert.deepEqual({...R.checkBarExit(lp,{o:100,h:100.5,l:98.01,c:99},0.04)},{reason:'stop',price:98});
+
 // P&L
 near(R.pnlUSD(lp,98,1),-20);near(R.pnlUSD(sp,94,1),60);
 

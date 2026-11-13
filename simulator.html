@@ -205,6 +205,7 @@ canvas#price-chart{width:100%;flex:1;display:block;}
 }
 
 /* ── PRACTICE LAB v2 ── */
+.replay-link{text-decoration:none;display:inline-flex;align-items:center;color:var(--gold)!important;border-color:var(--border-b)!important;}
 @media(min-width:769px){body.page-simulator .ticker-list{grid-template-columns:1fr;}body.page-simulator .tr-type-badge{display:none;}body.page-simulator .tr-left{min-width:64px;}}
 .ot-note{font-size:11px;color:var(--text-dim);margin-bottom:12px;line-height:1.45;}
 .side-toggle{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--border);width:max-content;}
@@ -287,6 +288,7 @@ canvas#price-chart{width:100%;flex:1;display:block;}
       <button class="mode-tab active" onclick="switchMode('stocks')">Stocks</button>
       <button class="mode-tab" onclick="switchMode('forex')">Forex &amp; Gold</button>
     </div>
+    <a class="reset-btn replay-link" href="replay.html">Replay drills</a>
     <button class="reset-btn" onclick="confirmReset()">Reset</button>
   </div>
 </div>
@@ -839,7 +841,7 @@ function renderJournal(){
   el.innerHTML = state.journal.slice(0,100).map(t=>{
     const reason = {stop:'Stopped out',gap:'Gap through stop',target:'Target hit',manual:'Closed manually'}[t.exitReason]||t.exitReason;
     return `<div class="journal-row">
-      <div class="jr-top"><div><b>${esc(t.symbol)}</b> <span class="side-tag ${t.side}">${t.side.toUpperCase()}</span> <span class="jr-setup">${esc(t.setup)}</span></div><div class="jr-r ${t.r>=0?'up':'down'}">${fmtR(t.r)}</div></div>
+      <div class="jr-top"><div><b>${esc(t.symbol)}</b> <span class="side-tag ${t.side}">${t.side.toUpperCase()}</span> <span class="jr-setup">${esc(t.setup)}${t.source==='replay'?' · replay':''}</span></div><div class="jr-r ${t.r>=0?'up':'down'}">${fmtR(t.r)}</div></div>
       <div class="jr-detail">${fmtPrice(t.symbol,t.entry)} → ${fmtPrice(t.symbol,t.exit)} · ${reason} · ${fmtUSD(t.pnl)} · ${new Date(t.closed).toLocaleDateString([], {month:'short',day:'numeric'})}</div>
       ${t.note?`<div class="jr-note">“${esc(t.note)}”</div>`:''}
       <div class="jr-rules">${chip(t.rules.risk,'1% risk')}${chip(t.rules.rr,'1:2 R:R')}${t.stopMoves?`<span class="rule-chip sm ok">Stop trailed ×${t.stopMoves}</span>`:''}${t.ruleAdherent?'':'<span class="rule-chip sm bad">Rule break</span>'}</div>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Replay Drills · The Trading Dojo</title>
+<link rel="stylesheet" href="/assets/fonts/fonts.css"/>
+<style>
+:root{
+  --gold:#2046F5;--gold-light:#FFF200;--gold-dim:#2046F5;
+  --ink:#F8F6EF;--ink-2:#F8F6EF;--ink-3:#E9E7DF;--ink-4:#DDDCD5;--ink-5:#D4D3CA;
+  --panel:#FFFEFA;--panel-2:#F3F1EA;--panel-3:#F8F6EF;
+  --border:rgba(32,70,245,0.14);--border-b:rgba(32,70,245,0.45);
+  --text:#131313;--text-dim:#51514C;--text-faint:#5B5B55;
+  --green:#13884F;--green-dim:rgba(61,186,114,0.12);
+  --red:#CC303D;--red-dim:rgba(224,82,82,0.12);
+  --teal:#087F70;--purple:#6E3ABD;--blue:#205AC4;
+  --mono:'Share Tech Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--text);height:100%;overflow:hidden;display:flex;flex-direction:column;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;border-bottom:1px solid var(--border);background:rgba(248,246,239,0.95);backdrop-filter:blur(14px);position:relative;z-index:100;flex-shrink:0;}
+.logo{font-family:'Barlow Condensed',serif;font-size:0.95rem;color:var(--gold);display:flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;}
+.logo-mark{width:26px;height:26px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.8rem;position:relative;flex-shrink:0;}
+.logo-mark::before{content:'';position:absolute;inset:3px;border:1px solid rgba(32,70,245,0.2);}
+.topbar-center{display:flex;align-items:center;gap:24px;}
+.account-value{text-align:center;}
+.av-label{font-family:'DM Sans',serif;font-size:0.52rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;}
+.av-num{font-family:var(--mono);font-size:1.3rem;color:var(--text);transition:color 0.3s;}
+.av-num.up{color:var(--green);}
+.av-num.down{color:var(--red);}
+.av-change{font-family:var(--mono);font-size:0.72rem;margin-top:1px;}
+.av-change.up{color:var(--green);}
+.av-change.down{color:var(--red);}
+.top-stats{display:flex;gap:20px;}
+.ts-item{text-align:center;}
+.ts-label{font-family:'DM Sans',serif;font-size:0.5rem;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;}
+.ts-val{font-family:var(--mono);font-size:0.82rem;color:var(--text);}
+.ts-val.up{color:var(--green);}
+.ts-val.down{color:var(--red);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.mode-tabs{display:flex;border:1px solid var(--border);}
+.mode-tab{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.12em;padding:7px 14px;cursor:pointer;color:var(--text-dim);transition:all 0.2s;border:none;background:transparent;}
+.mode-tab.active{background:rgba(32,70,245,0.1);color:var(--gold);}
+.reset-btn{font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.12em;color:var(--red);background:transparent;border:1px solid rgba(224,82,82,0.25);padding:6px 12px;cursor:pointer;transition:all 0.2s;}
+.reset-btn:hover{background:rgba(224,82,82,0.08);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ── MAIN LAYOUT ── */
+.terminal{display:flex;flex:1;overflow:hidden;position:relative;z-index:1;}
+
+/* ── LEFT PANEL — MARKET ── */
+.market-panel{width:380px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--panel-2);overflow:hidden;}
+
+/* Watchlist */
+.panel-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ph-title{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.22em;color:var(--gold-dim);text-transform:uppercase;}
+.ph-right{display:flex;align-items:center;gap:8px;}
+
+/* Search */
+.search-bar{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
+.search-input{flex:1;background:transparent;border:none;padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:0.92rem;color:var(--text);outline:none;}
+.search-input::placeholder{color:var(--text-faint);}
+.search-btn{background:rgba(32,70,245,0.08);border:none;border-left:1px solid var(--border);padding:0 14px;cursor:pointer;font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.1em;color:var(--gold-dim);transition:all 0.2s;}
+.search-btn:hover{background:rgba(32,70,245,0.15);color:var(--gold);}
+
+/* Ticker list */
+.ticker-list{flex:1;overflow-y:auto;}
+.ticker-row{display:flex;align-items:center;padding:11px 16px;border-bottom:1px solid rgba(32,70,245,0.05);cursor:pointer;transition:all 0.18s;gap:10px;}
+.ticker-row:hover{background:rgba(32,70,245,0.04);}
+.ticker-row.selected{background:rgba(32,70,245,0.08);border-left:2px solid var(--gold);}
+.tr-left{flex:1;min-width:0;}
+.tr-symbol{font-family:'DM Sans',serif;font-size:0.82rem;font-weight:700;color:var(--text);}
+.ticker-row.selected .tr-symbol{color:var(--gold);}
+.tr-name{font-size:0.72rem;color:var(--text-faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tr-sparkline{width:60px;height:24px;flex-shrink:0;}
+.tr-right{text-align:right;flex-shrink:0;min-width:80px;}
+.tr-price{font-family:var(--mono);font-size:0.88rem;color:var(--text);}
+.tr-change{font-family:var(--mono);font-size:0.68rem;}
+.tr-change.up{color:var(--green);}
+.tr-change.down{color:var(--red);}
+.tr-type-badge{font-family:'DM Sans',serif;font-size:0.48rem;letter-spacing:0.1em;padding:2px 6px;border-radius:0;flex-shrink:0;}
+.badge-stock{background:rgba(32,70,245,0.1);color:var(--gold-dim);border:1px solid rgba(32,70,245,0.2);}
+.badge-forex{background:rgba(76,201,168,0.1);color:var(--teal);border:1px solid rgba(76,201,168,0.2);}
+
+/* ── CENTER PANEL — CHART + ORDER ── */
+.center-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* Selected asset header */
+.asset-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--panel-3);}
+.ah-left{display:flex;align-items:center;gap:16px;}
+.ah-symbol{font-family:'Barlow Condensed',serif;font-size:1.4rem;font-weight:700;color:var(--gold);}
+.ah-name{font-size:0.82rem;color:var(--text-dim);font-weight:400;}
+.ah-price{font-family:var(--mono);font-size:1.8rem;color:var(--text);transition:color 0.3s;}
+.ah-price.flash-up{color:var(--green);}
+.ah-price.flash-down{color:var(--red);}
+.ah-change{font-family:var(--mono);font-size:0.82rem;margin-top:2px;}
+.ah-change.up{color:var(--green);}
+.ah-change.down{color:var(--red);}
+.ah-meta{display:flex;gap:16px;flex-wrap:wrap;}
+.ah-stat{text-align:center;}
+.ah-stat-label{font-family:'DM Sans',serif;font-size:0.5rem;letter-spacing:0.12em;color:var(--text-faint);text-transform:uppercase;}
+.ah-stat-val{font-family:var(--mono);font-size:0.78rem;color:var(--text-dim);}
+
+/* Chart area */
+.chart-area{padding:16px 24px;flex:1;display:flex;flex-direction:column;min-height:0;}
+.chart-label{font-family:'DM Sans',serif;font-size:0.55rem;letter-spacing:0.2em;color:var(--text-faint);text-transform:uppercase;margin-bottom:8px;}
+canvas#price-chart{width:100%;flex:1;display:block;}
+
+/* Order ticket */
+.order-ticket{border-top:1px solid var(--border);padding:16px 24px;flex-shrink:0;background:var(--panel-3);}
+.ot-title{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.22em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:14px;}
+.ot-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+.ot-field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:100px;}
+.ot-field-label{font-family:'DM Sans',serif;font-size:0.55rem;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;}
+.ot-input{background:var(--ink-4);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.92rem;padding:9px 12px;outline:none;transition:border-color 0.2s;width:100%;}
+.ot-input:focus{border-color:var(--gold-dim);}
+.ot-select{background:var(--ink-4);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',serif;font-size:0.68rem;letter-spacing:0.08em;padding:9px 12px;outline:none;cursor:pointer;width:100%;}
+.ot-cost{font-family:var(--mono);font-size:0.78rem;color:var(--text-dim);padding:9px 0;min-width:120px;}
+.ot-cost span{color:var(--gold);}
+.btn-buy{font-family:'DM Sans',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;color:#fff;background:var(--green);border:none;padding:10px 28px;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:all 0.2s;flex-shrink:0;}
+.btn-buy:hover{filter:brightness(1.15);transform:translateY(-1px);}
+.btn-sell{font-family:'DM Sans',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;color:#fff;background:var(--red);border:none;padding:10px 28px;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:all 0.2s;flex-shrink:0;}
+.btn-sell:hover{filter:brightness(1.15);transform:translateY(-1px);}
+.ot-msg{font-family:'DM Sans',serif;font-size:0.65rem;letter-spacing:0.1em;padding:8px 12px;margin-top:8px;display:none;}
+.ot-msg.show{display:block;}
+.ot-msg.ok{background:var(--green-dim);border:1px solid rgba(61,186,114,0.25);color:var(--green);}
+.ot-msg.err{background:var(--red-dim);border:1px solid rgba(224,82,82,0.25);color:var(--red);}
+
+/* ── RIGHT PANEL — PORTFOLIO ── */
+.portfolio-panel{width:320px;flex-shrink:0;border-left:1px solid var(--border);display:flex;flex-direction:column;background:var(--panel-2);overflow:hidden;}
+.port-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;}
+.port-tab{flex:1;font-family:'DM Sans',serif;font-size:0.58rem;letter-spacing:0.1em;padding:10px;text-align:center;cursor:pointer;color:var(--text-dim);border:none;background:transparent;border-bottom:2px solid transparent;transition:all 0.2s;}
+.port-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.port-content{flex:1;overflow-y:auto;}
+
+/* Position cards */
+.position-card{padding:14px 16px;border-bottom:1px solid rgba(32,70,245,0.05);transition:background 0.15s;}
+.position-card:hover{background:rgba(32,70,245,0.03);}
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.pc-sym{font-family:'DM Sans',serif;font-size:0.82rem;font-weight:700;color:var(--text);}
+.pc-shares{font-size:0.72rem;color:var(--text-faint);}
+.pc-pnl{font-family:var(--mono);font-size:0.85rem;font-weight:700;}
+.pc-pnl.up{color:var(--green);}
+.pc-pnl.down{color:var(--red);}
+.pc-bar-wrap{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;margin-bottom:6px;}
+.pc-bar{height:100%;border-radius:2px;transition:width 0.5s ease;}
+.pc-bar.up{background:var(--green);}
+.pc-bar.down{background:var(--red);}
+.pc-meta{display:flex;justify-content:space-between;}
+.pc-meta-item{font-family:var(--mono);font-size:0.65rem;color:var(--text-faint);}
+.pc-meta-item span{color:var(--text-dim);}
+.btn-close-pos{font-family:'DM Sans',serif;font-size:0.54rem;letter-spacing:0.1em;color:var(--red);background:transparent;border:1px solid rgba(224,82,82,0.2);padding:3px 8px;cursor:pointer;margin-top:6px;transition:all 0.15s;}
+.btn-close-pos:hover{background:var(--red-dim);}
+
+/* Trade history */
+.trade-row{padding:10px 16px;border-bottom:1px solid rgba(32,70,245,0.04);display:flex;align-items:center;gap:10px;}
+.tr-side{font-family:'DM Sans',serif;font-size:0.6rem;letter-spacing:0.08em;padding:3px 8px;font-weight:700;}
+.tr-side.buy{background:var(--green-dim);color:var(--green);border:1px solid rgba(61,186,114,0.2);}
+.tr-side.sell{background:var(--red-dim);color:var(--red);border:1px solid rgba(224,82,82,0.2);}
+.tr-info{flex:1;min-width:0;}
+.tr-sym{font-family:'DM Sans',serif;font-size:0.72rem;font-weight:700;color:var(--text);}
+.tr-detail{font-family:var(--mono);font-size:0.62rem;color:var(--text-faint);}
+.tr-total{font-family:var(--mono);font-size:0.75rem;color:var(--text-dim);text-align:right;flex-shrink:0;}
+.tr-time{font-family:var(--mono);font-size:0.58rem;color:var(--text-faint);text-align:right;}
+
+/* badges panel */
+.badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;}
+.badge-item{background:var(--panel);border:1px solid var(--border);padding:14px;text-align:center;opacity:0.35;transition:all 0.3s;}
+.badge-item.earned{opacity:1;border-color:rgba(32,70,245,0.3);}
+.badge-emoji{font-size:1.6rem;display:block;margin-bottom:6px;}
+.badge-name{font-family:'DM Sans',serif;font-size:0.62rem;letter-spacing:0.08em;color:var(--text-dim);}
+.badge-item.earned .badge-name{color:var(--gold);}
+.badge-desc{font-size:0.65rem;color:var(--text-faint);margin-top:3px;line-height:1.3;}
+
+/* Empty states */
+.empty-state{padding:40px 20px;text-align:center;}
+.es-icon{font-size:2rem;margin-bottom:10px;opacity:0.3;}
+.es-text{font-family:'DM Sans',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--text-faint);}
+
+/* Toast notification */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--panel);border:1px solid var(--border-b);padding:14px 20px;font-family:'DM Sans',serif;font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);z-index:999;transform:translateY(80px);opacity:0;transition:all 0.35s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.green{color:var(--green);border-color:rgba(61,186,114,0.4);}
+.toast.red{color:var(--red);border-color:rgba(224,82,82,0.4);}
+
+/* scrollbar */
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px;}
+
+/* No data overlay */
+.no-data{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;opacity:0.4;}
+.no-data-icon{font-size:2rem;}
+.no-data-text{font-family:'DM Sans',serif;font-size:0.62rem;letter-spacing:0.15em;color:var(--text-faint);}
+
+@media(max-width:900px){
+  body{overflow:auto;}
+  .terminal{flex-direction:column;height:auto;}
+  .market-panel,.portfolio-panel{width:100%;border-right:none;border-left:none;}
+  .center-panel{min-height:500px;}
+}
+
+/* ── PRACTICE LAB v2 ── */
+@media(min-width:769px){body.page-simulator .ticker-list{grid-template-columns:1fr;}body.page-simulator .tr-type-badge{display:none;}body.page-simulator .tr-left{min-width:64px;}}
+.ot-note{font-size:11px;color:var(--text-dim);margin-bottom:12px;line-height:1.45;}
+.side-toggle{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--border);width:max-content;}
+.side-btn{font-family:'DM Sans',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:8px 18px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;}
+.side-btn.long.active{background:var(--green);color:#fff;}
+.side-btn.short.active{background:var(--red);color:#fff;}
+.mini-link{background:none;border:none;color:var(--gold);font-size:0.55rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;text-decoration:underline;margin-left:6px;padding:0;}
+.plan-preview{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:12px;padding:10px 12px;background:var(--panel-2);border:1px solid var(--border);font-size:0.72rem;color:var(--text-dim);min-height:42px;}
+.pp-item b{font-family:var(--mono);color:var(--text);font-weight:600;}
+.pp-item b.up,.up{color:var(--green);}
+.pp-item b.down,.down{color:var(--red);}
+.pp-hint{color:var(--text-dim);}
+.pp-rules{display:flex;flex-wrap:wrap;gap:6px;width:100%;}
+.rule-chip{font-size:0.6rem;letter-spacing:0.05em;padding:3px 8px;border:1px solid;}
+.rule-chip.ok{color:var(--green);border-color:rgba(19,136,79,0.3);background:var(--green-dim);}
+.rule-chip.bad{color:var(--red);border-color:rgba(204,48,61,0.3);background:var(--red-dim);}
+.rule-chip.sm{font-size:0.55rem;padding:2px 6px;}
+.ot-note-input{font-family:'DM Sans',sans-serif;font-size:0.78rem;}
+.side-tag{font-size:0.5rem;letter-spacing:0.12em;padding:2px 5px;vertical-align:middle;}
+.side-tag.long{background:var(--green-dim);color:var(--green);}
+.side-tag.short{background:var(--red-dim);color:var(--red);}
+.pc-r{font-size:0.62rem;text-align:right;opacity:0.8;}
+.btn-move{color:var(--gold);border-color:var(--border-b);margin-left:6px;}
+.btn-move:hover{background:rgba(32,70,245,0.06);}
+.open-dot{color:var(--gold);font-size:0.6rem;}
+.journal-row{padding:10px 16px;border-bottom:1px solid rgba(32,70,245,0.06);font-size:0.75rem;}
+.jr-top{display:flex;justify-content:space-between;align-items:center;}
+.jr-setup{font-size:0.62rem;color:var(--text-faint);}
+.jr-r{font-family:var(--mono);font-weight:700;}
+.jr-detail{font-family:var(--mono);font-size:0.62rem;color:var(--text-faint);margin:4px 0;}
+.jr-note{font-size:0.68rem;color:var(--text-dim);font-style:italic;margin-bottom:4px;}
+.jr-rules{display:flex;flex-wrap:wrap;gap:4px;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border);}
+.stat-cell{background:var(--panel);padding:12px 10px;}
+.stat-label{font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;}
+.stat-val{font-family:var(--mono);font-size:0.95rem;color:var(--text);}
+.grad-box{padding:14px 16px;}
+.grad-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:8px;}
+.grad-list{list-style:none;font-size:0.72rem;color:var(--text-dim);margin:8px 0;}
+.grad-list li{padding:2px 0;}
+.grad-list li.ok{color:var(--green);}
+.grad-note,.stats-foot{font-size:0.66rem;color:var(--text-dim);line-height:1.5;}
+.stats-foot{padding:0 16px 16px;color:var(--text-faint);}
+
+/* ── REPLAY ── */
+.drill-setup{padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+.drill-check{font-size:0.72rem;color:var(--text-dim);display:flex;gap:6px;align-items:center;margin-top:4px;}
+.drill-start{margin-top:6px;width:100%;}
+.drill-help{font-size:0.7rem;color:var(--text-dim);line-height:1.5;}
+.drill-status{font-size:0.72rem;color:var(--text);line-height:1.5;border-left:3px solid var(--gold);padding-left:8px;}
+.drill-status:empty{display:none;}
+.replay-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.ctl-btn{font-family:'DM Sans',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.08em;padding:8px 12px;border:1px solid var(--border-b);background:var(--panel);color:var(--gold);cursor:pointer;}
+.ctl-btn:hover{background:rgba(32,70,245,0.06);}
+.ctl-speed{width:auto;}
+a.mode-tab{text-decoration:none;display:inline-flex;align-items:center;}
+.page-replay .market-panel{overflow:auto;}
+</style>
+<link rel="stylesheet" href="dojo-theme.css"/>
+<link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#2046F5"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+<script src="academy-data.js" defer></script><script src="dojo-ui.js" defer></script>
+<link rel="icon" href="/favicon.ico" sizes="any"/>
+<meta name="description" content="Learn trading instruments, chart reading, trading styles and risk management at Trading Dojo."/>
+<meta property="og:title" content="Trading Dojo — Put in the reps."/>
+<meta property="og:description" content="Lessons, knowledge checks and deliberate practice for better trading decisions."/>
+<meta property="og:image" content="https://trading-dojo.netlify.app/og-image.png"/>
+<meta property="og:url" content="https://trading-dojo.netlify.app/replay.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Trading Dojo"/>
+<meta name="twitter:description" content="Learn the market. Learn yourself."/>
+<meta name="twitter:image" content="https://trading-dojo.netlify.app/og-image.png"/>
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."><meta property="og:site_name" content="Trading Dojo"><meta name="twitter:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."></head>
+<body class="page-simulator page-replay">
+
+<div class="topbar">
+  <div class="logo" onclick="window.location.href='dashboard.html'"><div class="logo-mark">⚔</div>The Trading Dojo</div>
+  <div class="topbar-center">
+    <div class="account-value">
+      <div class="av-label">Drill Account</div>
+      <div class="av-num" id="av-num">$10,000.00</div>
+      <div class="av-change" id="av-change">+$0.00 (0.00%)</div>
+    </div>
+    <div class="top-stats">
+      <div class="ts-item"><div class="ts-label">Drill result</div><div class="ts-val" id="ts-r">0.00R</div></div>
+      <div class="ts-item"><div class="ts-label">Trades</div><div class="ts-val" id="ts-trades">0</div></div>
+      <div class="ts-item"><div class="ts-label">Losses</div><div class="ts-val" id="ts-losses">0 / 3</div></div>
+      <div class="ts-item"><div class="ts-label">Bars left</div><div class="ts-val" id="ts-bars">—</div></div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="mode-tabs">
+      <a class="mode-tab" href="simulator.html">Live</a>
+      <a class="mode-tab active" href="replay.html" aria-current="page">Replay</a>
+    </div>
+  </div>
+</div>
+
+<div class="terminal">
+
+  <div class="market-panel">
+    <div class="panel-header"><div class="ph-title">Replay Drill</div></div>
+    <div class="drill-setup">
+      <label class="ot-field-label" for="drill-symbol">Market</label>
+      <select class="ot-select" id="drill-symbol"></select>
+      <label class="ot-field-label" for="drill-interval">Timeframe</label>
+      <select class="ot-select" id="drill-interval">
+        <option value="5m">5 minute</option><option value="15m" selected>15 minute</option><option value="1h">1 hour</option><option value="1d">Daily</option>
+      </select>
+      <label class="drill-check"><input type="checkbox" id="drill-blind" checked/> Hide the date until the drill ends</label>
+      <button class="btn-buy drill-start" onclick="newDrill()">NEW DRILL</button>
+      <p class="drill-help">A drill drops you at a random point in real price history. You see what came before, nothing after. Plan a trade, then step forward one candle at a time. Three losses ends the drill.</p>
+      <div class="drill-status" id="drill-status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="center-panel">
+    <div class="asset-header">
+      <div class="ah-left"><div><div class="ah-symbol" id="ah-symbol">Start a drill</div><div class="ah-name" id="ah-name">Pick a market and timeframe</div></div></div>
+      <div><div class="ah-price" id="ah-price">—</div><div class="ah-change" id="ah-time"></div></div>
+      <div class="replay-controls">
+        <button class="ctl-btn" onclick="step(1)" title="Next candle (→)">Next ▶</button>
+        <button class="ctl-btn" onclick="step(5)">+5</button>
+        <button class="ctl-btn" id="play-btn" onclick="togglePlay()">Play</button>
+        <select class="ot-select ctl-speed" id="play-speed" aria-label="Play speed"><option value="900">Slow</option><option value="450" selected>Normal</option><option value="150">Fast</option></select>
+      </div>
+    </div>
+
+    <div class="chart-area">
+      <div class="chart-label" id="chart-label">Candles</div>
+      <canvas id="price-chart"></canvas>
+    </div>
+
+    <div class="order-ticket">
+      <div class="ot-title">Trade Plan</div>
+      <p class="ot-note">Entries fill at the current candle's close plus the spread. If one candle touches both your stop and your target, the stop wins, because you can't know which came first.</p>
+      <div class="side-toggle" role="group" aria-label="Trade direction">
+        <button class="side-btn long active" id="side-long" onclick="setSide('long')">Long · buy</button>
+        <button class="side-btn short" id="side-short" onclick="setSide('short')">Short · sell</button>
+      </div>
+      <div class="ot-row">
+        <div class="ot-field"><label class="ot-field-label" for="stop-input">Stop loss</label><input class="ot-input" id="stop-input" type="number" step="any" inputmode="decimal" placeholder="Price" oninput="updatePlan()"/></div>
+        <div class="ot-field"><label class="ot-field-label" for="target-input">Target <button type="button" class="mini-link" onclick="suggestTarget()">set 1:2</button></label><input class="ot-input" id="target-input" type="number" step="any" inputmode="decimal" placeholder="Price" oninput="updatePlan()"/></div>
+        <div class="ot-field" style="max-width:120px"><label class="ot-field-label" for="risk-select">Risk</label>
+          <select class="ot-select" id="risk-select" onchange="updatePlan()"><option value="0.25">0.25%</option><option value="0.5">0.5%</option><option value="1" selected>1% (rule)</option><option value="1.5">1.5%</option><option value="2">2%</option></select></div>
+        <div class="ot-field" style="max-width:160px"><label class="ot-field-label" for="setup-select">Setup</label>
+          <select class="ot-select" id="setup-select"><option>Trend pullback</option><option>Breakout</option><option>Range fade</option><option>Reversal</option><option>Momentum / news</option><option>Other</option></select></div>
+      </div>
+      <div class="plan-preview" id="plan-preview" aria-live="polite">Start a drill to plan a trade.</div>
+      <div class="ot-row" style="margin-top:10px">
+        <div class="ot-field" style="flex:3"><input class="ot-input ot-note-input" id="note-input" maxlength="140" placeholder="Why this trade? One line for your journal (optional)"/></div>
+        <button class="btn-buy" id="place-btn" onclick="placeTrade()">PLACE LONG</button>
+      </div>
+      <div class="ot-msg" id="ot-msg"></div>
+    </div>
+  </div>
+
+  <div class="portfolio-panel">
+    <div class="port-tabs"><button class="port-tab active" onclick="showPortTab('drill')">This drill</button><button class="port-tab" onclick="showPortTab('stats')">All stats</button></div>
+    <div class="port-content" id="port-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="risk-engine.js"></script>
+<script>
+const R = window.DojoRisk;
+const DRILL_CASH = 10000, WARMUP = 80, AHEAD = 240;
+const MARKETS = [
+  {symbol:'XAU/USD', feed:'GC=F',     name:'Gold / US Dollar'},
+  {symbol:'EUR/USD', feed:'EURUSD=X', name:'Euro / US Dollar'},
+  {symbol:'GBP/USD', feed:'GBPUSD=X', name:'British Pound / USD'},
+  {symbol:'USD/JPY', feed:'USDJPY=X', name:'US Dollar / Yen'},
+  {symbol:'AUD/USD', feed:'AUDUSD=X', name:'Australian Dollar'},
+  {symbol:'SPY',  feed:'SPY',  name:'S&P 500 ETF'},
+  {symbol:'AAPL', feed:'AAPL', name:'Apple Inc.'},
+  {symbol:'NVDA', feed:'NVDA', name:'NVIDIA Corp.'},
+  {symbol:'TSLA', feed:'TSLA', name:'Tesla Inc.'},
+];
+const FX = new Set(['XAU/USD','EUR/USD','GBP/USD','USD/JPY','AUD/USD']);
+let drill = null, side = 'long', playTimer = null, portTab = 'drill';
+
+const esc = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const specOf = sym => R.spec(sym, FX.has(sym)?'forex':'stocks');
+const fmtPrice = (sym,v) => { if(!Number.isFinite(v)) return '—'; const s=specOf(sym); return (s.kind!=='forex'?'$':'')+v.toFixed(s.decimals); };
+const fmtUSD = v => (v<0?'-':'')+'$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtR = v => Number.isFinite(v) ? (v>=0?'+':'')+v.toFixed(2)+'R' : '—';
+const usdPerMove = (sym,price) => R.usdPerUnitMove(specOf(sym), price, 1);
+
+document.getElementById('drill-symbol').innerHTML = MARKETS.map(m=>`<option value="${m.symbol}">${m.symbol} · ${m.name}</option>`).join('');
+
+// ── shared journal (same storage as the live lab, tagged as replay) ──
+function readSim(){ try{ const s=JSON.parse(localStorage.getItem('dojo_sim')||'{}'); return s.version===2 ? s : {version:2,cash:10000,positions:{},journal:[],badges:{},totalTrades:0,realizedPnL:0}; }catch(e){ return null; } }
+function addToJournal(entry){
+  const s = readSim(); if(!s) return false;
+  s.journal = [entry, ...(s.journal||[])];
+  try{ localStorage.setItem('dojo_sim', JSON.stringify(s)); return true; }catch(e){ return false; }
+}
+
+// ── drill lifecycle ──
+async function newDrill(){
+  stopPlay();
+  const sym = document.getElementById('drill-symbol').value, interval = document.getElementById('drill-interval').value;
+  const market = MARKETS.find(m=>m.symbol===sym);
+  setStatus('Loading price history…');
+  let bars = null;
+  try{
+    const res = await fetch(`/.netlify/functions/history?symbol=${encodeURIComponent(market.feed)}&interval=${interval}`, {signal:AbortSignal.timeout(15000)});
+    if(res.ok) bars = (await res.json()).bars;
+  }catch(e){}
+  if(!bars || bars.length < WARMUP+40){ setStatus('History is unavailable right now. Try another market or timeframe.'); return; }
+  const maxStart = bars.length - 40;
+  const start = WARMUP + Math.floor(Math.random()*Math.max(1, maxStart-WARMUP));
+  drill = {sym, interval, bars:bars.slice(start-WARMUP, Math.min(bars.length, start+AHEAD)), cursor:WARMUP-1,
+           blind:document.getElementById('drill-blind').checked, equity:DRILL_CASH, position:null, trades:[], losses:0, over:false};
+  document.getElementById('stop-input').value=''; document.getElementById('target-input').value='';
+  const step = specOf(sym).pip; ['stop-input','target-input'].forEach(id=>document.getElementById(id).step=step);
+  document.getElementById('ah-symbol').textContent = sym;
+  document.getElementById('ah-name').textContent = market.name+' · '+document.getElementById('drill-interval').selectedOptions[0].text;
+  setStatus('Drill started. Study the chart, plan a trade, then step forward.');
+  render();
+}
+function current(){ return drill.bars[drill.cursor]; }
+function barsLeft(){ return drill.bars.length-1-drill.cursor; }
+function step(n){
+  if(!drill || drill.over) return;
+  for(let i=0;i<n && barsLeft()>0 && !drill.over;i++){
+    drill.cursor++;
+    const bar = current();
+    if(drill.position){
+      const hit = R.checkBarExit(drill.position, bar, specOf(drill.sym).spread);
+      if(hit) closeTrade(hit.price, hit.reason);
+    }
+  }
+  if(barsLeft()===0 && !drill.over){
+    if(drill.position) closeTrade(R.exitMark(specOf(drill.sym), drill.position.side, current().c), 'manual');
+    endDrill('You reached the end of this stretch of history.');
+  }
+  render();
+}
+function togglePlay(){ playTimer ? stopPlay() : startPlay(); }
+function startPlay(){
+  if(!drill || drill.over) return;
+  document.getElementById('play-btn').textContent='Pause';
+  playTimer = setInterval(()=>{ step(1); if(!drill || drill.over || barsLeft()===0) stopPlay(); }, parseInt(document.getElementById('play-speed').value));
+}
+function stopPlay(){ clearInterval(playTimer); playTimer=null; document.getElementById('play-btn').textContent='Play'; }
+function endDrill(reason){
+  stopPlay(); drill.over = true;
+  const total = drill.trades.reduce((s,t)=>s+(Number.isFinite(t.r)?t.r:0),0);
+  const when = new Date(current().t).toLocaleDateString([], {year:'numeric',month:'short',day:'numeric'});
+  setStatus(`${reason} ${drill.trades.length} trade${drill.trades.length===1?'':'s'}, ${fmtR(total)}. This drill was from around ${when}.`);
+}
+function setStatus(t){ document.getElementById('drill-status').textContent = t; }
+
+// ── plan & orders ──
+function setSide(s){ side=s; document.getElementById('side-long').classList.toggle('active',s==='long'); document.getElementById('side-short').classList.toggle('active',s==='short'); updatePlan(); }
+function suggestTarget(){
+  if(!drill) return; const s=specOf(drill.sym), entry=R.entryFill(s,side,current().c), stop=parseFloat(document.getElementById('stop-input').value);
+  if(!Number.isFinite(stop)){ showMsg('Set your stop first. The target is measured from it.','err'); return; }
+  document.getElementById('target-input').value = (side==='long'? entry+2*(entry-stop) : entry-2*(stop-entry)).toFixed(s.decimals); updatePlan();
+}
+function buildPlan(){
+  if(!drill) return {error:'Start a drill first.'};
+  if(drill.over) return {error:'This drill is over. Start a new one.'};
+  if(drill.position) return {error:'One trade at a time in a drill. Manage the open trade first.'};
+  const s=specOf(drill.sym), entry=R.entryFill(s,side,current().c);
+  const stop=parseFloat(document.getElementById('stop-input').value), target=parseFloat(document.getElementById('target-input').value);
+  const riskPct=parseFloat(document.getElementById('risk-select').value);
+  const check=R.validatePlan({side,entry,stop,target}); if(!check.ok) return {entry,error:check.errors[0]};
+  const perMove=usdPerMove(drill.sym,entry), size=R.sizePosition({equity:drill.equity,riskPct,entry,stop,usdPerMove:perMove,step:s.step});
+  if(!size.lots) return {entry,error:`Your stop is too far away for a ${riskPct}% risk. Tighten it or skip the trade.`};
+  const margin=R.notionalUSD(s,size.lots,entry,1)/s.leverage;
+  if(margin>drill.equity) return {entry,error:'Not enough margin for that size. Use a wider stop or lower risk.'};
+  return {s,entry,stop,target,riskPct,rr:check.rr,lots:size.lots,riskUSD:size.riskUSD,reward:Math.abs(target-entry)*perMove*size.lots,margin,rules:R.rulesAtEntry({riskPct,rr:check.rr})};
+}
+function updatePlan(){
+  const el=document.getElementById('plan-preview'), plan=buildPlan(), btn=document.getElementById('place-btn');
+  btn.textContent = side==='long'?'PLACE LONG':'PLACE SHORT'; btn.className = side==='long'?'btn-buy':'btn-sell';
+  if(plan.error){ el.innerHTML=(plan.entry&&drill?`<span class="pp-item">Entry ≈ <b>${fmtPrice(drill.sym,plan.entry)}</b></span>`:'')+`<span class="pp-hint">${esc(plan.error)}</span>`; drawChart(); return; }
+  const chip=(ok,t)=>`<span class="rule-chip ${ok?'ok':'bad'}">${ok?'✓':'✗'} ${t}</span>`;
+  el.innerHTML=`<span class="pp-item">Entry ≈ <b>${fmtPrice(drill.sym,plan.entry)}</b></span><span class="pp-item">Size <b>${plan.lots} ${plan.s.unit}</b></span>
+    <span class="pp-item">Risk <b class="down">${fmtUSD(plan.riskUSD)}</b></span><span class="pp-item">Reward <b class="up">${fmtUSD(plan.reward)}</b></span>
+    <span class="pp-item">R:R <b>1:${plan.rr.toFixed(2)}</b></span>
+    <div class="pp-rules">${chip(true,'Stop set')}${chip(plan.rules.risk,'Risk ≤ 1%')}${chip(plan.rules.rr,'R:R ≥ 1:2')}</div>`;
+  drawChart();
+}
+function placeTrade(){
+  const plan=buildPlan(); if(plan.error){ showMsg(plan.error,'err'); return; }
+  const broken=[!plan.rules.risk&&'risk above 1%',!plan.rules.rr&&'reward less than 2× risk'].filter(Boolean);
+  if(broken.length && !confirm(`This plan breaks a Dojo rule: ${broken.join(' and ')}.\n\nYou can take it, but it will be logged as a rule break.`)) return;
+  drill.position={id:'r'+Date.now().toString(36), symbol:drill.sym, type:FX.has(drill.sym)?'forex':'stocks', side, lots:plan.lots, entry:plan.entry, stop:plan.stop, initialStop:plan.stop,
+    target:plan.target, riskUSD:plan.riskUSD, riskPct:plan.riskPct, rr:plan.rr, setup:document.getElementById('setup-select').value,
+    note:document.getElementById('note-input').value.trim().slice(0,140), opened:new Date().toISOString(), rules:plan.rules, stopMoves:0, barOpened:drill.cursor};
+  ['stop-input','target-input','note-input'].forEach(id=>document.getElementById(id).value='');
+  showMsg('Placed. Step forward to see how it plays out.','ok'); render();
+}
+function closeTrade(price, reason){
+  const pos=drill.position; if(!pos) return;
+  const pnl=R.pnlUSD(pos,price,usdPerMove(pos.symbol,price)), r=pos.riskUSD?pnl/pos.riskUSD:NaN;
+  const entry={...pos, exit:price, exitReason:reason, pnl, r, closed:new Date().toISOString(), ruleAdherent:pos.rules.risk&&pos.rules.rr, source:'replay',
+    replay:{interval:drill.interval, bars:drill.cursor-pos.barOpened, marketTime:new Date(current().t).toISOString()}};
+  drill.trades.unshift(entry); drill.equity+=pnl; drill.position=null;
+  if(pnl<0) drill.losses++;
+  if(!addToJournal(entry)) showToast('Could not save to your journal in this browser.','red');
+  showToast(`${({stop:'Stop hit',gap:'Gapped past stop',target:'Target hit',manual:'Closed'})[reason]}: ${fmtUSD(pnl)} (${fmtR(r)})`, pnl>=0?'green':'red');
+  if(drill.losses>=R.RULES.maxDailyLosses) endDrill('Three losses. Session over, the same rule as live practice.');
+}
+function closeNow(){ if(drill?.position && !drill.over){ closeTrade(R.exitMark(specOf(drill.sym),drill.position.side,current().c),'manual'); render(); } }
+function moveStop(){
+  const pos=drill?.position; if(!pos) return;
+  const v=parseFloat(prompt(`New stop (current ${fmtPrice(pos.symbol,pos.stop)}). Stops only move toward profit.`, pos.stop.toFixed(specOf(pos.symbol).decimals)));
+  const ok=R.canMoveStop(pos,v,R.exitMark(specOf(pos.symbol),pos.side,current().c));
+  if(!ok.ok){ showToast(ok.reason,'red'); return; } pos.stop=v; pos.stopMoves++; render();
+}
+
+// ── rendering ──
+function render(){
+  if(!drill){ drawChart(); renderPort(); return; }
+  const bar=current(), prev=drill.bars[drill.cursor-1]||bar;
+  document.getElementById('ah-price').textContent=fmtPrice(drill.sym,bar.c);
+  document.getElementById('ah-time').textContent = drill.blind && !drill.over ? `Candle ${drill.cursor-WARMUP+2} of the drill` : new Date(bar.t).toLocaleString([], {month:'short',day:'numeric',year:'numeric',hour:drill.interval==='1d'?undefined:'2-digit',minute:drill.interval==='1d'?undefined:'2-digit'});
+  document.getElementById('ah-time').className='ah-change '+(bar.c>=prev.c?'up':'down');
+  const open = drill.position ? R.pnlUSD(drill.position, R.exitMark(specOf(drill.sym),drill.position.side,bar.c), usdPerMove(drill.sym,bar.c)) : 0;
+  const eq=drill.equity+open, ch=eq-DRILL_CASH;
+  document.getElementById('av-num').textContent=fmtUSD(eq);
+  document.getElementById('av-change').textContent=`${ch>=0?'+':''}${fmtUSD(ch)} (${(ch/DRILL_CASH*100).toFixed(2)}%)`;
+  document.getElementById('av-change').className='av-change '+(ch>=0?'up':'down');
+  const totalR=drill.trades.reduce((s,t)=>s+(Number.isFinite(t.r)?t.r:0),0);
+  document.getElementById('ts-r').textContent=fmtR(totalR); document.getElementById('ts-r').className='ts-val '+(totalR>=0?'up':'down');
+  document.getElementById('ts-trades').textContent=drill.trades.length;
+  document.getElementById('ts-losses').textContent=`${drill.losses} / 3`;
+  document.getElementById('ts-bars').textContent=barsLeft();
+  document.getElementById('chart-label').textContent=`${drill.sym} · ${drill.interval} candles`;
+  updatePlan(); renderPort();
+}
+function drawChart(){
+  const canvas=document.getElementById('price-chart'), ctx=canvas.getContext('2d');
+  const rect=canvas.parentElement.getBoundingClientRect(); canvas.width=rect.width||600; canvas.height=(rect.height-30)||220;
+  const W=canvas.width,H=canvas.height; ctx.clearRect(0,0,W,H);
+  if(!drill){ ctx.fillStyle='rgba(32,70,245,0.45)'; ctx.font='12px DM Sans, sans-serif'; ctx.textAlign='center'; ctx.fillText('Start a drill to load real price history', W/2, H/2); return; }
+  const shown=drill.bars.slice(Math.max(0,drill.cursor-89), drill.cursor+1), dec=specOf(drill.sym).decimals;
+  const lines=[]; const pos=drill.position;
+  if(pos) lines.push({v:pos.entry,c:'#2046F5',l:'Entry'},{v:pos.stop,c:'#CC303D',l:'Stop'},{v:pos.target,c:'#13884F',l:'Target'});
+  else { const st=parseFloat(document.getElementById('stop-input').value), tg=parseFloat(document.getElementById('target-input').value);
+    if(Number.isFinite(st)) lines.push({v:st,c:'#CC303D',l:'Stop',dash:[2,4]}); if(Number.isFinite(tg)) lines.push({v:tg,c:'#13884F',l:'Target',dash:[2,4]}); }
+  const vals=shown.flatMap(b=>[b.h,b.l]).concat(lines.map(l=>l.v));
+  const min=Math.min(...vals), max=Math.max(...vals), range=(max-min)||1, pad={top:12,right:96,bottom:16,left:64};
+  const iW=W-pad.left-pad.right, iH=H-pad.top-pad.bottom, y=v=>pad.top+((max-v)/range)*iH;
+  ctx.font='9px Share Tech Mono, monospace';
+  for(let i=0;i<=4;i++){ const gy=pad.top+(i/4)*iH; ctx.strokeStyle='rgba(32,70,245,0.06)'; ctx.beginPath(); ctx.moveTo(pad.left,gy); ctx.lineTo(W-pad.right,gy); ctx.stroke();
+    ctx.fillStyle='rgba(32,70,245,0.45)'; ctx.textAlign='right'; ctx.fillText((max-(i/4)*range).toFixed(dec),pad.left-4,gy+3); }
+  const slot=iW/90, bw=Math.max(2,slot*0.62);
+  shown.forEach((b,i)=>{
+    const x=pad.left+i*slot+slot/2, up=b.c>=b.o, col=up?'#13884F':'#CC303D';
+    ctx.strokeStyle=col; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x,y(b.h)); ctx.lineTo(x,y(b.l)); ctx.stroke();
+    ctx.fillStyle=col; const top=y(Math.max(b.o,b.c)), h=Math.max(1,Math.abs(y(b.o)-y(b.c))); ctx.fillRect(x-bw/2,top,bw,h);
+  });
+  if(pos && pos.barOpened>drill.cursor-90){ const i=pos.barOpened-Math.max(0,drill.cursor-89); const x=pad.left+i*slot+slot/2; ctx.fillStyle='#2046F5'; ctx.beginPath(); ctx.arc(x,y(pos.entry),4,0,Math.PI*2); ctx.fill(); }
+  lines.forEach(l=>{ const ly=y(l.v); ctx.setLineDash(l.dash||[6,4]); ctx.strokeStyle=l.c; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(pad.left,ly); ctx.lineTo(W-pad.right,ly); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=l.c; ctx.textAlign='left'; ctx.fillText(`${l.l} ${l.v.toFixed(dec)}`,W-pad.right+4,ly+3); });
+}
+function showPortTab(t){ portTab=t; document.querySelectorAll('.port-tab').forEach((b,i)=>b.classList.toggle('active',['drill','stats'][i]===t)); renderPort(); }
+function renderPort(){
+  const el=document.getElementById('port-content');
+  if(portTab==='stats'){
+    const j=(readSim()?.journal)||[], rep=j.filter(t=>t.source==='replay'), st=R.stats(j), sr=R.stats(rep);
+    const cell=(l,v,c='')=>`<div class="stat-cell"><div class="stat-label">${l}</div><div class="stat-val ${c}">${v}</div></div>`;
+    el.innerHTML=`<div class="stats-grid">${cell('All trades',st.n)}${cell('Expectancy',st.n?fmtR(st.expectancy):'—',st.expectancy>0?'up':st.expectancy<0?'down':'')}${cell('Rules followed',st.n?(st.adherence*100).toFixed(0)+'%':'—')}
+      ${cell('Replay trades',sr.n)}${cell('Replay expectancy',sr.n?fmtR(sr.expectancy):'—',sr.expectancy>0?'up':sr.expectancy<0?'down':'')}${cell('Replay win rate',sr.n?(sr.winRate*100).toFixed(0)+'%':'—')}</div>
+      <div class="grad-box"><div class="grad-title">Graduation gate</div><div class="pc-bar-wrap"><div class="pc-bar up" style="width:${st.grad.done}%"></div></div>
+      <p class="grad-note">${st.grad.done} / 100 trades. Replay and live practice both count. Full stats and your journal live in the <a href="simulator.html">live lab</a>.</p></div>
+      <p class="stats-foot">Replay results are hypothetical and use past prices. They don't predict live results.</p>`;
+    return;
+  }
+  if(!drill){ el.innerHTML='<div class="empty-state"><div class="es-icon">⏪</div><div class="es-text">Start a drill to practice on real history.</div></div>'; return; }
+  const pos=drill.position;
+  let html='';
+  if(pos){
+    const mark=R.exitMark(specOf(drill.sym),pos.side,current().c), pnl=R.pnlUSD(pos,mark,usdPerMove(drill.sym,mark)), r=pnl/pos.riskUSD;
+    html+=`<div class="position-card"><div class="pc-top"><div><div class="pc-sym">${esc(pos.symbol)} <span class="side-tag ${pos.side}">${pos.side.toUpperCase()}</span></div><div class="pc-shares">${pos.lots} ${specOf(pos.symbol).unit} · ${esc(pos.setup)}</div></div>
+      <div class="pc-pnl ${pnl>=0?'up':'down'}">${fmtUSD(pnl)}<div class="pc-r">${fmtR(r)}</div></div></div>
+      <div class="pc-meta"><div class="pc-meta-item">In <span>${fmtPrice(pos.symbol,pos.entry)}</span></div><div class="pc-meta-item">Stop <span class="down">${fmtPrice(pos.symbol,pos.stop)}</span></div><div class="pc-meta-item">Target <span class="up">${fmtPrice(pos.symbol,pos.target)}</span></div></div>
+      <button class="btn-close-pos" onclick="closeNow()">Close now</button><button class="btn-close-pos btn-move" onclick="moveStop()">Move stop</button></div>`;
+  }
+  html+= drill.trades.length ? drill.trades.map(t=>`<div class="journal-row"><div class="jr-top"><div><b>${esc(t.symbol)}</b> <span class="side-tag ${t.side}">${t.side.toUpperCase()}</span> <span class="jr-setup">${esc(t.setup)}</span></div><div class="jr-r ${t.r>=0?'up':'down'}">${fmtR(t.r)}</div></div>
+    <div class="jr-detail">${fmtPrice(t.symbol,t.entry)} → ${fmtPrice(t.symbol,t.exit)} · ${({stop:'Stopped out',gap:'Gap through stop',target:'Target hit',manual:'Closed'})[t.exitReason]} · held ${t.replay.bars} candle${t.replay.bars===1?'':'s'}</div>
+    ${t.ruleAdherent?'':'<div class="jr-rules"><span class="rule-chip sm bad">Rule break</span></div>'}</div>`).join('')
+    : (pos?'':'<div class="empty-state"><div class="es-text">No trades yet in this drill. Waiting for a setup is a skill too.</div></div>');
+  el.innerHTML=html;
+}
+function showMsg(m,t){ const el=document.getElementById('ot-msg'); el.textContent=m; el.className='ot-msg show '+t; clearTimeout(showMsg.t); showMsg.t=setTimeout(()=>el.classList.remove('show'),5000); }
+let toastTimer=null; function showToast(m,t=''){ const el=document.getElementById('toast'); el.textContent=m; el.className='toast show'+(t?' '+t:''); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),3400); }
+document.addEventListener('keydown',e=>{ if(e.target.matches('input,select,textarea')) return; if(e.key==='ArrowRight'){ e.preventDefault(); step(1);} if(e.key===' '){ e.preventDefault(); togglePlay(); } });
+window.addEventListener('resize',drawChart);
+render();
+</script>
+</body>
+</html>
