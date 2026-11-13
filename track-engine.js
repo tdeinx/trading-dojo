@@ -10,7 +10,19 @@
  let current = 0;
  const esc = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+ function withFigures(l){
+  const blocks=[...l.blocks], figs=(window.DOJO_FIGURES||{})[l.id]||[];
+  for(const {at,fig} of figs.slice().reverse()){
+   let i=blocks.length;
+   if(at==='start') i=Math.min(1,blocks.length);
+   else if(at.startsWith('before:')){ const t=at.slice(7), k=blocks.findIndex(b=>b[t]); if(k>=0) i=k; }
+   else if(at!=='end'){ const k=blocks.findIndex(b=>b.h===at); if(k>=0) i=Math.min(k+2,blocks.length); }
+   blocks.splice(i,0,{fig});
+  }
+  return blocks;
+ }
  function block(b){
+  if(b.fig){ try{ const out=window.DojoFigures.render(b.fig); return `<figure class="tk-fig${out.interactive?' tk-fig-calc':''}">${out.html}</figure>`; }catch(e){ return ''; } }
   if(b.h) return `<h3 class="tk-h">${b.h}</h3>`;
   if(b.p) return `<p class="tk-p">${b.p}</p>`;
   if(b.list) return `<ul class="tk-list">${b.list.map(i=>`<li>${i}</li>`).join('')}</ul>`;
@@ -50,10 +62,11 @@
   current = Math.max(0, Math.min(i, lessons.length-1));
   const l = lessons[current];
   history.replaceState(null,'',`?t=${T.id}&l=${l.id}`);
+  const blocks = withFigures(l);
   document.getElementById('content').innerHTML = `
    <div class="lesson-hero"><div class="tk-eyebrow">${esc(T.title)} · Part ${l.pi+1}: ${esc(l.part.title)}</div>
     <h1 class="tk-title">${esc(l.title)}</h1><p class="tk-lede">${l.lede||''}</p></div>
-   <div class="tk-body">${l.blocks.map(block).join('')}</div>
+   <div class="tk-body">${blocks.map(block).join('')}</div>
    ${l.quiz?.length ? `<div class="tk-quiz"><div class="tk-quiz-t">Knowledge check</div><p class="tk-p">Score ${PASS*100}% or better to complete the lesson.</p>
     ${l.quiz.map((q,qi)=>`<fieldset class="tk-q"><legend>${qi+1}. ${q.q}</legend>${q.opts.map((o,oi)=>`<label class="tk-qo"><input type="radio" name="q${qi}" value="${oi}"/> ${o}</label>`).join('')}<div class="tk-why" hidden></div></fieldset>`).join('')}
     <button class="tk-submit" id="tk-submit">Check answers</button><div class="tk-result" id="tk-result" aria-live="polite"></div></div>` : ''}
@@ -61,11 +74,12 @@
     ${current<lessons.length-1?`<button class="tk-pg" data-go="${current+1}">${esc(lessons[current+1].title)} →</button>`:'<a class="tk-pg" href="tracks.html">Back to all tracks →</a>'}</div>
    <p class="tk-foot">Education only, not financial advice. Examples and drills use hypothetical or past prices and do not predict future results.</p>`;
   document.querySelectorAll('.tk-opt').forEach(btn=>btn.addEventListener('click',()=>{
-   const box = document.getElementById(btn.dataset.d), bl = l.blocks.filter(b=>b.decision)[[...document.querySelectorAll('.tk-decision')].indexOf(box)];
+   const box = document.getElementById(btn.dataset.d), bl = blocks.filter(b=>b.decision)[[...document.querySelectorAll('.tk-decision')].indexOf(box)];
    const o = bl.decision.opts[+btn.dataset.i]; box.querySelectorAll('.tk-opt').forEach(b=>b.classList.remove('picked','good','bad'));
    btn.classList.add('picked', o.ok?'good':'bad'); const why = box.querySelector('.tk-why'); why.hidden=false; why.innerHTML = (o.ok?'<b>Good call.</b> ':'<b>Think again.</b> ')+o.why;
   }));
   document.querySelectorAll('.tk-pg[data-go]').forEach(b=>b.addEventListener('click',()=>select(+b.dataset.go)));
+  if(window.DojoFigures) window.DojoFigures.mount(document.getElementById('content'));
   const submit = document.getElementById('tk-submit'); if(submit) submit.addEventListener('click',()=>grade(l));
   renderNav(); document.getElementById('content').scrollTop = 0; window.scrollTo(0,0);
  }

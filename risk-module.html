@@ -298,7 +298,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <meta name="twitter:title" content="Trading Dojo"/>
 <meta name="twitter:description" content="Learn the market. Learn yourself."/>
 <meta name="twitter:image" content="https://trading-dojo.netlify.app/og-image.png"/>
-<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."><meta property="og:site_name" content="Trading Dojo"><meta name="twitter:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."></head>
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."><meta property="og:site_name" content="Trading Dojo"><meta name="twitter:image:alt" content="Trading Dojo — Put in the reps. Learn the market. Learn yourself."><link rel="stylesheet" href="figures.css"/>
+<script src="risk-engine.js"></script><script src="options-engine.js"></script><script src="figures.js"></script>
+</head>
 <body class="page-risk-module">
 <div class="app">
   <div class="topbar">
@@ -637,6 +639,7 @@ const LESSONS = [
           <div class="mantra-icon">⚔</div>
           <div class="mantra-text"><strong>"If you don't manage risk, nothing else matters."</strong><br/>A good R:R means you can be wrong 60% of the time and still be profitable.</div>
         </div>
+        ${window.DojoFigures?`<figure class="tk-fig tk-fig-calc">${window.DojoFigures.render({type:'expectancy',win:40,aw:2,al:1}).html}</figure>`:''}
 
         <div class="section-block">
           <div class="section-label">The Math That Changes Everything</div>
@@ -718,6 +721,7 @@ const LESSONS = [
           <div class="mantra-icon">💀</div>
           <div class="mantra-text"><strong>"If you don't manage risk, nothing else matters."</strong><br/>This lesson shows exactly what "nothing else matters" looks like in real time.</div>
         </div>
+        ${window.DojoFigures?`<figure class="tk-fig">${window.DojoFigures.render({type:'gap',label:'Overnight news'}).html}</figure>`:''}
 
         <div class="section-block">
           <div class="section-label">The Anatomy of a Blown Account</div>
@@ -1091,6 +1095,7 @@ function buildLesson(idx){
   area.appendChild(div);
   // Init calculator if this lesson has it
   if(l.id==='position-sizing') setTimeout(calcPosition, 100);
+  if(window.DojoFigures) window.DojoFigures.mount(div);
   const saved=state.answers[idx]||{};
   Object.entries(saved).forEach(([qi,oi])=>{document.getElementById(`opt-${idx}-${qi}-${oi}`)?.classList.add('sel');});
   if(state.submitted[idx]) setTimeout(()=>renderSubmitted(idx),40);
