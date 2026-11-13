@@ -203,6 +203,58 @@ canvas#price-chart{width:100%;flex:1;display:block;}
   .market-panel,.portfolio-panel{width:100%;border-right:none;border-left:none;}
   .center-panel{min-height:500px;}
 }
+
+/* ── PRACTICE LAB v2 ── */
+.replay-link{text-decoration:none;display:inline-flex;align-items:center;color:var(--gold)!important;border-color:var(--border-b)!important;}
+@media(min-width:769px){body.page-simulator .ticker-list{grid-template-columns:1fr;}body.page-simulator .tr-type-badge{display:none;}body.page-simulator .tr-left{min-width:64px;}}
+.ot-note{font-size:11px;color:var(--text-dim);margin-bottom:12px;line-height:1.45;}
+.side-toggle{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--border);width:max-content;}
+.side-btn{font-family:'DM Sans',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:8px 18px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;}
+.side-btn.long.active{background:var(--green);color:#fff;}
+.side-btn.short.active{background:var(--red);color:#fff;}
+.mini-link{background:none;border:none;color:var(--gold);font-size:0.55rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;text-decoration:underline;margin-left:6px;padding:0;}
+.plan-preview{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:12px;padding:10px 12px;background:var(--panel-2);border:1px solid var(--border);font-size:0.72rem;color:var(--text-dim);min-height:42px;}
+.pp-item b{font-family:var(--mono);color:var(--text);font-weight:600;}
+.pp-item b.up,.up{color:var(--green);}
+.pp-item b.down,.down{color:var(--red);}
+.pp-hint{color:var(--text-dim);}
+.pp-rules{display:flex;flex-wrap:wrap;gap:6px;width:100%;}
+.rule-chip{font-size:0.6rem;letter-spacing:0.05em;padding:3px 8px;border:1px solid;}
+.rule-chip.ok{color:var(--green);border-color:rgba(19,136,79,0.3);background:var(--green-dim);}
+.rule-chip.bad{color:var(--red);border-color:rgba(204,48,61,0.3);background:var(--red-dim);}
+.rule-chip.sm{font-size:0.55rem;padding:2px 6px;}
+.ot-note-input{font-family:'DM Sans',sans-serif;font-size:0.78rem;}
+.side-tag{font-size:0.5rem;letter-spacing:0.12em;padding:2px 5px;vertical-align:middle;}
+.side-tag.long{background:var(--green-dim);color:var(--green);}
+.side-tag.short{background:var(--red-dim);color:var(--red);}
+.pc-r{font-size:0.62rem;text-align:right;opacity:0.8;}
+.btn-move{color:var(--gold);border-color:var(--border-b);margin-left:6px;}
+.btn-move:hover{background:rgba(32,70,245,0.06);}
+.open-dot{color:var(--gold);font-size:0.6rem;}
+.journal-row{padding:10px 16px;border-bottom:1px solid rgba(32,70,245,0.06);font-size:0.75rem;}
+.jr-top{display:flex;justify-content:space-between;align-items:center;}
+.jr-setup{font-size:0.62rem;color:var(--text-faint);}
+.jr-r{font-family:var(--mono);font-weight:700;}
+.jr-detail{font-family:var(--mono);font-size:0.62rem;color:var(--text-faint);margin:4px 0;}
+.jr-note{font-size:0.68rem;color:var(--text-dim);font-style:italic;margin-bottom:4px;}
+.jr-rules{display:flex;flex-wrap:wrap;gap:4px;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border);}
+.stat-cell{background:var(--panel);padding:12px 10px;}
+.stat-label{font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;}
+.stat-val{font-family:var(--mono);font-size:0.95rem;color:var(--text);}
+.grad-box{padding:14px 16px;}
+.grad-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:8px;}
+.grad-list{list-style:none;font-size:0.72rem;color:var(--text-dim);margin:8px 0;}
+.grad-list li{padding:2px 0;}
+.grad-list li.ok{color:var(--green);}
+.grad-note,.stats-foot{font-size:0.66rem;color:var(--text-dim);line-height:1.5;}
+.stats-foot{padding:0 16px 16px;color:var(--text-faint);}
+.sensei-head{padding:14px 16px 6px;font-weight:700;font-size:0.8rem;}
+.sensei-card{margin:8px 12px;padding:12px 14px;background:var(--panel);border-left:4px solid var(--gold);font-size:0.74rem;line-height:1.5;}
+.sensei-card.warn{border-left-color:var(--red);}
+.sensei-card.good{border-left-color:var(--green);}
+.sensei-t{font-weight:700;font-size:0.8rem;margin-bottom:4px;}
+.sensei-do{margin-top:6px;color:var(--text-dim);}
 </style>
 <link rel="stylesheet" href="dojo-theme.css"/>
 <link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#2046F5"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
@@ -230,18 +282,20 @@ canvas#price-chart{width:100%;flex:1;display:block;}
       <div class="av-change" id="av-change">+$0.00 (0.00%)</div>
     </div>
     <div class="top-stats">
-      <div class="ts-item"><div class="ts-label">Cash</div><div class="ts-val" id="ts-cash">$10,000.00</div></div>
-      <div class="ts-item"><div class="ts-label">Invested</div><div class="ts-val" id="ts-invested">$0.00</div></div>
-      <div class="ts-item"><div class="ts-label">P&amp;L Today</div><div class="ts-val" id="ts-pnl">$0.00</div></div>
-      <div class="ts-item"><div class="ts-label">Trades</div><div class="ts-val" id="ts-trades">0</div></div>
+      <div class="ts-item"><div class="ts-label">Balance</div><div class="ts-val" id="ts-cash">$10,000.00</div></div>
+      <div class="ts-item"><div class="ts-label">Margin used</div><div class="ts-val" id="ts-invested">$0.00</div></div>
+      <div class="ts-item"><div class="ts-label">Open P&amp;L</div><div class="ts-val" id="ts-pnl">$0.00</div></div>
+      <div class="ts-item"><div class="ts-label">Expectancy</div><div class="ts-val" id="ts-trades">—</div></div>
     </div>
   </div>
   <div class="topbar-right">
     <div class="live-dot" id="live-dot"></div>
     <div class="mode-tabs">
       <button class="mode-tab active" onclick="switchMode('stocks')">Stocks</button>
-      <button class="mode-tab" onclick="switchMode('forex')">Forex</button>
+      <button class="mode-tab" onclick="switchMode('forex')">Forex &amp; Gold</button>
     </div>
+    <a class="reset-btn replay-link" href="replay.html">Replay drills</a>
+    <a class="reset-btn replay-link" href="options-lab.html">Options lab</a>
     <button class="reset-btn" onclick="confirmReset()">Reset</button>
   </div>
 </div>
@@ -259,7 +313,7 @@ canvas#price-chart{width:100%;flex:1;display:block;}
       </div>
     </div>
     <div class="search-bar">
-      <input class="search-input" id="search-input" placeholder="Search ticker or pair..." maxlength="10"/>
+      <input class="search-input" id="search-input" placeholder="Add ticker (e.g. AMD)" maxlength="10" aria-label="Add a stock ticker"/>
       <button class="search-btn" onclick="searchTicker()">ADD</button>
     </div>
     <div class="ticker-list" id="ticker-list"></div>
@@ -282,27 +336,43 @@ canvas#price-chart{width:100%;flex:1;display:block;}
     </div>
 
     <div class="chart-area">
-      <div class="chart-label">Price History (Session)</div>
+      <div class="chart-label">Today · 1-minute closes</div>
       <canvas id="price-chart"></canvas>
     </div>
 
     <div class="order-ticket">
-      <div class="ot-title">Paper Order Ticket</div><p style="font-size:11px;color:var(--text-dim);margin-bottom:14px">Virtual funds only. Stock quotes may be delayed. Forex uses daily reference rates, not an intraday feed. Orders pause when quotes are unavailable.</p>
+      <div class="ot-title">Trade Plan</div>
+      <p class="ot-note">Virtual funds only. Every trade needs a stop and a target before it can be placed. Size is calculated from your risk, and fills include the spread.</p>
+      <div class="side-toggle" role="group" aria-label="Trade direction">
+        <button class="side-btn long active" id="side-long" onclick="setSide('long')">Long · buy</button>
+        <button class="side-btn short" id="side-short" onclick="setSide('short')">Short · sell</button>
+      </div>
       <div class="ot-row">
         <div class="ot-field">
-          <div class="ot-field-label" id="qty-label">Shares</div>
-          <input class="ot-input" id="qty-input" type="number" min="1" placeholder="0" oninput="updateOrderCost()"/>
+          <label class="ot-field-label" for="stop-input">Stop loss</label>
+          <input class="ot-input" id="stop-input" type="number" step="any" inputmode="decimal" placeholder="Price" oninput="updatePlan()"/>
         </div>
-        <div class="ot-field" style="max-width:130px">
-          <div class="ot-field-label">Order Type</div>
-          <select class="ot-select" id="order-type">
-            <option value="market">Market Order</option>
-            <option value="limit" disabled>Limit (soon)</option>
+        <div class="ot-field">
+          <label class="ot-field-label" for="target-input">Target <button type="button" class="mini-link" onclick="suggestTarget()">set 1:2</button></label>
+          <input class="ot-input" id="target-input" type="number" step="any" inputmode="decimal" placeholder="Price" oninput="updatePlan()"/>
+        </div>
+        <div class="ot-field" style="max-width:120px">
+          <label class="ot-field-label" for="risk-select">Risk</label>
+          <select class="ot-select" id="risk-select" onchange="updatePlan()">
+            <option value="0.25">0.25%</option><option value="0.5">0.5%</option><option value="1" selected>1% (rule)</option><option value="1.5">1.5%</option><option value="2">2%</option>
           </select>
         </div>
-        <div class="ot-cost" id="order-cost">Cost: <span>$0.00</span></div>
-        <button class="btn-buy" onclick="placeOrder('buy')">BUY</button>
-        <button class="btn-sell" onclick="placeOrder('sell')">SELL</button>
+        <div class="ot-field" style="max-width:160px">
+          <label class="ot-field-label" for="setup-select">Setup</label>
+          <select class="ot-select" id="setup-select">
+            <option>Trend pullback</option><option>Breakout</option><option>Range fade</option><option>Reversal</option><option>Momentum / news</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="plan-preview" id="plan-preview" aria-live="polite">Pick an asset, then set your stop and target.</div>
+      <div class="ot-row" style="margin-top:10px">
+        <div class="ot-field" style="flex:3"><input class="ot-input ot-note-input" id="note-input" maxlength="140" placeholder="Why this trade? One line for your journal (optional)"/></div>
+        <button class="btn-buy" id="place-btn" onclick="placeTrade()">PLACE TRADE</button>
       </div>
       <div class="ot-msg" id="ot-msg"></div>
     </div>
@@ -312,7 +382,9 @@ canvas#price-chart{width:100%;flex:1;display:block;}
   <div class="portfolio-panel">
     <div class="port-tabs">
       <button class="port-tab active" onclick="showPortTab('positions')">Positions</button>
-      <button class="port-tab" onclick="showPortTab('history')">History</button>
+      <button class="port-tab" onclick="showPortTab('journal')">Journal</button>
+      <button class="port-tab" onclick="showPortTab('stats')">Stats</button>
+      <button class="port-tab" onclick="showPortTab('sensei')">Sensei</button>
       <button class="port-tab" onclick="showPortTab('badges')">Badges</button>
     </div>
     <div class="port-content" id="port-content"></div>
@@ -322,11 +394,17 @@ canvas#price-chart{width:100%;flex:1;display:block;}
 
 <div class="toast" id="toast"></div>
 
+<script src="risk-engine.js"></script>
+<script src="coach.js"></script>
 <script>
 // ═══════════════════════════════════════
-// CONSTANTS
+// TRADING DOJO PRACTICE LAB v2
+// Every trade is a plan: entry, stop, target, size from risk.
+// Math lives in risk-engine.js (window.DojoRisk).
 // ═══════════════════════════════════════
+const R = window.DojoRisk;
 const STARTING_CASH = 10000;
+const QUOTE_URL = '/.netlify/functions/quote';
 
 const DEFAULT_STOCKS = [
   {symbol:'AAPL', name:'Apple Inc.'},
@@ -338,721 +416,541 @@ const DEFAULT_STOCKS = [
   {symbol:'MSFT', name:'Microsoft Corp.'},
   {symbol:'GOOGL',name:'Alphabet Inc.'},
 ];
-
 const DEFAULT_FOREX = [
-  {symbol:'EUR/USD', name:'Euro / US Dollar',    pair:'EURUSD'},
-  {symbol:'GBP/USD', name:'British Pound / USD', pair:'GBPUSD'},
-  {symbol:'USD/JPY', name:'US Dollar / Yen',     pair:'USDJPY'},
-  {symbol:'AUD/USD', name:'Australian Dollar',   pair:'AUDUSD'},
-  {symbol:'USD/CAD', name:'US Dollar / CAD',     pair:'USDCAD'},
-  {symbol:'EUR/GBP', name:'Euro / British Pound',pair:'EURGBP'},
+  {symbol:'XAU/USD', name:'Gold / US Dollar',     feed:'GC=F'},
+  {symbol:'EUR/USD', name:'Euro / US Dollar',     feed:'EURUSD=X'},
+  {symbol:'GBP/USD', name:'British Pound / USD',  feed:'GBPUSD=X'},
+  {symbol:'USD/JPY', name:'US Dollar / Yen',      feed:'USDJPY=X'},
+  {symbol:'AUD/USD', name:'Australian Dollar',    feed:'AUDUSD=X'},
+  {symbol:'USD/CAD', name:'US Dollar / CAD',      feed:'USDCAD=X'},
+  {symbol:'EUR/GBP', name:'Euro / British Pound', feed:'EURGBP=X'},
 ];
+const MAX_CUSTOM = 8;
 
 const BADGES_DEF = [
-  {id:'first_trade',  emoji:'🎯', name:'First Trade',    desc:'Execute your first trade'},
-  {id:'first_profit', emoji:'💰', name:'First Profit',   desc:'Close a position in profit'},
-  {id:'first_loss',   emoji:'📚', name:'Lesson Learned', desc:'Take your first loss'},
-  {id:'ten_trades',   emoji:'⚔️',  name:'Ten Trades',     desc:'Complete 10 trades'},
-  {id:'up_10',        emoji:'🚀', name:'Rocket',         desc:'Account up 10%'},
-  {id:'forex_trade',  emoji:'💱', name:'Forex Warrior',  desc:'Complete a forex trade'},
-  {id:'stock_trade',  emoji:'📈', name:'Stock Samurai',  desc:'Complete a stock trade'},
-  {id:'multi_pos',    emoji:'🐙', name:'Multi-Position', desc:'Hold 3+ positions at once'},
+  {id:'first_trade',  emoji:'🎯', name:'First Plan',      desc:'Place your first planned trade'},
+  {id:'first_profit', emoji:'💰', name:'First Profit',    desc:'Close a trade in profit'},
+  {id:'first_loss',   emoji:'📚', name:'Lesson Learned',  desc:'Take your first loss'},
+  {id:'stop_honored', emoji:'🛡️', name:'Stop Honored',    desc:'Let a stop do its job'},
+  {id:'target_hit',   emoji:'🏹', name:'On Target',       desc:'Close a trade at your target'},
+  {id:'ten_trades',   emoji:'⚔️', name:'Ten Reps',        desc:'Journal 10 trades'},
+  {id:'clean_ten',    emoji:'🧘', name:'Clean Ten',       desc:'10 rule-following trades in a row'},
+  {id:'forex_trade',  emoji:'💱', name:'Forex Warrior',   desc:'Complete a forex or gold trade'},
+  {id:'stock_trade',  emoji:'📈', name:'Stock Samurai',   desc:'Complete a stock trade'},
+  {id:'graduate',     emoji:'🎓', name:'Dojo Graduate',   desc:'Pass the 100-trade graduation gate'},
 ];
 
 // ═══════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════
-let state = {
-  cash: STARTING_CASH,
-  positions: {},      // symbol: {shares, avgCost, type}
-  history: [],        // [{side,symbol,shares,price,total,time,type}]
-  badges: {},         // badge_id: true
-  totalTrades: 0,
-  realizedPnL: 0,
-};
-
-let market = {
-  mode: 'stocks',          // 'stocks' | 'forex'
-  selected: null,
-  prices: {},              // symbol: {price, open, change, changePct, history:[]}
-  lastUpdate: null,
-};
-
-let chartCtx = null;
+const freshState = () => ({version:2, cash:STARTING_CASH, positions:{}, journal:[], badges:{}, totalTrades:0, realizedPnL:0});
+let state = freshState();
+let market = {mode:'stocks', selected:null, prices:{}, lastUpdate:null, source:''};
+let side = 'long';
 let refreshInterval = null;
 let currentPortTab = 'positions';
+let customStocks = [];
 
-// ═══════════════════════════════════════
-// PERSISTENCE
-// ═══════════════════════════════════════
-function saveState(){
-  try{ localStorage.setItem('dojo_sim', JSON.stringify(state)); }catch(e){}
-}
+function saveState(){ try{ localStorage.setItem('dojo_sim', JSON.stringify(state)); }catch(e){} }
 function loadState(){
   try{
-    const s = JSON.parse(localStorage.getItem('dojo_sim')||'{}');
-    if(s.cash !== undefined) state.cash = s.cash;
-    if(s.positions) state.positions = s.positions;
-    if(s.history)   state.history   = s.history;
-    if(s.badges)    state.badges    = s.badges;
-    if(s.totalTrades) state.totalTrades = s.totalTrades;
-    if(s.realizedPnL) state.realizedPnL = s.realizedPnL;
+    const raw = localStorage.getItem('dojo_sim');
+    if(!raw) return;
+    const s = JSON.parse(raw);
+    if(s.version === 2){ state = {...freshState(), ...s}; return; }
+    if(s.history?.length || Object.keys(s.positions||{}).length){
+      localStorage.setItem('dojo_sim_legacy', raw);
+      saveState();
+      setTimeout(()=>showToast('The practice lab now requires a stop and target on every trade. Your old account was archived and you start fresh at $10,000.',''), 800);
+    }
   }catch(e){}
+  try{ customStocks = JSON.parse(localStorage.getItem('dojo_sim_watch')||'[]').slice(0,MAX_CUSTOM); }catch(e){ customStocks=[]; }
 }
+function saveWatch(){ try{ localStorage.setItem('dojo_sim_watch', JSON.stringify(customStocks)); }catch(e){} }
+
+const esc = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 // ═══════════════════════════════════════
-// PRICE FETCHING
+// INSTRUMENT HELPERS
 // ═══════════════════════════════════════
-async function fetchStockPrice(symbol){
+function typeOf(sym){ return DEFAULT_FOREX.some(f=>f.symbol===sym) ? 'forex' : 'stocks'; }
+function specOf(sym){ return R.spec(sym, typeOf(sym)); }
+function decimalsOf(sym){ return specOf(sym).decimals; }
+function fmtPrice(sym, v){ if(!Number.isFinite(v)) return '—'; const s=specOf(sym); return (s.kind==='stock'||s.kind==='metal'?'$':'')+v.toFixed(s.decimals); }
+const fmtUSD = v => (v<0?'-':'')+'$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtR = v => Number.isFinite(v) ? (v>=0?'+':'')+v.toFixed(2)+'R' : '—';
+function quoteToUSD(sym){
+  const s = specOf(sym);
+  if(s.kind!=='forex' || s.quote==='USD' || s.base==='USD') return 1;
+  const direct = market.prices[s.quote+'/USD']?.price; if(direct) return direct;
+  const inverse = market.prices['USD/'+s.quote]?.price; return inverse ? 1/inverse : NaN;
+}
+function usdPerMove(sym, price){ return R.usdPerUnitMove(specOf(sym), price, quoteToUSD(sym)); }
+function mid(sym){ const p=market.prices[sym]; return p && !p.stale ? p.price : null; }
+
+// ═══════════════════════════════════════
+// PRICES
+// ═══════════════════════════════════════
+function allFeeds(){
+  return [...DEFAULT_STOCKS, ...customStocks].map(s=>({symbol:s.symbol, feed:s.symbol}))
+    .concat(DEFAULT_FOREX.map(f=>({symbol:f.symbol, feed:f.feed})));
+}
+async function fetchRelay(feeds){
   try{
-    // Use Yahoo Finance v8 quote endpoint via CORS proxy
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
-    const res = await fetch(url, {headers:{'Accept':'application/json'},signal:AbortSignal.timeout(8000)});
-    if(!res.ok) throw new Error('fetch failed');
-    const data = await res.json();
-    const meta = data?.chart?.result?.[0]?.meta;
-    if(!meta) throw new Error('no meta');
-    const price = meta.regularMarketPrice || meta.previousClose;
-    const open  = meta.chartPreviousClose || meta.previousClose;
-    const change = price - open;
-    const changePct = (change / open) * 100;
-    return {price, open, change, changePct, sourceTime: meta.regularMarketTime ? new Date(meta.regularMarketTime*1000).toISOString() : null};
-  }catch(e){
-    // Fallback: return null and we'll use simulated movement
-    return null;
-  }
+    const res = await fetch(QUOTE_URL+'?symbols='+encodeURIComponent(feeds.map(f=>f.feed).join(',')), {signal:AbortSignal.timeout(12000)});
+    if(!res.ok) return null;
+    return (await res.json()).quotes || null;
+  }catch(e){ return null; }
 }
-
-async function fetchForexRates(){
+async function fetchForexFallback(){
   try{
     const res = await fetch('https://api.frankfurter.app/latest?from=USD',{signal:AbortSignal.timeout(8000)});
-    if(!res.ok) throw new Error('failed');
-    const data = await res.json();
-    return {rates:data.rates, date:data.date};
-  }catch(e){
-    return null;
-  }
+    if(!res.ok) return null;
+    return await res.json();
+  }catch(e){ return null; }
 }
-
+function applyQuote(sym, price, prevClose, closes){
+  const old = market.prices[sym];
+  const history = old?.history?.length ? [...old.history.slice(-119), price] : (closes?.length ? [...closes.slice(-119)] : [price]);
+  if(history[history.length-1] !== price) history.push(price);
+  market.prices[sym] = {price, open:prevClose||old?.open||price, change:price-(prevClose||price), changePct:prevClose?(price-prevClose)/prevClose*100:0, history, prevPrice:old?.price||price, stale:false};
+}
 async function refreshPrices(){
-  const requestedMode=market.mode;
-  const status=document.getElementById('feed-status');
-  status.textContent='Fetching quotes…';
-  document.getElementById('live-dot').style.background='var(--gold)';
-  let count=0,sourceTimes=[];
-  if(requestedMode==='stocks'){
-    const results=await Promise.all(getStockWatchlist().map(async item=>({symbol:item.symbol,quote:await fetchStockPrice(item.symbol)})));
-    if(market.mode!==requestedMode)return;
-    results.forEach(({symbol,quote})=>{
-      const old=market.prices[symbol];
-      if(quote&&Number.isFinite(quote.price)&&quote.price>0){
-        market.prices[symbol]={...quote,history:[...(old?.history||[]).slice(-59),quote.price],prevPrice:old?.price||quote.price,stale:false};
-        count++;if(quote.sourceTime)sourceTimes.push(quote.sourceTime);
-      }else if(old){old.stale=true;}
+  const status = document.getElementById('feed-status');
+  status.textContent = 'Fetching quotes…';
+  document.getElementById('live-dot').style.background = 'var(--gold)';
+  const feeds = allFeeds();
+  const quotes = await fetchRelay(feeds);
+  let count = 0;
+  const before = {}; Object.keys(market.prices).forEach(k=>before[k]=market.prices[k].price);
+  if(quotes){
+    feeds.forEach(({symbol, feed})=>{
+      const q = quotes[feed];
+      if(q && Number.isFinite(q.price) && q.price>0){ applyQuote(symbol, q.price, q.prevClose, q.closes); count++; }
+      else if(market.prices[symbol]) market.prices[symbol].stale = true;
     });
+    market.source = 'Provider quotes, may be delayed';
   }else{
-    const response=await fetchForexRates();
-    if(market.mode!==requestedMode)return;
-    const rates=response?.rates;
-    DEFAULT_FOREX.forEach(fx=>{
-      const [base,quote]=fx.symbol.split('/');
-      const baseRate=base==='USD'?1:rates?.[base],quoteRate=quote==='USD'?1:rates?.[quote];
-      const old=market.prices[fx.symbol];
-      const price=baseRate&&quoteRate?Number((quoteRate/baseRate).toFixed(fx.symbol.includes('JPY')?3:5)):null;
-      if(price){
-        const open=old?.open||price;
-        market.prices[fx.symbol]={price,open,change:price-open,changePct:(price-open)/open*100,history:[...(old?.history||[]).slice(-59),price],prevPrice:old?.price||price,stale:false,sourceTime:response.date};count++;
-      }else if(old){old.stale=true;}
+    const fx = await fetchForexFallback();
+    DEFAULT_FOREX.forEach(f=>{
+      const [b,q] = f.symbol.split('/');
+      const br = b==='USD'?1:fx?.rates?.[b], qr = q==='USD'?1:fx?.rates?.[q];
+      if(br && qr){ applyQuote(f.symbol, Number((qr/br).toFixed(decimalsOf(f.symbol))), null, null); count++; }
+      else if(market.prices[f.symbol]) market.prices[f.symbol].stale = true;
     });
-    if(response?.date)sourceTimes.push(response.date);
+    market.source = count ? 'Daily reference rates (live feed unavailable)' : '';
   }
-  if(count)market.lastUpdate=new Date();
-  const total=requestedMode==='stocks'?getStockWatchlist().length:DEFAULT_FOREX.length;
-  status.textContent=count?(requestedMode==='forex'?'Daily reference rates':'Provider quotes')+(count<total?' · partial':''):'Quotes unavailable';
-  status.title=sourceTimes.length?'Source date/time: '+sourceTimes.join(', '):'No current quote was returned. Orders need an available quote.';
-  document.getElementById('live-dot').style.background=count?'var(--green)':'var(--red)';
-  renderTickerList();updateSelectedAsset();updatePortfolio();updateAccountValue();
+  if(count) market.lastUpdate = new Date();
+  status.textContent = count ? market.source : 'Quotes unavailable';
+  status.title = market.lastUpdate ? 'Last update '+market.lastUpdate.toLocaleTimeString() : 'No quote returned. Orders need a current price.';
+  document.getElementById('live-dot').style.background = count ? 'var(--green)' : 'var(--red)';
+  checkBrackets(before);
+  renderTickerList(); updateSelectedAsset(); updatePlan(); renderPortTab(); updateAccountValue();
 }
 
 // ═══════════════════════════════════════
 // WATCHLIST
 // ═══════════════════════════════════════
-let customStocks = [];
-let customForex  = [];
-
-function getStockWatchlist(){ return [...DEFAULT_STOCKS, ...customStocks]; }
-function getForexWatchlist(){  return [...DEFAULT_FOREX,  ...customForex];  }
-function getWatchlist(){ return market.mode==='stocks' ? getStockWatchlist() : getForexWatchlist(); }
-
+function getWatchlist(){ return market.mode==='stocks' ? [...DEFAULT_STOCKS, ...customStocks] : DEFAULT_FOREX; }
 function renderTickerList(){
   const list = document.getElementById('ticker-list');
-  const items = getWatchlist();
-  list.innerHTML = items.map(item=>{
-    const sym = item.symbol;
-    const p = market.prices[sym];
-    const isSelected = market.selected === sym;
-    const type = market.mode === 'stocks' ? 'stock' : 'forex';
-
-    let priceStr = '—', changeStr = '', changeClass = '';
-    if(p){
-      if(market.mode==='forex'){
-        priceStr = p.price.toFixed(sym.includes('JPY')?3:5);
-      } else {
-        priceStr = '$'+p.price.toFixed(2);
-      }
-      const sign = p.changePct >= 0 ? '+' : '';
-      changeStr = sign+p.changePct.toFixed(2)+'%';
-      changeClass = p.changePct >= 0 ? 'up' : 'down';
-    }
-
-    // Sparkline as tiny SVG path
-    const sparkSVG = p && p.history && p.history.length > 1
-      ? buildSparkline(p.history, p.changePct >= 0)
-      : '<svg viewBox="0 0 60 24" style="opacity:0.2"><line x1="0" y1="12" x2="60" y2="12" stroke="#888" stroke-width="1"/></svg>';
-
-    return `<div class="ticker-row${isSelected?' selected':''}" onclick="selectAsset('${sym}')">
-      <div class="tr-left">
-        <div class="tr-symbol">${sym}</div>
-        <div class="tr-name">${item.name}</div>
-      </div>
-      <div class="tr-sparkline">${sparkSVG}</div>
-      <div class="tr-right">
-        <div class="tr-price">${priceStr}</div>
-        <div class="tr-change ${changeClass}">${changeStr}</div>
-      </div>
-      <div class="tr-type-badge badge-${type}">${type.toUpperCase()}</div>
+  list.innerHTML = getWatchlist().map(item=>{
+    const sym = item.symbol, p = market.prices[sym];
+    const open = Object.values(state.positions).some(pos=>pos.symbol===sym);
+    const type = market.mode==='stocks' ? 'stock' : (sym==='XAU/USD' ? 'gold' : 'forex');
+    const changeStr = p ? (p.changePct>=0?'+':'')+p.changePct.toFixed(2)+'%' : '';
+    const spark = p?.history?.length>1 ? buildSparkline(p.history, p.changePct>=0) : '<svg viewBox="0 0 60 24" style="opacity:0.2"><line x1="0" y1="12" x2="60" y2="12" stroke="#888" stroke-width="1"/></svg>';
+    return `<div class="ticker-row${market.selected===sym?' selected':''}" onclick="selectAsset('${esc(sym)}')">
+      <div class="tr-left"><div class="tr-symbol">${esc(sym)}${open?' <span class="open-dot" title="Open position">●</span>':''}</div><div class="tr-name">${esc(item.name)}</div></div>
+      <div class="tr-sparkline">${spark}</div>
+      <div class="tr-right"><div class="tr-price">${p?fmtPrice(sym,p.price):'—'}</div><div class="tr-change ${p&&p.changePct>=0?'up':'down'}">${changeStr}</div></div>
+      <div class="tr-type-badge badge-${type==='gold'?'forex':type}">${type.toUpperCase()}</div>
     </div>`;
   }).join('');
 }
-
 function buildSparkline(history, isUp){
-  if(history.length < 2) return '';
-  const w=60,h=24,pad=2;
-  const min=Math.min(...history),max=Math.max(...history);
-  const range=max-min||1;
-  const pts=history.map((v,i)=>{
-    const x=pad+(i/(history.length-1))*(w-pad*2);
-    const y=h-pad-((v-min)/range)*(h-pad*2);
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  });
-  const color=isUp?'#13884F':'#CC303D';
-  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
-    <polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
-  </svg>`;
+  const w=60,h=24,pad=2,min=Math.min(...history),max=Math.max(...history),range=max-min||1;
+  const pts=history.map((v,i)=>`${(pad+(i/(history.length-1))*(w-pad*2)).toFixed(1)},${(h-pad-((v-min)/range)*(h-pad*2)).toFixed(1)}`);
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts.join(' ')}" fill="none" stroke="${isUp?'#13884F':'#CC303D'}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
 }
 
 // ═══════════════════════════════════════
-// ASSET SELECTION
+// SELECTED ASSET
 // ═══════════════════════════════════════
 function selectAsset(sym){
+  if(market.selected !== sym){ document.getElementById('stop-input').value=''; document.getElementById('target-input').value=''; }
   market.selected = sym;
-  updateSelectedAsset();
-  updateOrderCost();
-  renderTickerList();
-  drawChart();
+  const step = specOf(sym).pip;
+  document.getElementById('stop-input').step = step; document.getElementById('target-input').step = step;
+  updateSelectedAsset(); updatePlan(); renderTickerList();
 }
-
 function updateSelectedAsset(){
-  if(!market.selected) return;
-  const sym = market.selected;
-  const p = market.prices[sym];
-  const items = getWatchlist();
-  const item = items.find(i=>i.symbol===sym);
-
+  const sym = market.selected; if(!sym) return;
+  const p = market.prices[sym], item = [...DEFAULT_STOCKS,...customStocks,...DEFAULT_FOREX].find(i=>i.symbol===sym);
   document.getElementById('ah-symbol').textContent = sym;
   document.getElementById('ah-name').textContent = item ? item.name : sym;
-
-  if(!p){ document.getElementById('ah-price').textContent='Quote unavailable'; return; }
-
-  const isForex = market.mode==='forex';
-  const decimals = isForex ? (sym.includes('JPY')?3:5) : 2;
-  const priceStr = isForex ? p.price.toFixed(decimals) : '$'+p.price.toFixed(2);
-  const sign = p.change >= 0 ? '+' : '';
-  const changeStr = isForex
-    ? `${sign}${p.change.toFixed(decimals)} (${sign}${p.changePct.toFixed(3)}%)`
-    : `${sign}$${p.change.toFixed(2)} (${sign}${p.changePct.toFixed(2)}%)`;
-
+  if(!p){ document.getElementById('ah-price').textContent='Quote unavailable'; drawChart(); return; }
+  const s = specOf(sym), q = R.bidAsk(s, p.price);
   const priceEl = document.getElementById('ah-price');
-  const prevPrice = p.prevPrice || p.price;
-  if(p.price > prevPrice){ priceEl.className='ah-price flash-up'; setTimeout(()=>priceEl.className='ah-price',600); }
-  else if(p.price < prevPrice){ priceEl.className='ah-price flash-down'; setTimeout(()=>priceEl.className='ah-price',600); }
-
-  priceEl.textContent = priceStr;
-  const chEl = document.getElementById('ah-change');
-  chEl.textContent = changeStr;
-  chEl.className = 'ah-change '+(p.changePct>=0?'up':'down');
-
-  // Meta stats
-  document.getElementById('ah-meta').innerHTML = isForex ? `
-    <div class="ah-stat"><div class="ah-stat-label">Bid</div><div class="ah-stat-val">${(p.price-0.00010).toFixed(decimals)}</div></div>
-    <div class="ah-stat"><div class="ah-stat-label">Ask</div><div class="ah-stat-val">${(p.price+0.00010).toFixed(decimals)}</div></div>
-    <div class="ah-stat"><div class="ah-stat-label">Spread</div><div class="ah-stat-val">1.0 pip</div></div>
-    <div class="ah-stat"><div class="ah-stat-label">Open</div><div class="ah-stat-val">${p.open.toFixed(decimals)}</div></div>
-  ` : `
-    <div class="ah-stat"><div class="ah-stat-label">Open</div><div class="ah-stat-val">$${p.open.toFixed(2)}</div></div>
-    <div class="ah-stat"><div class="ah-stat-label">Change</div><div class="ah-stat-val ${p.changePct>=0?'up':'down'}">${sign}${p.changePct.toFixed(2)}%</div></div>
-  `;
-
+  if(p.price>p.prevPrice){ priceEl.className='ah-price flash-up'; setTimeout(()=>priceEl.className='ah-price',600); }
+  else if(p.price<p.prevPrice){ priceEl.className='ah-price flash-down'; setTimeout(()=>priceEl.className='ah-price',600); }
+  priceEl.textContent = fmtPrice(sym, p.price);
+  const sign = p.change>=0?'+':'', ch = document.getElementById('ah-change');
+  ch.textContent = `${sign}${p.change.toFixed(s.decimals)} (${sign}${p.changePct.toFixed(2)}%)`;
+  ch.className = 'ah-change '+(p.changePct>=0?'up':'down');
+  const spreadLabel = s.kind==='forex' ? (s.spread/s.pip).toFixed(1)+' pips' : fmtPrice(sym, s.spread);
+  document.getElementById('ah-meta').innerHTML = `
+    <div class="ah-stat"><div class="ah-stat-label">Bid</div><div class="ah-stat-val">${fmtPrice(sym,q.bid)}</div></div>
+    <div class="ah-stat"><div class="ah-stat-label">Ask</div><div class="ah-stat-val">${fmtPrice(sym,q.ask)}</div></div>
+    <div class="ah-stat"><div class="ah-stat-label">Spread</div><div class="ah-stat-val">${spreadLabel}</div></div>
+    <div class="ah-stat"><div class="ah-stat-label">Leverage</div><div class="ah-stat-val">${s.leverage}:1</div></div>`;
   drawChart();
 }
 
 // ═══════════════════════════════════════
-// CHART
+// CHART (with entry / stop / target lines)
 // ═══════════════════════════════════════
+function chartLevels(){
+  const sym = market.selected, lines = [];
+  Object.values(state.positions).filter(p=>p.symbol===sym).forEach(p=>{
+    lines.push({v:p.entry,c:'#2046F5',l:'Entry'},{v:p.stop,c:'#CC303D',l:'Stop'},{v:p.target,c:'#13884F',l:'Target'});
+  });
+  if(!lines.length){
+    const st=parseFloat(document.getElementById('stop-input').value), tg=parseFloat(document.getElementById('target-input').value);
+    if(Number.isFinite(st)) lines.push({v:st,c:'#CC303D',l:'Stop',dash:[2,4]});
+    if(Number.isFinite(tg)) lines.push({v:tg,c:'#13884F',l:'Target',dash:[2,4]});
+  }
+  return lines;
+}
 function drawChart(){
-  const canvas = document.getElementById('price-chart');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const sym = market.selected;
-  const p = sym ? market.prices[sym] : null;
-
-  // Size canvas
+  const canvas = document.getElementById('price-chart'); if(!canvas) return;
+  const ctx = canvas.getContext('2d'), sym = market.selected, p = sym ? market.prices[sym] : null;
   const rect = canvas.parentElement.getBoundingClientRect();
-  canvas.width  = rect.width  || 600;
-  canvas.height = (rect.height - 30) || 160;
+  canvas.width = rect.width || 600; canvas.height = (rect.height-30) || 160;
   const W = canvas.width, H = canvas.height;
-
   ctx.clearRect(0,0,W,H);
-
-  if(!p || !p.history || p.history.length < 2){
-    ctx.fillStyle='rgba(32,70,245,0.08)';
-    ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='rgba(32,70,245,0.3)';
-    ctx.font='12px DM Sans, serif';
-    ctx.textAlign='center';
-    ctx.fillText('Waiting for price data...', W/2, H/2);
-    return;
+  if(!p || !p.history || p.history.length<2){
+    ctx.fillStyle='rgba(32,70,245,0.08)'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(32,70,245,0.45)'; ctx.font='12px DM Sans, sans-serif'; ctx.textAlign='center';
+    ctx.fillText(p ? 'Collecting price history…' : 'Waiting for price data…', W/2, H/2); return;
   }
-
-  const history = p.history;
-  const isUp = history[history.length-1] >= history[0];
-  const color = isUp ? '#13884F' : '#CC303D';
-  const min = Math.min(...history), max = Math.max(...history);
-  const range = max - min || 1;
-  const pad = {top:16,right:16,bottom:24,left:60};
-  const iW = W - pad.left - pad.right;
-  const iH = H - pad.top  - pad.bottom;
-
-  // Grid lines
-  ctx.strokeStyle='rgba(32,70,245,0.06)';
-  ctx.lineWidth=1;
+  const history = p.history, levels = chartLevels();
+  const vals = history.concat(levels.map(l=>l.v));
+  const min = Math.min(...vals), max = Math.max(...vals), range = (max-min)||1;
+  const pad = {top:14,right:96,bottom:18,left:64}, iW = W-pad.left-pad.right, iH = H-pad.top-pad.bottom;
+  const y = v => pad.top + ((max-v)/range)*iH, dec = decimalsOf(sym);
+  ctx.font='9px Share Tech Mono, monospace';
   for(let i=0;i<=4;i++){
-    const y = pad.top + (i/4)*iH;
-    ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(W-pad.right,y);ctx.stroke();
-    const val = max - (i/4)*range;
-    ctx.fillStyle='rgba(32,70,245,0.3)';
-    ctx.font='9px Share Tech Mono, monospace';
-    ctx.textAlign='right';
-    const decimals = market.mode==='forex'?(market.selected?.includes('JPY')?3:5):2;
-    ctx.fillText(val.toFixed(decimals), pad.left-4, y+3);
+    const gy = pad.top+(i/4)*iH;
+    ctx.strokeStyle='rgba(32,70,245,0.06)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pad.left,gy); ctx.lineTo(W-pad.right,gy); ctx.stroke();
+    ctx.fillStyle='rgba(32,70,245,0.45)'; ctx.textAlign='right'; ctx.fillText((max-(i/4)*range).toFixed(dec), pad.left-4, gy+3);
   }
-
-  // Gradient fill
-  const grad = ctx.createLinearGradient(0, pad.top, 0, H-pad.bottom);
-  grad.addColorStop(0, isUp?'rgba(61,186,114,0.18)':'rgba(224,82,82,0.18)');
-  grad.addColorStop(1, 'rgba(0,0,0,0)');
-
-  // Build path
-  const pts = history.map((v,i)=>({
-    x: pad.left + (i/(history.length-1))*iW,
-    y: pad.top  + ((max-v)/range)*iH,
-  }));
-
-  ctx.beginPath();
-  ctx.moveTo(pts[0].x, pts[0].y);
-  for(let i=1;i<pts.length;i++){
-    const cp1x=(pts[i-1].x+pts[i].x)/2, cp1y=pts[i-1].y;
-    const cp2x=(pts[i-1].x+pts[i].x)/2, cp2y=pts[i].y;
-    ctx.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,pts[i].x,pts[i].y);
-  }
-  // Fill
-  ctx.lineTo(pts[pts.length-1].x, H-pad.bottom);
-  ctx.lineTo(pts[0].x, H-pad.bottom);
-  ctx.closePath();
-  ctx.fillStyle=grad;
-  ctx.fill();
-
-  // Line
-  ctx.beginPath();
-  ctx.moveTo(pts[0].x,pts[0].y);
-  for(let i=1;i<pts.length;i++){
-    const cp1x=(pts[i-1].x+pts[i].x)/2,cp1y=pts[i-1].y;
-    const cp2x=(pts[i-1].x+pts[i].x)/2,cp2y=pts[i].y;
-    ctx.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,pts[i].x,pts[i].y);
-  }
-  ctx.strokeStyle=color;
-  ctx.lineWidth=2;
-  ctx.stroke();
-
-  // Last price dot
+  const isUp = history[history.length-1] >= history[0], color = isUp ? '#13884F' : '#CC303D';
+  const pts = history.map((v,i)=>({x:pad.left+(i/(history.length-1))*iW, y:y(v)}));
+  const grad = ctx.createLinearGradient(0,pad.top,0,H-pad.bottom);
+  grad.addColorStop(0, isUp?'rgba(61,186,114,0.16)':'rgba(224,82,82,0.16)'); grad.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.beginPath(); pts.forEach((pt,i)=>i?ctx.lineTo(pt.x,pt.y):ctx.moveTo(pt.x,pt.y));
+  ctx.lineTo(pts[pts.length-1].x,H-pad.bottom); ctx.lineTo(pts[0].x,H-pad.bottom); ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
+  ctx.beginPath(); pts.forEach((pt,i)=>i?ctx.lineTo(pt.x,pt.y):ctx.moveTo(pt.x,pt.y)); ctx.strokeStyle=color; ctx.lineWidth=1.8; ctx.stroke();
+  levels.forEach(l=>{
+    const ly = y(l.v);
+    ctx.setLineDash(l.dash||[6,4]); ctx.strokeStyle=l.c; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.moveTo(pad.left,ly); ctx.lineTo(W-pad.right,ly); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=l.c; ctx.textAlign='left'; ctx.fillText(`${l.l} ${l.v.toFixed(dec)}`, W-pad.right+4, ly+3);
+  });
   const last = pts[pts.length-1];
-  ctx.beginPath();
-  ctx.arc(last.x,last.y,4,0,Math.PI*2);
-  ctx.fillStyle=color;
-  ctx.fill();
-  ctx.strokeStyle='var(--ink)';
-  ctx.lineWidth=1.5;
-  ctx.stroke();
+  ctx.beginPath(); ctx.arc(last.x,last.y,3.5,0,Math.PI*2); ctx.fillStyle=color; ctx.fill();
 }
 
 // ═══════════════════════════════════════
-// ORDER EXECUTION
+// TRADE PLAN
 // ═══════════════════════════════════════
-function updateOrderCost(){
-  if(!market.selected){ return; }
-  const qty = parseFloat(document.getElementById('qty-input').value)||0;
-  const p = market.prices[market.selected];
-  if(!p || !qty){ document.getElementById('order-cost').innerHTML='Cost: <span>$0.00</span>'; return; }
-  const isForex = market.mode==='forex';
-  const lotSize = isForex ? 1000 : 1; // micro lot for forex
-  const cost = qty * p.price * lotSize;
-  document.getElementById('order-cost').innerHTML=`Cost: <span>$${cost.toFixed(2)}</span>`;
-  document.getElementById('qty-label').textContent = isForex ? 'Micro Lots' : 'Shares';
+function setSide(s){
+  side = s;
+  document.getElementById('side-long').classList.toggle('active', s==='long');
+  document.getElementById('side-short').classList.toggle('active', s==='short');
+  updatePlan();
 }
-
-function placeOrder(side){
-  const sym = market.selected;
-  if(!sym){ showMsg('Select an asset first.','err'); return; }
-  const p = market.prices[sym];
-  if(!p||p.stale){ showMsg('A current quote is not available. Please wait or try another asset.','err'); return; }
-  const qty = parseFloat(document.getElementById('qty-input').value);
-  if(!qty || qty <= 0){ showMsg('Enter a valid quantity.','err'); return; }
-
-  const isForex = market.mode==='forex';
-  const lotSize = isForex ? 1000 : 1;
-  const price = p.price;
-  const total = qty * price * lotSize;
-  const type = market.mode;
-
-  if(side==='buy'){
-    if(total > state.cash){ showMsg(`Insufficient cash. Need $${total.toFixed(2)}, have $${state.cash.toFixed(2)}.`,'err'); return; }
-    state.cash -= total;
-    if(!state.positions[sym]){
-      state.positions[sym] = {shares:qty, avgCost:price, type, lotSize};
-    } else {
-      const pos = state.positions[sym];
-      const totalShares = pos.shares + qty;
-      pos.avgCost = (pos.shares*pos.avgCost + qty*price) / totalShares;
-      pos.shares = totalShares;
-    }
-    awardBadge(type==='forex'?'forex_trade':'stock_trade');
-  } else {
-    const pos = state.positions[sym];
-    if(!pos || pos.shares < qty){ showMsg(`You only hold ${pos?pos.shares:0} ${isForex?'lots':'shares'} of ${sym}.`,'err'); return; }
-    const proceeds = qty * price * lotSize;
-    const costBasis = qty * pos.avgCost * lotSize;
-    const pnl = proceeds - costBasis;
-    state.cash += proceeds;
-    state.realizedPnL += pnl;
-    pos.shares -= qty;
-    if(pos.shares <= 0.0001) delete state.positions[sym];
-    if(pnl > 0) awardBadge('first_profit');
-    else awardBadge('first_loss');
-  }
-
-  // Log trade
-  state.history.unshift({side,symbol:sym,shares:qty,price,total,time:new Date().toISOString(),type});
-  state.totalTrades++;
-
-  // Badges
-  awardBadge('first_trade');
-  if(state.totalTrades>=10) awardBadge('ten_trades');
-  if(Object.keys(state.positions).length>=3) awardBadge('multi_pos');
-  const totalValue = calcAccountValue();
-  if(totalValue >= STARTING_CASH*1.1) awardBadge('up_10');
-
-  saveState();
-  updateAccountValue();
-  updatePortfolio();
-  renderPortTab();
-
-  const verb = side==='buy'?'Bought':'Sold';
-  const unit = isForex?'lots':'shares';
-  showToast(`${verb} ${qty} ${unit} of ${sym} @ ${isForex?price.toFixed(5):'$'+price.toFixed(2)}`, side==='buy'?'green':'red');
-  showMsg(`${verb} ${qty} ${unit} of ${sym} at ${isForex?price.toFixed(5):'$'+price.toFixed(2)}. Total: $${total.toFixed(2)}.`, 'ok');
-
-  document.getElementById('qty-input').value='';
-  updateOrderCost();
+function suggestTarget(){
+  const sym = market.selected, m = sym && mid(sym); if(!m) return;
+  const s = specOf(sym), entry = R.entryFill(s, side, m), stop = parseFloat(document.getElementById('stop-input').value);
+  if(!Number.isFinite(stop)){ showMsg('Set your stop first. The target is measured from it.','err'); return; }
+  const t = side==='long' ? entry + 2*(entry-stop) : entry - 2*(stop-entry);
+  const f = 10**s.decimals;
+  document.getElementById('target-input').value = ((side==='long'?Math.ceil(t*f):Math.floor(t*f))/f).toFixed(s.decimals);
+  updatePlan();
 }
-
-function showMsg(msg, type){
-  const el = document.getElementById('ot-msg');
-  el.textContent = msg;
-  el.className = 'ot-msg show '+type;
-  setTimeout(()=>el.classList.remove('show'), 4000);
-}
-
-// ═══════════════════════════════════════
-// ACCOUNT VALUE
-// ═══════════════════════════════════════
-function calcAccountValue(){
-  let invested = 0;
-  Object.entries(state.positions).forEach(([sym,pos])=>{
-    const p = market.prices[sym];
-    if(p) invested += pos.shares * p.price * (pos.lotSize||1);
-  });
-  return state.cash + invested;
-}
-
-function updateAccountValue(){
-  const total = calcAccountValue();
-  let invested = 0;
-  Object.entries(state.positions).forEach(([sym,pos])=>{
-    const p = market.prices[sym];
-    if(p) invested += pos.shares * p.price * (pos.lotSize||1);
-  });
-  const change = total - STARTING_CASH;
-  const changePct = (change/STARTING_CASH)*100;
-  const sign = change>=0?'+':'';
-
-  const avEl = document.getElementById('av-num');
-  avEl.textContent = '$'+total.toFixed(2);
-  avEl.className = 'av-num'+(change>0?' up':change<0?' down':'');
-
-  const chEl = document.getElementById('av-change');
-  chEl.textContent = `${sign}$${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)`;
-  chEl.className = 'av-change'+(change>=0?' up':' down');
-
-  document.getElementById('ts-cash').textContent    = '$'+state.cash.toFixed(2);
-  document.getElementById('ts-invested').textContent = '$'+invested.toFixed(2);
-
-  // Unrealized PnL
+function equity(){
   let unreal = 0;
-  Object.entries(state.positions).forEach(([sym,pos])=>{
-    const p = market.prices[sym];
-    if(p) unreal += (p.price - pos.avgCost)*pos.shares*(pos.lotSize||1);
-  });
-  const totalPnL = state.realizedPnL + unreal;
-  const pnlEl = document.getElementById('ts-pnl');
-  pnlEl.textContent = (totalPnL>=0?'+':'')+'$'+totalPnL.toFixed(2);
-  pnlEl.className = 'ts-val'+(totalPnL>=0?' up':' down');
-
-  document.getElementById('ts-trades').textContent = state.totalTrades;
+  Object.values(state.positions).forEach(pos=>{ const m=mid(pos.symbol); if(m) unreal += R.pnlUSD(pos, R.exitMark(specOf(pos.symbol),pos.side,m), usdPerMove(pos.symbol,m)); });
+  return state.cash + unreal;
+}
+function marginUsed(){
+  return Object.values(state.positions).reduce((sum,pos)=>{ const s=specOf(pos.symbol), m=mid(pos.symbol)||pos.entry; return sum + R.notionalUSD(s,pos.lots,m,quoteToUSD(pos.symbol))/s.leverage; },0);
+}
+function buildPlan(){
+  const sym = market.selected; if(!sym) return {error:'Pick an asset first.'};
+  const m = mid(sym); if(!m) return {error:'Waiting for a current price for '+sym+'.'};
+  const s = specOf(sym), entry = R.entryFill(s, side, m);
+  const stop = parseFloat(document.getElementById('stop-input').value), target = parseFloat(document.getElementById('target-input').value);
+  const riskPct = parseFloat(document.getElementById('risk-select').value);
+  const check = R.validatePlan({side, entry, stop, target});
+  if(!check.ok) return {sym, entry, error:check.errors[0]};
+  const perMove = usdPerMove(sym, entry);
+  if(!Number.isFinite(perMove)) return {sym, entry, error:'Waiting for the conversion rate this pair needs.'};
+  const eq = equity(), size = R.sizePosition({equity:eq, riskPct, entry, stop, usdPerMove:perMove, step:s.step});
+  if(!size.lots) return {sym, entry, error:`Your stop is too far away for a ${riskPct}% risk on this account. Tighten the stop or skip the trade.`};
+  const reward = Math.abs(target-entry)*perMove*size.lots;
+  const margin = R.notionalUSD(s, size.lots, entry, quoteToUSD(sym))/s.leverage;
+  const rules = R.rulesAtEntry({riskPct, rr:check.rr});
+  return {sym, s, entry, stop, target, riskPct, rr:check.rr, lots:size.lots, riskUSD:size.riskUSD, reward, margin, rules, perMove};
+}
+function updatePlan(){
+  const el = document.getElementById('plan-preview');
+  const plan = buildPlan();
+  const btn = document.getElementById('place-btn');
+  btn.textContent = side==='long' ? 'PLACE LONG' : 'PLACE SHORT';
+  btn.className = side==='long' ? 'btn-buy' : 'btn-sell';
+  if(plan.error){
+    el.innerHTML = (plan.entry?`<span class="pp-item">Entry ≈ <b>${fmtPrice(plan.sym,plan.entry)}</b></span>`:'')+`<span class="pp-hint">${esc(plan.error)}</span>`;
+    drawChart(); return;
+  }
+  const unit = plan.s.unit, lockout = R.lossesToday(state.journal) >= R.RULES.maxDailyLosses;
+  const chip = (ok, txt) => `<span class="rule-chip ${ok?'ok':'bad'}">${ok?'✓':'✗'} ${txt}</span>`;
+  el.innerHTML = `
+    <span class="pp-item">Entry ≈ <b>${fmtPrice(plan.sym,plan.entry)}</b></span>
+    <span class="pp-item">Size <b>${plan.lots} ${unit}</b></span>
+    <span class="pp-item">Risk <b class="down">${fmtUSD(plan.riskUSD)}</b></span>
+    <span class="pp-item">Reward <b class="up">${fmtUSD(plan.reward)}</b></span>
+    <span class="pp-item">R:R <b>1:${plan.rr.toFixed(2)}</b></span>
+    <span class="pp-item">Margin <b>${fmtUSD(plan.margin)}</b></span>
+    <div class="pp-rules">${chip(true,'Stop set')}${chip(plan.rules.risk,'Risk ≤ 1%')}${chip(plan.rules.rr,'R:R ≥ 1:2')}${chip(!lockout,'Under 3 losses today')}</div>`;
+  drawChart();
+}
+function placeTrade(){
+  if(R.lossesToday(state.journal) >= R.RULES.maxDailyLosses){
+    showMsg('Three losses today. The Dojo rule is to stop for the session. Review your journal and come back tomorrow.','err'); return;
+  }
+  const plan = buildPlan();
+  if(plan.error){ showMsg(plan.error,'err'); return; }
+  if(plan.margin > equity() - marginUsed()){ showMsg(`Not enough free margin. This trade needs ${fmtUSD(plan.margin)}.`,'err'); return; }
+  const broken = [!plan.rules.risk&&'risk above 1%', !plan.rules.rr&&'reward less than 2× risk'].filter(Boolean);
+  if(broken.length && !confirm(`This plan breaks a Dojo rule: ${broken.join(' and ')}.\n\nYou can take it, but it will be logged as a rule break and count against your graduation.`)) return;
+  const id = 't'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  state.positions[id] = {id, symbol:plan.sym, type:typeOf(plan.sym), side, lots:plan.lots, entry:plan.entry, stop:plan.stop, initialStop:plan.stop,
+    target:plan.target, riskUSD:plan.riskUSD, riskPct:plan.riskPct, rr:plan.rr, setup:document.getElementById('setup-select').value,
+    note:document.getElementById('note-input').value.trim().slice(0,140), opened:new Date().toISOString(), rules:plan.rules, stopMoves:0};
+  state.totalTrades++;
+  awardBadge('first_trade');
+  saveState();
+  document.getElementById('stop-input').value=''; document.getElementById('target-input').value=''; document.getElementById('note-input').value='';
+  showToast(`${side==='long'?'Long':'Short'} ${plan.lots} ${plan.s.unit} ${plan.sym} @ ${fmtPrice(plan.sym,plan.entry)}`, side==='long'?'green':'red');
+  showMsg(`Placed. Stop ${fmtPrice(plan.sym,plan.stop)}, target ${fmtPrice(plan.sym,plan.target)}. The lab will close it for you if either is hit.`,'ok');
+  showPortTab('positions'); renderTickerList(); updatePlan(); updateAccountValue();
 }
 
 // ═══════════════════════════════════════
-// PORTFOLIO TABS
+// EXITS & JOURNAL
 // ═══════════════════════════════════════
+function checkBrackets(before){
+  Object.values(state.positions).forEach(pos=>{
+    const m = mid(pos.symbol); if(!m) return;
+    const s = specOf(pos.symbol), mark = R.exitMark(s,pos.side,m);
+    const prev = before[pos.symbol] ? R.exitMark(s,pos.side,before[pos.symbol]) : NaN;
+    const hit = R.checkExit(pos, mark, prev);
+    if(hit) closeTrade(pos.id, hit.price, hit.reason);
+  });
+}
+function closeTrade(id, exitPrice, reason){
+  const pos = state.positions[id]; if(!pos) return;
+  const pnl = R.pnlUSD(pos, exitPrice, usdPerMove(pos.symbol, exitPrice));
+  const r = pos.riskUSD ? pnl/pos.riskUSD : NaN;
+  const ruleAdherent = pos.rules.stop && pos.rules.risk && pos.rules.rr;
+  state.journal.unshift({...pos, exit:exitPrice, exitReason:reason, pnl, r, closed:new Date().toISOString(), ruleAdherent});
+  state.cash += pnl; state.realizedPnL += pnl;
+  delete state.positions[id];
+  awardBadge(pnl>0?'first_profit':'first_loss');
+  if(reason==='stop'||reason==='gap') awardBadge('stop_honored');
+  if(reason==='target') awardBadge('target_hit');
+  awardBadge(pos.type==='forex'?'forex_trade':'stock_trade');
+  if(state.journal.length>=10) awardBadge('ten_trades');
+  if(state.journal.length>=10 && state.journal.slice(0,10).every(t=>t.ruleAdherent)) awardBadge('clean_ten');
+  if(R.stats(state.journal).grad.passed) awardBadge('graduate');
+  saveState();
+  const label = {stop:'Stop hit',gap:'Gapped past stop',target:'Target hit',manual:'Closed'}[reason]||'Closed';
+  showToast(`${label}: ${pos.symbol} ${fmtUSD(pnl)} (${fmtR(r)})`, pnl>=0?'green':'red');
+  if(reason==='gap') setTimeout(()=>showToast('Price jumped past your stop, so it filled at the next available price. That is gap risk, and why size matters even with a stop.',''), 3800);
+  renderTickerList(); renderPortTab(); updateAccountValue(); updatePlan();
+}
+function closePosition(id){
+  const pos = state.positions[id]; if(!pos) return;
+  const m = mid(pos.symbol); if(!m){ showToast('Price not available, try again shortly','red'); return; }
+  closeTrade(id, R.exitMark(specOf(pos.symbol),pos.side,m), 'manual');
+}
+function moveStop(id){
+  const pos = state.positions[id]; if(!pos) return;
+  const m = mid(pos.symbol); if(!m){ showToast('Price not available, try again shortly','red'); return; }
+  const input = prompt(`New stop for ${pos.symbol} (current ${fmtPrice(pos.symbol,pos.stop)}). Stops can only move toward profit.`, pos.stop.toFixed(decimalsOf(pos.symbol)));
+  if(input===null) return;
+  const v = parseFloat(input), ok = R.canMoveStop(pos, v, R.exitMark(specOf(pos.symbol),pos.side,m));
+  if(!ok.ok){ showToast(ok.reason,'red'); return; }
+  pos.stop = v; pos.stopMoves++; saveState(); renderPortTab(); drawChart();
+  showToast(`Stop moved to ${fmtPrice(pos.symbol,v)}`,'green');
+}
+
+// ═══════════════════════════════════════
+// ACCOUNT & TABS
+// ═══════════════════════════════════════
+function updateAccountValue(){
+  const eq = equity(), change = eq-STARTING_CASH, pct = change/STARTING_CASH*100, sign = change>=0?'+':'';
+  const av = document.getElementById('av-num'); av.textContent = fmtUSD(eq); av.className = 'av-num'+(change>0?' up':change<0?' down':'');
+  const ch = document.getElementById('av-change'); ch.textContent = `${sign}${fmtUSD(change)} (${sign}${pct.toFixed(2)}%)`; ch.className = 'av-change'+(change>=0?' up':' down');
+  document.getElementById('ts-cash').textContent = fmtUSD(state.cash);
+  document.getElementById('ts-invested').textContent = fmtUSD(marginUsed());
+  const open = eq - state.cash, pnl = document.getElementById('ts-pnl');
+  pnl.textContent = (open>=0?'+':'')+fmtUSD(open); pnl.className = 'ts-val'+(open>=0?' up':' down');
+  const st = R.stats(state.journal);
+  document.getElementById('ts-trades').textContent = st.n ? fmtR(st.expectancy) : '—';
+}
+const TABS = ['positions','journal','stats','sensei','badges'];
 function showPortTab(tab){
   currentPortTab = tab;
-  document.querySelectorAll('.port-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.port-tab')[['positions','history','badges'].indexOf(tab)].classList.add('active');
+  document.querySelectorAll('.port-tab').forEach((t,i)=>t.classList.toggle('active', TABS[i]===tab));
   renderPortTab();
 }
-
-function renderPortTab(){
-  if(currentPortTab==='positions') renderPositions();
-  else if(currentPortTab==='history') renderHistory();
-  else renderBadges();
+function renderPortTab(){ ({positions:renderPositions, journal:renderJournal, stats:renderStats, sensei:renderSensei, badges:renderBadges})[currentPortTab](); }
+function renderSensei(){
+  const rv = window.DojoCoach.review(state.journal);
+  document.getElementById('port-content').innerHTML = `<div class="sensei-head">🥷 Sensei reviewed ${rv.n} trade${rv.n===1?'':'s'}</div>` +
+    rv.findings.map(f=>`<div class="sensei-card ${f.tone}"><div class="sensei-t">${esc(f.title)}</div><p>${esc(f.text)}</p><p class="sensei-do"><b>Do this:</b> ${esc(f.action)}</p></div>`).join('') +
+    `<p class="stats-foot">Sensei reads your journal for common patterns. It is a checklist, not a prediction, and it gets sharper as your sample grows.</p>`;
 }
-
-function updatePortfolio(){ renderPortTab(); }
-
 function renderPositions(){
-  const el = document.getElementById('port-content');
-  const syms = Object.keys(state.positions);
-  if(!syms.length){
-    el.innerHTML=`<div class="empty-state"><div class="es-icon">📋</div><div class="es-text">No open positions</div></div>`;
-    return;
-  }
-  el.innerHTML = syms.map(sym=>{
-    const pos = state.positions[sym];
-    const p = market.prices[sym];
-    const currentPrice = p ? p.price : pos.avgCost;
-    const lotSize = pos.lotSize||1;
-    const marketVal = pos.shares * currentPrice * lotSize;
-    const costBasis = pos.shares * pos.avgCost * lotSize;
-    const pnl = marketVal - costBasis;
-    const pnlPct = (pnl/costBasis)*100;
-    const sign = pnl>=0?'+':'';
-    const isForex = pos.type==='forex';
-    const decimals = isForex?(sym.includes('JPY')?3:5):2;
-    const pct = Math.min(Math.abs(pnlPct),100);
-    const unit = isForex?'lots':'shares';
+  const el = document.getElementById('port-content'), list = Object.values(state.positions);
+  if(!list.length){ el.innerHTML = `<div class="empty-state"><div class="es-icon">📋</div><div class="es-text">No open trades. Build a plan in the ticket.</div></div>`; return; }
+  el.innerHTML = list.map(pos=>{
+    const m = mid(pos.symbol), s = specOf(pos.symbol);
+    const mark = m ? R.exitMark(s,pos.side,m) : null;
+    const pnl = mark ? R.pnlUSD(pos, mark, usdPerMove(pos.symbol,mark)) : 0, r = pos.riskUSD ? pnl/pos.riskUSD : 0;
+    const toward = Math.max(-1, Math.min(r/pos.rr, 1));
     return `<div class="position-card">
       <div class="pc-top">
-        <div>
-          <div class="pc-sym">${sym}</div>
-          <div class="pc-shares">${pos.shares} ${unit} · avg ${isForex?pos.avgCost.toFixed(decimals):'$'+pos.avgCost.toFixed(2)}</div>
-        </div>
-        <div class="pc-pnl ${pnl>=0?'up':'down'}">${sign}$${pnl.toFixed(2)}</div>
+        <div><div class="pc-sym">${esc(pos.symbol)} <span class="side-tag ${pos.side}">${pos.side.toUpperCase()}</span></div>
+        <div class="pc-shares">${pos.lots} ${s.unit} · ${esc(pos.setup)}</div></div>
+        <div class="pc-pnl ${pnl>=0?'up':'down'}">${fmtUSD(pnl)}<div class="pc-r">${fmtR(r)}</div></div>
       </div>
-      <div class="pc-bar-wrap"><div class="pc-bar ${pnl>=0?'up':'down'}" style="width:${pct}%"></div></div>
+      <div class="pc-bar-wrap" title="Progress from stop (left) to target (right)"><div class="pc-bar ${r>=0?'up':'down'}" style="width:${Math.abs(toward)*100}%"></div></div>
       <div class="pc-meta">
-        <div class="pc-meta-item">Mkt Val: <span>$${marketVal.toFixed(2)}</span></div>
-        <div class="pc-meta-item">${sign}${pnlPct.toFixed(2)}%</div>
-        <div class="pc-meta-item">Now: <span>${isForex?currentPrice.toFixed(decimals):'$'+currentPrice.toFixed(2)}</span></div>
+        <div class="pc-meta-item">In <span>${fmtPrice(pos.symbol,pos.entry)}</span></div>
+        <div class="pc-meta-item">Stop <span class="down">${fmtPrice(pos.symbol,pos.stop)}</span></div>
+        <div class="pc-meta-item">Target <span class="up">${fmtPrice(pos.symbol,pos.target)}</span></div>
       </div>
-      <button class="btn-close-pos" onclick="closePosition('${sym}')">Close Position</button>
+      <button class="btn-close-pos" onclick="closePosition('${pos.id}')">Close now</button>
+      <button class="btn-close-pos btn-move" onclick="moveStop('${pos.id}')">Move stop</button>
     </div>`;
   }).join('');
 }
-
-function renderHistory(){
+function renderJournal(){
   const el = document.getElementById('port-content');
-  if(!state.history.length){
-    el.innerHTML=`<div class="empty-state"><div class="es-icon">📜</div><div class="es-text">No trades yet</div></div>`;
-    return;
-  }
-  el.innerHTML = state.history.slice(0,50).map(t=>{
-    const isForex = t.type==='forex';
-    const decimals = isForex?(t.symbol.includes('JPY')?3:5):2;
-    const priceStr = isForex?t.price.toFixed(decimals):'$'+t.price.toFixed(2);
-    const timeStr = new Date(t.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    const unit = isForex?'lots':'sh';
-    return `<div class="trade-row">
-      <div class="tr-side ${t.side}">${t.side.toUpperCase()}</div>
-      <div class="tr-info">
-        <div class="tr-sym">${t.symbol}</div>
-        <div class="tr-detail">${t.shares} ${unit} @ ${priceStr}</div>
-      </div>
-      <div>
-        <div class="tr-total">$${t.total.toFixed(2)}</div>
-        <div class="tr-time">${timeStr}</div>
-      </div>
+  if(!state.journal.length){ el.innerHTML = `<div class="empty-state"><div class="es-icon">📓</div><div class="es-text">Closed trades are journaled here automatically.</div></div>`; return; }
+  const chip = (ok,t)=>`<span class="rule-chip sm ${ok?'ok':'bad'}">${ok?'✓':'✗'} ${t}</span>`;
+  el.innerHTML = state.journal.slice(0,100).map(t=>{
+    const reason = {stop:'Stopped out',gap:'Gap through stop',target:'Target hit',manual:'Closed manually'}[t.exitReason]||t.exitReason;
+    return `<div class="journal-row">
+      <div class="jr-top"><div><b>${esc(t.symbol)}</b> <span class="side-tag ${t.side}">${t.side.toUpperCase()}</span> <span class="jr-setup">${esc(t.setup)}${t.source==='replay'?' · replay':t.source==='options-replay'?' · options lab':''}</span></div><div class="jr-r ${t.r>=0?'up':'down'}">${fmtR(t.r)}</div></div>
+      <div class="jr-detail">${t.type==='options'?`Underlying $${t.entry.toFixed(2)} → $${t.exit.toFixed(2)}`:`${fmtPrice(t.symbol,t.entry)} → ${fmtPrice(t.symbol,t.exit)}`} · ${t.type==='options'?(t.exitReason==='expiry'?'Held to expiry':'Closed early'):reason} · ${fmtUSD(t.pnl)} · ${new Date(t.closed).toLocaleDateString([], {month:'short',day:'numeric'})}</div>
+      ${t.note?`<div class="jr-note">“${esc(t.note)}”</div>`:''}
+      <div class="jr-rules">${chip(t.rules.risk,'1% risk')}${chip(t.rules.rr,'1:2 R:R')}${t.stopMoves?`<span class="rule-chip sm ok">Stop trailed ×${t.stopMoves}</span>`:''}${t.ruleAdherent?'':'<span class="rule-chip sm bad">Rule break</span>'}</div>
     </div>`;
   }).join('');
 }
-
+function renderStats(){
+  const el = document.getElementById('port-content'), st = R.stats(state.journal);
+  const pct = v => (v*100).toFixed(0)+'%';
+  const cell = (label, val, cls='') => `<div class="stat-cell"><div class="stat-label">${label}</div><div class="stat-val ${cls}">${val}</div></div>`;
+  const g = st.grad, check = (ok,t)=>`<li class="${ok?'ok':''}">${ok?'✓':'○'} ${t}</li>`;
+  el.innerHTML = `
+    <div class="stats-grid">
+      ${cell('Trades', st.n)}
+      ${cell('Win rate', st.n?pct(st.winRate):'—')}
+      ${cell('Expectancy', st.n?fmtR(st.expectancy):'—', st.expectancy>0?'up':st.expectancy<0?'down':'')}
+      ${cell('Total', st.n?fmtR(st.totalR):'—', st.totalR>0?'up':st.totalR<0?'down':'')}
+      ${cell('Avg win', st.wins?fmtR(st.avgWinR):'—','up')}
+      ${cell('Avg loss', st.losses?fmtR(st.avgLossR):'—','down')}
+      ${cell('Profit factor', st.n?(Number.isFinite(st.profitFactor)?st.profitFactor.toFixed(2):'∞'):'—')}
+      ${cell('Max drawdown', st.n?'-'+st.maxDrawdownR.toFixed(2)+'R':'—')}
+      ${cell('Rules followed', st.n?pct(st.adherence):'—', st.n&&st.adherence<0.9?'down':'')}
+    </div>
+    <div class="grad-box">
+      <div class="grad-title">${g.passed?'🎓 Graduation gate passed':'Graduation gate'}</div>
+      <div class="pc-bar-wrap"><div class="pc-bar up" style="width:${g.done}%"></div></div>
+      <ul class="grad-list">${check(st.n>=100, `${g.done} / 100 journaled trades`)}${check(g.adherenceOk && st.n>0, 'Rules followed on 90%+ of trades')}${check(g.expectancyOk && st.n>0, 'Positive expectancy')}</ul>
+      <p class="grad-note">${g.passed
+        ? 'You have evidence of a disciplined process with a positive edge in practice. If you go live, start with the smallest size your broker allows and expect results to be worse than practice at first.'
+        : 'Expectancy is your average result per trade in R. Under 30 trades it is mostly noise. Over 100 trades with the rules followed, it starts to tell you whether you have an edge.'}</p>
+    </div>
+    <p class="stats-foot">Practice results are hypothetical. They don't include real slippage, emotions of real money, or every cost, and they don't predict live results.</p>`;
+}
 function renderBadges(){
-  const el = document.getElementById('port-content');
-  el.innerHTML = `<div class="badge-grid">${BADGES_DEF.map(b=>`
-    <div class="badge-item ${state.badges[b.id]?'earned':''}">
-      <span class="badge-emoji">${b.emoji}</span>
-      <div class="badge-name">${b.name}</div>
-      <div class="badge-desc">${b.desc}</div>
-    </div>`).join('')}</div>`;
+  document.getElementById('port-content').innerHTML = `<div class="badge-grid">${BADGES_DEF.map(b=>`
+    <div class="badge-item ${state.badges[b.id]?'earned':''}"><span class="badge-emoji">${b.emoji}</span><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`).join('')}</div>`;
 }
-
-function closePosition(sym){
-  const pos = state.positions[sym];
-  if(!pos) return;
-  const p = market.prices[sym];
-  if(!p||p.stale){ showToast('Price not available — try again','red'); return; }
-  const proceeds = pos.shares * p.price * (pos.lotSize||1);
-  const costBasis = pos.shares * pos.avgCost * (pos.lotSize||1);
-  const pnl = proceeds - costBasis;
-  state.cash += proceeds;
-  state.realizedPnL += pnl;
-  state.history.unshift({side:'sell',symbol:sym,shares:pos.shares,price:p.price,total:proceeds,time:new Date().toISOString(),type:pos.type});
-  state.totalTrades++;
-  delete state.positions[sym];
-  if(pnl>0) awardBadge('first_profit');
-  else awardBadge('first_loss');
-  saveState();
-  updateAccountValue();
-  renderPortTab();
-  const sign = pnl>=0?'+':'';
-  showToast(`Closed ${sym} — P&L: ${sign}$${pnl.toFixed(2)}`, pnl>=0?'green':'red');
-}
-
-// ═══════════════════════════════════════
-// BADGES
-// ═══════════════════════════════════════
 function awardBadge(id){
   if(state.badges[id]) return;
   state.badges[id] = true;
   const b = BADGES_DEF.find(x=>x.id===id);
-  if(b) showToast(`🏆 Badge Earned: ${b.name}!`,'');
-  if(currentPortTab==='badges') renderBadges();
+  if(b) setTimeout(()=>showToast(`🏆 Badge earned: ${b.name}`,''), 1600);
 }
 
 // ═══════════════════════════════════════
-// MODE SWITCH
+// MODE, SEARCH, MESSAGES, RESET
 // ═══════════════════════════════════════
 function switchMode(mode){
-  market.mode = mode;
-  market.selected = null;
-  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.mode-tab')[mode==='stocks'?0:1].classList.add('active');
-  document.getElementById('watchlist-title').textContent = mode==='stocks'?'Stocks Watchlist':'Forex Pairs';
-  document.getElementById('ah-symbol').textContent = 'Select an asset';
-  document.getElementById('ah-name').textContent = 'Choose from the watchlist';
-  document.getElementById('ah-price').textContent = '—';
-  document.getElementById('ah-change').textContent = '';
-  document.getElementById('ah-meta').innerHTML = '';
-  document.getElementById('search-input').placeholder = mode==='stocks'?'Search ticker (e.g. AMZN)':'Search pair (e.g. GBP/USD)';
-  renderTickerList();
-  refreshPrices();
+  market.mode = mode; market.selected = null;
+  document.querySelectorAll('.mode-tab').forEach((t,i)=>t.classList.toggle('active', i===(mode==='stocks'?0:1)));
+  document.getElementById('watchlist-title').textContent = mode==='stocks'?'Stocks Watchlist':'Forex & Gold';
+  ['ah-change','ah-meta'].forEach(i=>document.getElementById(i).innerHTML='');
+  document.getElementById('ah-symbol').textContent='Select an asset'; document.getElementById('ah-name').textContent='Choose from the watchlist'; document.getElementById('ah-price').textContent='—';
+  document.getElementById('search-input').placeholder = mode==='stocks'?'Add ticker (e.g. AMD)':'Pairs list is fixed for now';
+  document.getElementById('search-input').disabled = mode!=='stocks';
+  renderTickerList(); const first = getWatchlist()[0]; if(first) selectAsset(first.symbol); else { updatePlan(); drawChart(); }
 }
-
-// ═══════════════════════════════════════
-// SEARCH / ADD TICKER
-// ═══════════════════════════════════════
 async function searchTicker(){
-  const input = document.getElementById('search-input');
-  const raw = input.value.trim().toUpperCase();
-  if(!raw) return;
-
-  if(market.mode==='stocks'){
-    const existing = getStockWatchlist().find(i=>i.symbol===raw);
-    if(existing){ selectAsset(raw); input.value=''; return; }
-    showToast(`Adding ${raw}...`, '');
-    const fetched = await fetchStockPrice(raw);
-    if(fetched){
-      customStocks.push({symbol:raw, name:raw});
-      market.prices[raw] = {...fetched, history:[fetched.price], prevPrice:fetched.price};
-      renderTickerList();
-      selectAsset(raw);
-      input.value='';
-    } else {
-      showToast(`Could not find ticker: ${raw}`,'red');
-    }
-  } else {
-    const sym = raw.includes('/')?raw:raw.slice(0,3)+'/'+raw.slice(3);
-    const existing = getForexWatchlist().find(i=>i.symbol===sym);
-    if(existing){ selectAsset(sym); input.value=''; return; }
-    showToast(`Pair ${sym} not in default list yet.`,'red');
-  }
+  const input = document.getElementById('search-input'), raw = input.value.trim().toUpperCase();
+  if(!raw || market.mode!=='stocks') return;
+  if(!/^[A-Z][A-Z0-9.-]{0,9}$/.test(raw)){ showToast('Enter a ticker like AMD or BRK-B','red'); return; }
+  if([...DEFAULT_STOCKS,...customStocks].some(i=>i.symbol===raw)){ selectAsset(raw); input.value=''; return; }
+  if(customStocks.length>=MAX_CUSTOM){ showToast(`Watchlist holds ${MAX_CUSTOM} extra tickers. Remove one by resetting the lab.`,'red'); return; }
+  showToast(`Adding ${raw}…`,'');
+  const q = await fetchRelay([{symbol:raw, feed:raw}]);
+  const hit = q?.[raw];
+  if(hit){ customStocks.push({symbol:raw, name:raw}); saveWatch(); applyQuote(raw, hit.price, hit.prevClose, hit.closes); renderTickerList(); selectAsset(raw); input.value=''; }
+  else showToast(`Could not find a quote for ${raw}`,'red');
 }
-
 document.getElementById('search-input').addEventListener('keydown', e=>{ if(e.key==='Enter') searchTicker(); });
-
-// ═══════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════
+function showMsg(msg, type){
+  const el = document.getElementById('ot-msg'); el.textContent = msg; el.className = 'ot-msg show '+type;
+  clearTimeout(showMsg.t); showMsg.t = setTimeout(()=>el.classList.remove('show'), 6000);
+}
 let toastTimer = null;
 function showToast(msg, type=''){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show'+(type?' '+type:'');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 3500);
+  const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast show'+(type?' '+type:'');
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove('show'), 3600);
 }
-
-// ═══════════════════════════════════════
-// RESET
-// ═══════════════════════════════════════
 function confirmReset(){
-  if(!confirm('Reset your paper trading account back to $10,000? All positions and history will be cleared.')) return;
-  state = {cash:STARTING_CASH, positions:{}, history:[], badges:{}, totalTrades:0, realizedPnL:0};
-  saveState();
-  updateAccountValue();
-  renderPortTab();
+  if(!confirm('Reset the practice account to $10,000? Open trades, your journal, stats and badges will all be cleared.')) return;
+  state = freshState(); customStocks = []; saveState(); saveWatch();
+  renderTickerList(); renderPortTab(); updateAccountValue(); updatePlan();
   showToast('Account reset to $10,000','');
 }
-
-// ═══════════════════════════════════════
-// RESIZE HANDLER
-// ═══════════════════════════════════════
 window.addEventListener('resize', ()=>{ if(market.selected) drawChart(); });
 
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
 loadState();
-updateAccountValue();
-renderTickerList();
-renderPortTab();
-
-// First price fetch
-refreshPrices().then(()=>{
-  // Auto-select first item
-  const first = getWatchlist()[0];
-  if(first && !market.selected){ selectAsset(first.symbol); }
-});
-
-// Refresh every 20 seconds
+updateAccountValue(); renderTickerList(); renderPortTab(); updatePlan();
+refreshPrices().then(()=>{ const first = getWatchlist()[0]; if(first && !market.selected) selectAsset(first.symbol); });
 refreshInterval = setInterval(refreshPrices, 20000);
 </script>
 <script src="dojo-engine.js"></script>

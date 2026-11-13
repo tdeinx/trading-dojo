@@ -98,7 +98,7 @@ window.ACADEMY_MODULES = [
     "storage": "dojo_sim",
     "kind": "sim",
     "description": "Rehearse your process using a virtual account and practice orders.",
-    "detail": "Stocks & forex \u00b7 Virtual funds",
+    "detail": "Stocks, forex & gold \u00b7 Stop & target required",
     "lessons": [],
     "level": "Practice workspace"
   }

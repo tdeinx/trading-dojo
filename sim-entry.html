@@ -355,6 +355,8 @@ body::after{
   </div>
 
   <button class="entry-btn" id="entry-btn" onclick="launchSim()">Begin Session</button>
+  <a href="replay.html" class="entry-back" style="color:var(--gold,#2046F5);font-weight:700">⏪ Or practice on real history with Replay drills</a>
+  <a href="options-lab.html" class="entry-back" style="color:var(--gold,#2046F5);font-weight:700">🎯 Options lab: spreads, premiums and the Greeks</a>
   <a href="dashboard.html" class="entry-back">← Return to dashboard</a>
 </div>
 
@@ -380,10 +382,11 @@ function loadSimState(){
     const cash = s.cash || 10000;
     const positions = s.positions || {};
     const history = s.history || [];
-    const trades = s.totalTrades || 0;
+    const trades = s.version===2 ? (s.journal||[]).length : (s.totalTrades || 0);
 
     // Calc total account value
-    const invested = Object.values(positions).reduce((sum,p)=>sum+(p.shares*(p.avgCost||0)*(p.lotSize||1)),0);
+    // v2 keeps realized results in cash; open trades are marked live inside the lab.
+    const invested = s.version===2 ? 0 : Object.values(positions).reduce((sum,p)=>sum+(p.shares*(p.avgCost||0)*(p.lotSize||1)),0);
     const totalVal = cash + invested;
     const pnl = totalVal - 10000;
     const sign = pnl >= 0 ? '+' : '';
