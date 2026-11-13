@@ -256,6 +256,7 @@ canvas#price-chart{width:100%;flex:1;display:block;}
 .drill-help{font-size:0.7rem;color:var(--text-dim);line-height:1.5;}
 .drill-status{font-size:0.72rem;color:var(--text);line-height:1.5;border-left:3px solid var(--gold);padding-left:8px;}
 .drill-status:empty{display:none;}
+.drill-brief{background:var(--gold);color:#fff;font-size:0.72rem;font-weight:700;padding:8px 10px;}
 .replay-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
 .ctl-btn{font-family:'DM Sans',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.08em;padding:8px 12px;border:1px solid var(--border-b);background:var(--panel);color:var(--gold);cursor:pointer;}
 .ctl-btn:hover{background:rgba(32,70,245,0.06);}
@@ -394,6 +395,12 @@ const fmtR = v => Number.isFinite(v) ? (v>=0?'+':'')+v.toFixed(2)+'R' : '—';
 const usdPerMove = (sym,price) => R.usdPerUnitMove(specOf(sym), price, 1);
 
 document.getElementById('drill-symbol').innerHTML = MARKETS.map(m=>`<option value="${m.symbol}">${m.symbol} · ${m.name}</option>`).join('');
+(()=>{ const q=new URLSearchParams(location.search), sym=q.get('symbol'), iv=q.get('interval'), name=q.get('drill');
+  if(sym && MARKETS.some(m=>m.symbol===sym)) document.getElementById('drill-symbol').value=sym;
+  if(iv && ['5m','15m','1h','1d'].includes(iv)) document.getElementById('drill-interval').value=iv;
+  if(name){ const setups=['Trend pullback','Breakout','Range fade','Reversal','Momentum / news']; const map={pullback:0,breakout:1,range:2,reaction:4}; for(const k in map) if(name.toLowerCase().includes(k)) document.getElementById('setup-select').value=setups[map[k]];
+    const box=document.createElement('div'); box.className='drill-brief'; box.textContent='Track drill: '+name.slice(0,80); document.querySelector('.drill-setup').prepend(box); }
+})();
 
 // ── shared journal (same storage as the live lab, tagged as replay) ──
 function readSim(){ try{ const s=JSON.parse(localStorage.getItem('dojo_sim')||'{}'); return s.version===2 ? s : {version:2,cash:10000,positions:{},journal:[],badges:{},totalTrades:0,realizedPnL:0}; }catch(e){ return null; } }
