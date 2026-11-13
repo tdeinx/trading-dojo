@@ -1,6 +1,7 @@
 /* Historical candles for replay drills. Read-only relay, cached for an hour. */
 const SYMBOL=/^[A-Z0-9^][A-Z0-9.=^-]{0,14}$/;
 const RANGES={'5m':'60d','15m':'60d','1h':'730d','1d':'5y'};
+const MAX_BARS=4000; // keeps responses light on phones while leaving months of variety
 
 const rd=v=>Number(v.toPrecision(7));
 export function toBars(data){
@@ -22,7 +23,7 @@ export async function handle(request,fetchImpl=fetch){
   const res=await fetchImpl(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=${interval}&range=${RANGES[interval]}`,
    {headers:{'User-Agent':'Mozilla/5.0 (TradingDojo replay)','Accept':'application/json'},signal:AbortSignal.timeout(9000)});
   if(!res.ok)return Response.json({error:'History unavailable right now.'},{status:502});
-  const bars=toBars(await res.json());
+  const bars=toBars(await res.json()).slice(-MAX_BARS);
   if(!bars.length)return Response.json({error:'No history returned.'},{status:502});
   return Response.json({symbol,interval,bars},{headers:{'Cache-Control':'public, max-age=3600'}});
  }catch{return Response.json({error:'History unavailable right now.'},{status:502});}
