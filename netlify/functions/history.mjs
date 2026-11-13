@@ -2,12 +2,13 @@
 const SYMBOL=/^[A-Z0-9^][A-Z0-9.=^-]{0,14}$/;
 const RANGES={'5m':'60d','15m':'60d','1h':'730d','1d':'5y'};
 
+const rd=v=>Number(v.toPrecision(7));
 export function toBars(data){
  const r=data?.chart?.result?.[0];const t=r?.timestamp||[];const q=r?.indicators?.quote?.[0]||{};
  const bars=[];
  for(let i=0;i<t.length;i++){
   const o=q.open?.[i],h=q.high?.[i],l=q.low?.[i],c=q.close?.[i];
-  if([o,h,l,c].every(Number.isFinite)&&h>=l)bars.push({t:t[i]*1000,o,h:Math.max(h,o,c),l:Math.min(l,o,c),c});
+  if([o,h,l,c].every(Number.isFinite)&&h>=l)bars.push({t:t[i]*1000,o:rd(o),h:rd(Math.max(h,o,c)),l:rd(Math.min(l,o,c)),c:rd(c)});
  }
  return bars;
 }

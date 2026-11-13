@@ -289,6 +289,7 @@ canvas#price-chart{width:100%;flex:1;display:block;}
       <button class="mode-tab" onclick="switchMode('forex')">Forex &amp; Gold</button>
     </div>
     <a class="reset-btn replay-link" href="replay.html">Replay drills</a>
+    <a class="reset-btn replay-link" href="options-lab.html">Options lab</a>
     <button class="reset-btn" onclick="confirmReset()">Reset</button>
   </div>
 </div>
@@ -841,8 +842,8 @@ function renderJournal(){
   el.innerHTML = state.journal.slice(0,100).map(t=>{
     const reason = {stop:'Stopped out',gap:'Gap through stop',target:'Target hit',manual:'Closed manually'}[t.exitReason]||t.exitReason;
     return `<div class="journal-row">
-      <div class="jr-top"><div><b>${esc(t.symbol)}</b> <span class="side-tag ${t.side}">${t.side.toUpperCase()}</span> <span class="jr-setup">${esc(t.setup)}${t.source==='replay'?' · replay':''}</span></div><div class="jr-r ${t.r>=0?'up':'down'}">${fmtR(t.r)}</div></div>
-      <div class="jr-detail">${fmtPrice(t.symbol,t.entry)} → ${fmtPrice(t.symbol,t.exit)} · ${reason} · ${fmtUSD(t.pnl)} · ${new Date(t.closed).toLocaleDateString([], {month:'short',day:'numeric'})}</div>
+      <div class="jr-top"><div><b>${esc(t.symbol)}</b> <span class="side-tag ${t.side}">${t.side.toUpperCase()}</span> <span class="jr-setup">${esc(t.setup)}${t.source==='replay'?' · replay':t.source==='options-replay'?' · options lab':''}</span></div><div class="jr-r ${t.r>=0?'up':'down'}">${fmtR(t.r)}</div></div>
+      <div class="jr-detail">${t.type==='options'?`Underlying $${t.entry.toFixed(2)} → $${t.exit.toFixed(2)}`:`${fmtPrice(t.symbol,t.entry)} → ${fmtPrice(t.symbol,t.exit)}`} · ${t.type==='options'?(t.exitReason==='expiry'?'Held to expiry':'Closed early'):reason} · ${fmtUSD(t.pnl)} · ${new Date(t.closed).toLocaleDateString([], {month:'short',day:'numeric'})}</div>
       ${t.note?`<div class="jr-note">“${esc(t.note)}”</div>`:''}
       <div class="jr-rules">${chip(t.rules.risk,'1% risk')}${chip(t.rules.rr,'1:2 R:R')}${t.stopMoves?`<span class="rule-chip sm ok">Stop trailed ×${t.stopMoves}</span>`:''}${t.ruleAdherent?'':'<span class="rule-chip sm bad">Rule break</span>'}</div>
     </div>`;

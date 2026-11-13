@@ -121,7 +121,7 @@
  }
 
  function sameDay(a,b){const x=new Date(a),y=new Date(b);return x.getFullYear()===y.getFullYear()&&x.getMonth()===y.getMonth()&&x.getDate()===y.getDate();}
- function lossesToday(journal,now=Date.now()){return journal.filter(t=>t.source!=="replay"&&t.pnl<0&&sameDay(t.closed,now)).length;}
+ function lossesToday(journal,now=Date.now()){return journal.filter(t=>!t.source&&t.pnl<0&&sameDay(t.closed,now)).length;}
 
  function rulesAtEntry({riskPct,rr}){
   return {stop:true,risk:riskPct<=RULES.maxRiskPct+1e-9,rr:rr>=RULES.minRR-1e-9};
