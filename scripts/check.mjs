@@ -26,6 +26,6 @@ for(const icon of manifest.icons)assert.ok(fs.existsSync(path.join(root,icon.src
 for(const f of ['favicon.ico','favicon.png','favicon-32.png','apple-touch-icon.png','og-image.png'])assert.ok(fs.existsSync(path.join(root,f)),`Missing house asset ${f}`);
 assert.equal(manifest.start_url,'/dashboard.html');
 const shareImage=fs.readFileSync(path.join(root,'og-image.png'));assert.equal(shareImage.readUInt32BE(16),1200);assert.equal(shareImage.readUInt32BE(20),630);
-execFileSync(process.execPath,[path.join(root,'scripts/learning-path.test.mjs')],{stdio:'inherit'});
+for(const t of ['learning-path.test.mjs','risk-engine.test.mjs','quote.test.mjs'])execFileSync(process.execPath,[path.join(root,'scripts',t)],{stdio:'inherit'});
 if(errors.length){console.error(errors.join('\n'));process.exit(1);}
 console.log(`PASS: ${pages.length} pages, ${scripts} scripts parsed, ${links} local references, 7 modules / 22 core lessons, metadata and PWA icons.`);
