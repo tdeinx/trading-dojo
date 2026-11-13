@@ -26,9 +26,11 @@
     <div class="tk-why" hidden></div></div>`;
   }
   if(b.drill){
-   const d = b.drill, q = new URLSearchParams({symbol:d.symbol, interval:d.interval, drill:d.title}).toString();
-   return `<div class="tk-drill"><div class="tk-drill-label">Replay drill</div><div class="tk-drill-t">${d.title}</div><p class="tk-p">${d.brief}</p>
-    <ul class="tk-list">${d.rules.map(r=>`<li>${r}</li>`).join('')}</ul><a class="tk-drill-btn" href="replay.html?${q}">Run this drill on ${d.symbol} · ${d.interval} ↗</a></div>`;
+   const d = b.drill, isOpt = d.lab==='options';
+   const q = new URLSearchParams(isOpt ? {symbol:d.symbol, strategy:d.strategy, drill:d.title} : {symbol:d.symbol, interval:d.interval, drill:d.title}).toString();
+   const href = (isOpt ? 'options-lab.html?' : 'replay.html?') + q, label = isOpt ? `Run this drill in the options lab on ${d.symbol}` : `Run this drill on ${d.symbol} · ${d.interval}`;
+   return `<div class="tk-drill"><div class="tk-drill-label">${isOpt?'Options lab drill':'Replay drill'}</div><div class="tk-drill-t">${d.title}</div><p class="tk-p">${d.brief}</p>
+    <ul class="tk-list">${d.rules.map(r=>`<li>${r}</li>`).join('')}</ul><a class="tk-drill-btn" href="${href}">${label} ↗</a></div>`;
   }
   return '';
  }
