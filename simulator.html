@@ -249,6 +249,12 @@ canvas#price-chart{width:100%;flex:1;display:block;}
 .grad-list li.ok{color:var(--green);}
 .grad-note,.stats-foot{font-size:0.66rem;color:var(--text-dim);line-height:1.5;}
 .stats-foot{padding:0 16px 16px;color:var(--text-faint);}
+.sensei-head{padding:14px 16px 6px;font-weight:700;font-size:0.8rem;}
+.sensei-card{margin:8px 12px;padding:12px 14px;background:var(--panel);border-left:4px solid var(--gold);font-size:0.74rem;line-height:1.5;}
+.sensei-card.warn{border-left-color:var(--red);}
+.sensei-card.good{border-left-color:var(--green);}
+.sensei-t{font-weight:700;font-size:0.8rem;margin-bottom:4px;}
+.sensei-do{margin-top:6px;color:var(--text-dim);}
 </style>
 <link rel="stylesheet" href="dojo-theme.css"/>
 <link rel="manifest" href="/manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Trading Dojo"/><meta name="theme-color" content="#2046F5"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
@@ -378,6 +384,7 @@ canvas#price-chart{width:100%;flex:1;display:block;}
       <button class="port-tab active" onclick="showPortTab('positions')">Positions</button>
       <button class="port-tab" onclick="showPortTab('journal')">Journal</button>
       <button class="port-tab" onclick="showPortTab('stats')">Stats</button>
+      <button class="port-tab" onclick="showPortTab('sensei')">Sensei</button>
       <button class="port-tab" onclick="showPortTab('badges')">Badges</button>
     </div>
     <div class="port-content" id="port-content"></div>
@@ -388,6 +395,7 @@ canvas#price-chart{width:100%;flex:1;display:block;}
 <div class="toast" id="toast"></div>
 
 <script src="risk-engine.js"></script>
+<script src="coach.js"></script>
 <script>
 // ═══════════════════════════════════════
 // TRADING DOJO PRACTICE LAB v2
@@ -804,13 +812,19 @@ function updateAccountValue(){
   const st = R.stats(state.journal);
   document.getElementById('ts-trades').textContent = st.n ? fmtR(st.expectancy) : '—';
 }
-const TABS = ['positions','journal','stats','badges'];
+const TABS = ['positions','journal','stats','sensei','badges'];
 function showPortTab(tab){
   currentPortTab = tab;
   document.querySelectorAll('.port-tab').forEach((t,i)=>t.classList.toggle('active', TABS[i]===tab));
   renderPortTab();
 }
-function renderPortTab(){ ({positions:renderPositions, journal:renderJournal, stats:renderStats, badges:renderBadges})[currentPortTab](); }
+function renderPortTab(){ ({positions:renderPositions, journal:renderJournal, stats:renderStats, sensei:renderSensei, badges:renderBadges})[currentPortTab](); }
+function renderSensei(){
+  const rv = window.DojoCoach.review(state.journal);
+  document.getElementById('port-content').innerHTML = `<div class="sensei-head">🥷 Sensei reviewed ${rv.n} trade${rv.n===1?'':'s'}</div>` +
+    rv.findings.map(f=>`<div class="sensei-card ${f.tone}"><div class="sensei-t">${esc(f.title)}</div><p>${esc(f.text)}</p><p class="sensei-do"><b>Do this:</b> ${esc(f.action)}</p></div>`).join('') +
+    `<p class="stats-foot">Sensei reads your journal for common patterns. It is a checklist, not a prediction, and it gets sharper as your sample grows.</p>`;
+}
 function renderPositions(){
   const el = document.getElementById('port-content'), list = Object.values(state.positions);
   if(!list.length){ el.innerHTML = `<div class="empty-state"><div class="es-icon">📋</div><div class="es-text">No open trades. Build a plan in the ticket.</div></div>`; return; }

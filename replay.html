@@ -371,6 +371,7 @@ a.mode-tab{text-decoration:none;display:inline-flex;align-items:center;}
 
 <div class="toast" id="toast"></div>
 <script src="risk-engine.js"></script>
+<script src="coach.js"></script>
 <script>
 const R = window.DojoRisk;
 const DRILL_CASH = 10000, WARMUP = 80, AHEAD = 240;
@@ -592,7 +593,8 @@ function renderPort(){
     el.innerHTML=`<div class="stats-grid">${cell('All trades',st.n)}${cell('Expectancy',st.n?fmtR(st.expectancy):'—',st.expectancy>0?'up':st.expectancy<0?'down':'')}${cell('Rules followed',st.n?(st.adherence*100).toFixed(0)+'%':'—')}
       ${cell('Replay trades',sr.n)}${cell('Replay expectancy',sr.n?fmtR(sr.expectancy):'—',sr.expectancy>0?'up':sr.expectancy<0?'down':'')}${cell('Replay win rate',sr.n?(sr.winRate*100).toFixed(0)+'%':'—')}</div>
       <div class="grad-box"><div class="grad-title">Graduation gate</div><div class="pc-bar-wrap"><div class="pc-bar up" style="width:${st.grad.done}%"></div></div>
-      <p class="grad-note">${st.grad.done} / 100 trades. Replay and live practice both count. Full stats and your journal live in the <a href="simulator.html">live lab</a>.</p></div>
+      <p class="grad-note">${st.grad.done} / 100 trades. Replay and live practice both count. Full stats, your journal and Sensei's full review live in the <a href="simulator.html">live lab</a>.</p></div>
+      ${(()=>{ const f=window.DojoCoach.review(j).findings[0]; return f?`<div class="grad-box"><div class="grad-title">🥷 Sensei</div><p class="grad-note"><b>${esc(f.title)}.</b> ${esc(f.text)} <b>Do this:</b> ${esc(f.action)}</p></div>`:''; })()}
       <p class="stats-foot">Replay results are hypothetical and use past prices. They don't predict live results.</p>`;
     return;
   }
