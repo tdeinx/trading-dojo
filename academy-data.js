@@ -13,7 +13,8 @@ window.ACADEMY_MODULES = [
       "Crypto",
       "Forex",
       "Futures"
-    ]
+    ],
+    "level": "Foundations"
   },
   {
     "name": "Trading Styles",
@@ -30,7 +31,8 @@ window.ACADEMY_MODULES = [
       "Sniper / Position Trading",
       "Momentum Trading",
       "Algorithmic / Systematic"
-    ]
+    ],
+    "level": "Foundations"
   },
   {
     "name": "Platforms & Tools",
@@ -40,7 +42,8 @@ window.ACADEMY_MODULES = [
     "kind": "platforms",
     "description": "Get to know the brokers, charting tools and research stack.",
     "detail": "9 profiles \u00b7 Stack builder \u00b7 8 questions",
-    "lessons": []
+    "lessons": [],
+    "level": "Orientation"
   },
   {
     "name": "Chart Reading",
@@ -57,7 +60,8 @@ window.ACADEMY_MODULES = [
       "Volume",
       "Moving Averages",
       "RSI, MACD & VWAP"
-    ]
+    ],
+    "level": "Early intermediate"
   },
   {
     "name": "Risk Management",
@@ -73,7 +77,8 @@ window.ACADEMY_MODULES = [
       "Position Sizing",
       "Risk / Reward",
       "The Blowup Scenario"
-    ]
+    ],
+    "level": "Applied foundations"
   },
   {
     "name": "Trader DNA",
@@ -83,7 +88,8 @@ window.ACADEMY_MODULES = [
     "kind": "dna",
     "description": "Explore your instincts and discover your trading archetype.",
     "detail": "10 scenarios \u00b7 6 archetypes",
-    "lessons": []
+    "lessons": [],
+    "level": "Self-discovery"
   },
   {
     "name": "Paper Trading",
@@ -93,6 +99,7 @@ window.ACADEMY_MODULES = [
     "kind": "sim",
     "description": "Rehearse your process using a virtual account and practice orders.",
     "detail": "Stocks & forex \u00b7 Virtual funds",
-    "lessons": []
+    "lessons": [],
+    "level": "Practice workspace"
   }
 ];

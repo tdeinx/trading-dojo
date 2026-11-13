@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 const root=path.resolve(import.meta.dirname,'..');
 let scripts=0,links=0;const errors=[];
 const pages=fs.readdirSync(root).filter(f=>f.endsWith('.html'));
@@ -15,7 +16,7 @@ for(const file of pages){
   const target=url.split(/[?#]/)[0];if(!target)continue;links++;
   if(!fs.existsSync(path.join(root,target.replace(/^\//,''))))errors.push(`${file}: missing ${target}`);
  }
- for(const marker of ['name="description"','property="og:title"','property="og:description"','property="og:image"','property="og:url"','name="twitter:card"','name="viewport"'])if(!html.includes(marker))errors.push(`${file}: missing ${marker}`);
+ for(const marker of ['name="description"','property="og:title"','property="og:description"','property="og:image"','property="og:url"','property="og:image:width"','property="og:image:height"','property="og:image:alt"','name="twitter:card"','name="twitter:title"','name="twitter:description"','name="twitter:image"','name="twitter:image:alt"','name="viewport"'])if(!html.includes(marker))errors.push(`${file}: missing ${marker}`);
 }
 for(const file of fs.readdirSync(root).filter(f=>f.endsWith('.js'))){new vm.Script(fs.readFileSync(path.join(root,file),'utf8'),{filename:file});scripts++;}
 const ctx={window:{}};vm.runInNewContext(fs.readFileSync(path.join(root,'academy-data.js'),'utf8'),ctx);
@@ -24,5 +25,7 @@ const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'
 for(const icon of manifest.icons)assert.ok(fs.existsSync(path.join(root,icon.src)),`Missing install icon ${icon.src}`);
 for(const f of ['favicon.ico','favicon.png','favicon-32.png','apple-touch-icon.png','og-image.png'])assert.ok(fs.existsSync(path.join(root,f)),`Missing house asset ${f}`);
 assert.equal(manifest.start_url,'/dashboard.html');
+const shareImage=fs.readFileSync(path.join(root,'og-image.png'));assert.equal(shareImage.readUInt32BE(16),1200);assert.equal(shareImage.readUInt32BE(20),630);
+execFileSync(process.execPath,[path.join(root,'scripts/learning-path.test.mjs')],{stdio:'inherit'});
 if(errors.length){console.error(errors.join('\n'));process.exit(1);}
 console.log(`PASS: ${pages.length} pages, ${scripts} scripts parsed, ${links} local references, 7 modules / 22 core lessons, metadata and PWA icons.`);
