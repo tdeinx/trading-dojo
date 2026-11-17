@@ -31,3 +31,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  const showLevels=()=>{if(!module)return;document.querySelectorAll('.lesson-hero,.mod-hero').forEach(hero=>{if(hero.querySelector('.content-level'))return;const label=document.createElement('span');label.className='content-level';label.textContent='Course depth: '+module.level;hero.appendChild(label);});};
  showLevels();if(lessonArea)new MutationObserver(showLevels).observe(lessonArea,{childList:true,subtree:true});
 });
+/* Accounts: load config, merge logic and the account module on every page. Dormant until configured. */
+(()=>{const add=(src,mod)=>new Promise(r=>{const s=document.createElement('script');s.src=src;if(mod)s.type='module';s.onload=r;s.onerror=r;document.head.appendChild(s);});
+ add('/firebase-config.js').then(()=>{ if(!window.DOJO_FIREBASE) return; return add('/sync-merge.js').then(()=>add('/account.js',true)); });})();

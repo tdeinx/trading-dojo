@@ -17,6 +17,7 @@
 .fg-level{stroke-width:1.1;stroke-dasharray:5 3;} .fg-level.good{stroke:var(--green);} .fg-level.bad{stroke:var(--red);} .fg-level.entry{stroke:var(--gold);} .fg-level.neutral{stroke:var(--text-dim);}
 .fg-zone{opacity:0.13;} .fg-zone.good{fill:var(--green);} .fg-zone.bad{fill:var(--red);}
 .fg-band{opacity:0.12;} .fg-band.good{fill:var(--green);} .fg-band.bad{fill:var(--red);} .fg-band.warn{fill:var(--gold);}
+.fg-fvg{fill:var(--purple);opacity:0.16;}
 .fg-range{fill:var(--gold);opacity:0.08;stroke:var(--gold);stroke-dasharray:3 2;stroke-opacity:0.6;}
 .fg-vline{stroke:var(--text-dim);stroke-dasharray:2 3;stroke-width:1;}
 .fg-grid{stroke:var(--border);stroke-width:1;}
