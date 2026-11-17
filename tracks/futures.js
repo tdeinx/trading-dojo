@@ -182,6 +182,73 @@ window.DOJO_TRACK = {
     {q:'What is the entry trigger?', opts:['Buying before the report','A later 15-minute close beyond the first post-release candle','Selling the release candle','Any candle after noon'], correct:1, why:'Wait for the reaction, then trade the follow-through.'},
     {q:'One MCL contract, stop 30 cents away. Dollar risk per contract?', opts:['$0.30','$3','$30','$300'], correct:2, why:'MCL is $100 per $1. $0.30 × 100 = $30.'},
     {q:'Why be flat before the release?', opts:['The market closes','The first move can jump past stops in either direction','Brokers require it','Oil stops trading'], correct:1, why:'Holding through is a coin flip with gap risk.'}
+   ]},
+  {id:'fu-po3', icon:'🎭', minutes:10, title:'ICT Power of Three, tested honestly',
+   lede:'One of the most popular frameworks on trading social media. Here is what it says, what holds up, and how to find out if it works for you.',
+   blocks:[
+    {p:'"Power of Three" (PO3) comes from the ICT (Inner Circle Trader) teaching style, which is hugely popular with futures and forex traders online, especially on Nasdaq futures. It describes a trading session, or a single daily candle, as three phases.'},
+    {terms:[
+     ['Accumulation','A quiet range, often overnight or early in the session, where price goes nowhere.'],
+     ['Manipulation','A fast move out of that range in the "wrong" direction, taking out the obvious highs or lows. ICT calls the false move a "Judas swing."'],
+     ['Distribution','The real move of the session, in the opposite direction of the manipulation.'],
+     ['Liquidity','In ICT terms, the stop orders resting above obvious highs and below obvious lows.'],
+     ['Liquidity sweep','Price running through one of those levels, triggering the stops, then reversing.']
+    ]},
+    {callout:{tone:'key', title:'What holds up', text:'Stop orders really do cluster just beyond obvious highs and lows, and price really does sometimes run those levels and snap back. Quiet ranges are often followed by expansion. Waiting for a failed breakout before trading the other way is a legitimate idea that predates ICT.'}},
+    {callout:{tone:'warn', title:'What does not', text:'The framework presents these moves as deliberate, engineered by "smart money" or an algorithm. There is no public evidence for that. The bigger problem is hindsight: on yesterday\'s chart, every session can be labeled accumulation, manipulation, distribution. In real time, you never know whether a move out of the range is the Judas swing or the real breakout. A framework that explains everything after the fact predicts nothing until you give it rules.'}},
+    {h:'A testable version'},
+    {p:'To find out if PO3 has an edge for you, turn it into rules a stranger could follow and get the same trades:'},
+    {steps:[
+     '<b>Accumulation:</b> mark the overnight range on MNQ before the 9:30am Eastern open.',
+     '<b>Manipulation:</b> wait for price to trade below the range low (for a long setup) after the open.',
+     '<b>Confirmation:</b> price must reclaim the range and leave a fair value gap on the way up (next lesson).',
+     '<b>Entry:</b> a limit order at the top of that fair value gap.',
+     '<b>Stop:</b> below the sweep low. <b>Target:</b> 2R.',
+     '<b>No trade</b> if there is no sweep, no reclaim or no gap by 11am Eastern.'
+    ]},
+    {decision:{q:'Price drops below the overnight low right after the open. You are sure it is the Judas swing. What do you do?', opts:[
+     {t:'Buy immediately, it is manipulation and the real move is up', ok:false, why:'In real time you can\'t know that. Many sweeps keep going and become real breakdowns. Buying the drop with no confirmation is guessing.'},
+     {t:'Wait for a reclaim of the range and a fair value gap before considering a long', ok:true, why:'Confirmation is what turns a story into a rule. You will miss some moves, and you will skip many of the ones that never reversed.'},
+     {t:'Short it, the range broke', ok:false, why:'That may also be valid, but it is a different setup with its own rules. Decide which one you are testing before the session.'}
+    ]}},
+    {drill:{title:'Power of Three on MNQ', symbol:'MNQ', interval:'5m', brief:'Turn off "hide the date" so you can see the session times. Mark the overnight range, wait for a sweep and a reclaim, and only trade the rules. Tag the setup "Reversal" in the journal.', rules:['Sweep of the overnight range required','Reclaim plus a fair value gap required','Stop below the sweep low, target 2R','Write down every session where the "manipulation" kept going']}}
+   ],
+   quiz:[
+    {q:'What are the three phases in Power of Three?', opts:['Buy, hold, sell','Accumulation, manipulation, distribution','Open, high, close','Trend, range, reversal'], correct:1, why:'Accumulation range, a false move out of it, then the real move.'},
+    {q:'What is a liquidity sweep in ICT terms?', opts:['A broker sweeping your account','Price running through obvious highs or lows, triggering stops, then reversing','A sudden rise in volume','A gap at the open'], correct:1, why:'It describes stops being triggered beyond an obvious level before price turns.'},
+    {q:'What is the biggest weakness of PO3 as usually taught?', opts:['It is too mathematical','Every session can be labeled after the fact, but it is hard to know the phase in real time','It only works on stocks','It requires expensive software'], correct:1, why:'Hindsight labeling makes it look perfect on old charts.'},
+    {q:'What turns PO3 into something you can actually test?', opts:['Watching more videos','Fixed rules for the range, sweep, confirmation, entry, stop and target','Trading it live with big size','Ignoring losing days'], correct:1, why:'Only rules produce the same trades every time, which is what a journal can measure.'},
+    {q:'Is there public evidence that sweeps are engineered by a "smart money algorithm"?', opts:['Yes, exchanges publish it','No, it is an untested claim','Only on Fridays','Yes, for gold only'], correct:1, why:'Stops do cluster at obvious levels, but deliberate engineering is a story, not evidence.'}
+   ]},
+  {id:'fu-fvg', icon:'🕳️', minutes:9, title:'Fair value gaps (gap theory)',
+   lede:'A three-candle pattern that ICT traders build entire strategies around. Simple to spot, easy to overrate.',
+   blocks:[
+    {p:'A <b>fair value gap (FVG)</b> forms when price moves so fast that one candle leaves a hole between its neighbors. In an upward move, the high of the first candle is below the low of the third candle. The space between them is the gap.'},
+    {terms:[
+     ['Bullish FVG','Candle 1 high is below candle 3 low, after a strong up candle in the middle.'],
+     ['Bearish FVG','Candle 1 low is above candle 3 high, after a strong down candle in the middle.'],
+     ['Displacement','The large, fast candle that creates the gap. ICT treats it as a sign of real buying or selling.'],
+     ['Filling the gap','Price coming back into the gap later.']
+    ]},
+    {callout:{tone:'key', title:'The claim', text:'Price tends to return to fill the gap, and the gap then acts as support (bullish) or resistance (bearish). Traders put a limit order at the edge of the gap, with a stop beyond the move that created it.'}},
+    {callout:{tone:'warn', title:'The honest version', text:'Markets often retrace after a fast move, so many gaps do get revisited. That alone is not an edge. What matters is what happens after price touches the gap: does it hold, or slice straight through? Plenty of gaps fill and keep going. On a 5-minute chart, a busy morning can produce a dozen gaps, and picking the "right" one afterward is easy. Your journal is what tells you whether the ones you pick in real time pay.'}},
+    {h:'Rules you can test'},
+    {steps:[
+     '<b>Context first:</b> trade bullish gaps only in an uptrend, or after a Power of Three reclaim.',
+     '<b>Quality:</b> the middle candle must be clearly larger than the candles around it.',
+     '<b>Entry:</b> a limit order at the near edge of the gap (the top of a bullish gap).',
+     '<b>Stop:</b> below the low of the first candle of the pattern.',
+     '<b>Target:</b> 2R. <b>Cancel</b> the order if price has not returned within 12 candles.'
+    ]},
+    {h:'Opening gaps'},
+    {p:'ICT traders also mark <b>opening gaps</b>: the space between one session\'s close and the next session\'s open, such as the gap between Friday\'s close and Sunday evening\'s open in futures. Treat them like any other reference level: worth marking, worth testing, not a guarantee.'},
+    {drill:{title:'Fair value gaps on MNQ', symbol:'MNQ', interval:'15m', brief:'Look for a large candle that leaves a clear gap between its neighbors. Trade only gaps that match the rules, and journal every touch, including the ones that failed.', rules:['Gap must come from a clearly larger candle','Limit entry at the near edge of the gap','Stop below candle 1 of the pattern','Cancel after 12 candles with no retest']}}
+   ],
+   quiz:[
+    {q:'In a bullish fair value gap, what is true?', opts:['Candle 1 low is above candle 3 high','Candle 1 high is below candle 3 low','All three candles are red','The gap happens overnight'], correct:1, why:'The hole between candle 1\'s high and candle 3\'s low is the gap.'},
+    {q:'Why is "price returns to the gap" not an edge on its own?', opts:['Gaps never fill','Markets often retrace anyway; what matters is whether the gap holds after the touch','It is illegal','Gaps only form on gold'], correct:1, why:'A retrace is common. Profit depends on what happens next.'},
+    {q:'Where does the stop go on a bullish FVG entry in these rules?', opts:['At the top of the gap','Below the low of candle 1 of the pattern','No stop','Above candle 3'], correct:1, why:'If price falls below where the move started, the idea has failed.'},
+    {q:'A 5-minute chart shows 12 gaps this morning. What is the risk when reviewing it later?', opts:['None','Picking the gaps that worked after the fact','Running out of chart space','The broker deletes them'], correct:1, why:'Hindsight selection makes any pattern look great. Rules and a journal prevent it.'}
    ]}
  ]},
  {title:'Practice plan', lessons:[

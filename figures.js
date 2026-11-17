@@ -34,13 +34,16 @@
  function resolve(sp, C){
   const out={};
   if(sp.range){ const [a,b]=sp.range; out.range={a,b,hi:hiOf(C,a,b),lo:loOf(C,a,b)}; }
-  let ei=sp.entry, side=sp.side||'long';
+  let ei=sp.entry, side=sp.side||'long', fill=null;
+  if(sp.fvg!=null){ const i=sp.fvg, up=side==='long'; out.fvg={i, lo: up?C[i-1].h:C[i+1].h, hi: up?C[i+1].l:C[i-1].l}; }
+  if(sp.entry==='fvgRetest'&&out.fvg){ const g=out.fvg, up=side==='long';
+   ei=C.findIndex((k,j)=>j>g.i+1&&(up?k.l<=g.hi:k.h>=g.lo)); fill=up?g.hi:g.lo; }
   if(sp.entry==='breakUp'||sp.entry==='breakDown'){
    const up=sp.entry==='breakUp'; side=up?'long':'short';
    ei=C.findIndex((k,i)=>i>out.range.b&&(up?k.c>out.range.hi:k.c<out.range.lo));
   }
   if(!(ei>=0)) return out;
-  const entry=C[ei].c, st=sp.stop||{}, tg=sp.target||{rr:2};
+  const entry=fill!=null?fill:C[ei].c, st=sp.stop||{}, tg=sp.target||{rr:2};
   let stop = st.lowOf ? loOf(C,...st.lowOf)-(st.pad||0.2)
    : st.highOf ? hiOf(C,...st.highOf)+(st.pad||0.2)
    : st.mid ? (out.range.hi+out.range.lo)/2
@@ -81,6 +84,7 @@
   s+=`<text x="${P.l}" y="15" class="fg-title">${esc(title)}</text>`;
   (sp.bands||[]).forEach(b=>{ s+=`<rect x="${P.l}" y="${y(b.hi)}" width="${iW}" height="${Math.max(1,y(b.lo)-y(b.hi))}" class="fg-band ${b.tone||'good'}"/>`; if(b.label) s+=`<text x="${P.l+4}" y="${y(b.hi)+11}" class="fg-small ${b.tone||'good'}">${esc(b.label)}</text>`; });
   if(T&&T.range){ const rg=T.range; s+=`<rect x="${x(rg.a)-slot/2}" y="${y(rg.hi)}" width="${(rg.b-rg.a+1)*slot}" height="${y(rg.lo)-y(rg.hi)}" class="fg-range"/><text x="${x(rg.a)-slot/2+3}" y="${y(rg.hi)-4}" class="fg-small">${esc(sp.rangeLabel||'Range')}</text>`; }
+  if(T&&T.fvg&&T.fvg.hi>T.fvg.lo){ const g=T.fvg; s+=`<rect x="${x(g.i-1)-slot/2}" y="${y(g.hi)}" width="${W-P.r-(x(g.i-1)-slot/2)}" height="${y(g.lo)-y(g.hi)}" class="fg-fvg"/><text x="${x(g.i+1)+slot}" y="${y(g.lo)+10}" class="fg-small fg-strong">Fair value gap</text>`; }
   (sp.vlines||[]).forEach(v=>{ s+=`<line x1="${x(v.i)-slot/2}" x2="${x(v.i)-slot/2}" y1="${P.t}" y2="${H-P.b}" class="fg-vline"/><text x="${x(v.i)-slot/2+3}" y="${H-P.b-4}" class="fg-small">${esc(v.label)}</text>`; });
   if(T&&T.ei>=0){
    const endI=T.exit?T.exit.i:C.length-1, x0=x(T.ei), x1=x(endI)+slot/2;
