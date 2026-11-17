@@ -6,8 +6,43 @@ if (CFG && CFG.apiKey && SYNC) start();
 
 async function start(){
  const V = '10.14.1', base = `https://www.gstatic.com/firebasejs/${V}`;
- const [{initializeApp}, A, F] = await Promise.all([import(`${base}/firebase-app.js`), import(`${base}/firebase-auth.js`), import(`${base}/firebase-firestore.js`)]);
+ // ── UI ──
+ const css = document.createElement('style');
+ css.textContent = `.acct-btn{margin-left:auto;font:700 0.68rem 'DM Sans',sans-serif;letter-spacing:0.08em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--gold,#2046F5);background:transparent;color:var(--gold,#2046F5);cursor:pointer;white-space:nowrap}
+.acct-btn.on{border-color:var(--green,#13884F);color:var(--green,#13884F)}
+.acct-btn.err{border-color:var(--red,#CC303D);color:var(--red,#CC303D)}
+.acct-float{position:fixed;right:14px;bottom:14px;z-index:900;background:var(--panel,#fff);box-shadow:0 4px 14px rgba(0,0,0,0.18);padding:10px 14px}
+.acct-modal{position:fixed;inset:0;background:rgba(10,12,20,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.acct-card{background:var(--panel,#fffefa);color:var(--text,#131313);max-width:400px;width:100%;padding:24px;border:1px solid var(--border,#ddd);font-family:'DM Sans',sans-serif}
+.acct-card h2{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;margin-bottom:6px}
+.acct-card p{font-size:0.88rem;line-height:1.5;color:var(--text-dim,#555);margin-bottom:14px}
+.acct-card button,.acct-card input{width:100%;font:inherit;font-size:0.92rem;padding:11px 12px;margin-bottom:10px;border:1px solid var(--border-b,#bbb);background:var(--ink,#fff);color:var(--text,#131313)}
+.acct-card .primary{background:var(--gold,#2046F5);color:#fff;border-color:var(--gold,#2046F5);font-weight:700;cursor:pointer}
+.acct-card .ghost{cursor:pointer;font-weight:600}
+.acct-card .or{text-align:center;font-size:0.75rem;color:var(--text-faint,#888);margin:4px 0 10px}
+.acct-card .msg{font-size:0.85rem;min-height:1.2em;margin-bottom:6px}
+.acct-card .fine{font-size:0.72rem;color:var(--text-faint,#888);margin:6px 0 0}`;
+ document.head.appendChild(css);
+ const btn = document.createElement('button'); btn.className='acct-btn'; btn.type='button';
+ const nav = document.querySelector('.academy-nav');
+ const small = matchMedia('(max-width: 768px)').matches;
+ if(nav && !small){ nav.style.display='flex'; nav.appendChild(btn); } else { btn.classList.add('acct-float'); document.body.appendChild(btn); }
+ let ready=false;
+ btn.textContent='Save progress';
+ const early = () => { if(!ready) earlyModal(); };
+ btn.addEventListener('click', early);
+ function earlyModal(){
+  const m=document.createElement('div'); m.className='acct-modal';
+  m.innerHTML=`<div class="acct-card" role="dialog" aria-modal="true"><h2>Save your progress</h2><p data-t>Loading sign-in…</p><button class="ghost" data-x>Close</button></div>`;
+  m.querySelector('[data-x]').onclick=()=>m.remove(); m.addEventListener('click',e=>{ if(e.target===m) m.remove(); }); document.body.appendChild(m);
+  if(failed) m.querySelector('[data-t]').textContent='Sign-in could not load. Check your connection, or pause an ad or tracker blocker for this site, then refresh.';
+ }
+ let failed=false, mods;
+ try{ mods = await Promise.all([import(`${base}/firebase-app.js`), import(`${base}/firebase-auth.js`), import(`${base}/firebase-firestore.js`)]); }
+ catch(e){ failed=true; btn.title='Sign-in could not load'; return; }
+ const [{initializeApp}, A, F] = mods;
  const app = initializeApp(CFG), auth = A.getAuth(app), db = F.getFirestore(app);
+ ready=true; btn.removeEventListener('click', early);
  const META = 'dojo_sync_meta', EMAIL = 'dojo_signin_email';
  const rawSet = Storage.prototype.setItem, rawRemove = Storage.prototype.removeItem;
  const readMeta = () => { try { return JSON.parse(localStorage.getItem(META)||'{}'); } catch(e){ return {}; } };
@@ -63,26 +98,6 @@ async function start(){
  });
  addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden' && user && pushTimer){ clearTimeout(pushTimer); pushTimer=null; syncNow(); } });
 
- // ── UI ──
- const css = document.createElement('style');
- css.textContent = `.acct-btn{margin-left:auto;font:700 0.68rem 'DM Sans',sans-serif;letter-spacing:0.08em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--gold,#2046F5);background:transparent;color:var(--gold,#2046F5);cursor:pointer;white-space:nowrap}
-.acct-btn.on{border-color:var(--green,#13884F);color:var(--green,#13884F)}
-.acct-btn.err{border-color:var(--red,#CC303D);color:var(--red,#CC303D)}
-.acct-float{position:fixed;right:14px;bottom:14px;z-index:900;background:var(--panel,#fff)}
-.acct-modal{position:fixed;inset:0;background:rgba(10,12,20,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px}
-.acct-card{background:var(--panel,#fffefa);color:var(--text,#131313);max-width:400px;width:100%;padding:24px;border:1px solid var(--border,#ddd);font-family:'DM Sans',sans-serif}
-.acct-card h2{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;margin-bottom:6px}
-.acct-card p{font-size:0.88rem;line-height:1.5;color:var(--text-dim,#555);margin-bottom:14px}
-.acct-card button,.acct-card input{width:100%;font:inherit;font-size:0.92rem;padding:11px 12px;margin-bottom:10px;border:1px solid var(--border-b,#bbb);background:var(--ink,#fff);color:var(--text,#131313)}
-.acct-card .primary{background:var(--gold,#2046F5);color:#fff;border-color:var(--gold,#2046F5);font-weight:700;cursor:pointer}
-.acct-card .ghost{cursor:pointer;font-weight:600}
-.acct-card .or{text-align:center;font-size:0.75rem;color:var(--text-faint,#888);margin:4px 0 10px}
-.acct-card .msg{font-size:0.85rem;min-height:1.2em;margin-bottom:6px}
-.acct-card .fine{font-size:0.72rem;color:var(--text-faint,#888);margin:6px 0 0}`;
- document.head.appendChild(css);
- const btn = document.createElement('button'); btn.className='acct-btn'; btn.type='button';
- const nav = document.querySelector('.academy-nav');
- if(nav){ nav.style.display='flex'; nav.appendChild(btn); } else { btn.classList.add('acct-float'); document.body.appendChild(btn); }
  btn.addEventListener('click', () => user ? accountMenu() : signInModal());
 
  function setState(s, why){ state=s; btn.title=why||''; render(); }
