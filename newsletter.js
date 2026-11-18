@@ -67,7 +67,7 @@
    if(!/^\S+@\S+\.\S+$/.test(email)){ m.querySelector('.msg').textContent='Enter a valid email.'; return; }
    m.querySelector('.go').disabled = true; m.querySelector('.go').textContent='Sending…';
    await subscribe({email, name, source:'popup'});
-   m.innerHTML = `<button class="x" aria-label="Close">×</button><h2>Almost there</h2><p>Check your inbox and tap the confirmation link to start getting Dojo tips.</p>`;
+   m.innerHTML = `<button class="x" aria-label="Close">×</button><h2>You are in</h2><p>Your welcome email is on the way. If it is not in your inbox in a few minutes, check spam or promotions.</p>`;
    m.querySelector('.x').onclick = () => m.remove();
   };
   setTimeout(()=>m.querySelector('#nl-email')?.focus({preventScroll:true}), 50);
