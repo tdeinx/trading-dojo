@@ -96,7 +96,7 @@
   const res = document.getElementById('tk-result');
   if(answered < l.quiz.length){ res.textContent = `Answer all ${l.quiz.length} questions first.`; return; }
   const score = right/l.quiz.length;
-  if(score >= PASS){ progress.done[l.id] = Math.max(score, progress.done[l.id]||0); save(progress); res.innerHTML = `<b>${right}/${l.quiz.length}.</b> Lesson complete.`; renderNav(); }
+  if(score >= PASS){ progress.done[l.id] = Math.max(score, progress.done[l.id]||0); save(progress); res.innerHTML = `<b>${right}/${l.quiz.length}.</b> Lesson complete.`; renderNav(); window.dispatchEvent(new CustomEvent('dojo:milestone',{detail:{kind:'lesson'}})); }
   else res.innerHTML = `<b>${right}/${l.quiz.length}.</b> Read the explanations, review the lesson, then try again.`;
  }
 

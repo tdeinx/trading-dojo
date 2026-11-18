@@ -21,6 +21,8 @@ async function start(){
 .acct-card .ghost{cursor:pointer;font-weight:600}
 .acct-card .or{text-align:center;font-size:0.75rem;color:var(--text-faint,#888);margin:4px 0 10px}
 .acct-card .msg{font-size:0.85rem;min-height:1.2em;margin-bottom:6px}
+.acct-card .acct-opt{display:flex;gap:8px;align-items:flex-start;font-size:0.82rem;line-height:1.4;color:var(--text-dim,#555);margin:2px 0 10px;cursor:pointer}
+.acct-card .acct-opt input{width:auto;margin:2px 0 0;padding:0}
 .acct-card .fine{font-size:0.72rem;color:var(--text-faint,#888);margin:6px 0 0}`;
  document.head.appendChild(css);
  const btn = document.createElement('button'); btn.className='acct-btn'; btn.type='button';
@@ -91,6 +93,7 @@ async function start(){
  A.onAuthStateChanged(auth, async u => {
   user = u; render();
   if(!u) return;
+  if(localStorage.getItem('dojo_tips_optin')==='1' && u.email && window.DojoNewsletter){ rawRemove.call(localStorage,'dojo_tips_optin'); window.DojoNewsletter.subscribe({email:u.email, name:(u.displayName||'').split(' ')[0], source:'account'}); }
   const first = !sessionStorage.getItem('dojo_synced_'+u.uid);
   const changed = await syncNow();
   sessionStorage.setItem('dojo_synced_'+u.uid, '1');
@@ -113,9 +116,12 @@ async function start(){
   const m = modal(`<h2>Save your progress</h2><p>Sign in to keep your lessons, practice journal and stats, and pick up on any device.</p>
    <button class="primary" data-g>Continue with Google</button><div class="or">or get a sign-in link by email</div>
    <input type="email" placeholder="you@example.com" autocomplete="email" data-e/><button class="ghost" data-l>Email me a link</button>
+   <label class="acct-opt"><input type="checkbox" data-t/> Send me Dojo tips by email (monthly, unsubscribe anytime)</label>
    <div class="msg" aria-live="polite" data-m></div><button class="ghost" data-x>Not now</button>
    <p class="fine">We store your email and Dojo progress only. Practice is still free without an account.</p>`);
   const msg = t => m.querySelector('[data-m]').textContent = t;
+  const optIn = () => { try{ rawSet.call(localStorage,'dojo_tips_optin', m.querySelector('[data-t]').checked?'1':'0'); }catch(e){} };
+  m.querySelectorAll('[data-g],[data-l]').forEach(b=>b.addEventListener('click', optIn, true));
   m.querySelector('[data-x]').onclick = () => m.remove();
   m.querySelector('[data-g]').onclick = async () => {
    try{ await A.signInWithPopup(auth, new A.GoogleAuthProvider()); m.remove(); }

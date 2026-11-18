@@ -33,4 +33,5 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 /* Accounts: load config, merge logic and the account module on every page. Dormant until configured. */
 (()=>{const add=(src,mod)=>new Promise(r=>{const s=document.createElement('script');s.src=src;if(mod)s.type='module';s.onload=r;s.onerror=r;document.head.appendChild(s);});
+if(!/subscribed\.html$/.test(location.pathname)) add('/newsletter.js');
  add('/firebase-config.js').then(()=>{ if(!window.DOJO_FIREBASE) return; return add('/sync-merge.js').then(()=>add('/account.js',true)); });})();

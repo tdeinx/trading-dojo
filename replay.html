@@ -524,7 +524,7 @@ function closeTrade(price, reason){
   const pnl=R.pnlUSD(pos,price,usdPerMove(pos.symbol,price)), r=pos.riskUSD?pnl/pos.riskUSD:NaN;
   const entry={...pos, exit:price, exitReason:reason, pnl, r, closed:new Date().toISOString(), ruleAdherent:pos.rules.risk&&pos.rules.rr, source:'replay',
     replay:{interval:drill.interval, bars:drill.cursor-pos.barOpened, marketTime:new Date(current().t).toISOString()}};
-  drill.trades.unshift(entry); drill.equity+=pnl; drill.position=null;
+  drill.trades.unshift(entry); drill.equity+=pnl; drill.position=null; window.dispatchEvent(new CustomEvent('dojo:milestone',{detail:{kind:'trade'}}));
   if(pnl<0) drill.losses++;
   if(!addToJournal(entry)) showToast('Could not save to your journal in this browser.','red');
   showToast(`${({stop:'Stop hit',gap:'Gapped past stop',target:'Target hit',manual:'Closed'})[reason]}: ${fmtUSD(pnl)} (${fmtR(r)})`, pnl>=0?'green':'red');

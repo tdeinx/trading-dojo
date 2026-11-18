@@ -481,7 +481,7 @@ function closePos(reason){
     entry:pos.entrySpot, exit:spot(), stop:NaN, target:NaN, lots:pos.contracts, riskUSD:pos.maxLoss, riskPct:pos.riskPct, rr:pos.maxGain/pos.maxLoss,
     pnl, r, exitReason:reason, opened:pos.opened, closed:new Date().toISOString(), rules:{stop:true,risk:pos.riskPct<=1,rr:true}, ruleAdherent:pos.riskPct<=1,
     source:'options-replay', options:{legs:pos.legs.map(l=>({type:l.type,strike:l.strike,qty:l.qty})), days:pos.days, heldDays:Math.round((cur().t-drill.bars[pos.entryBar].t)/DAY)}};
-  drill.trades.unshift(entry); drill.equity+=pnl; drill.pos=null; strikeOffset=0;
+  drill.trades.unshift(entry); drill.equity+=pnl; drill.pos=null; strikeOffset=0; window.dispatchEvent(new CustomEvent('dojo:milestone',{detail:{kind:'trade'}}));
   if(!addToJournal(entry)) showToast('Could not save to your journal in this browser.','red');
   showToast(`${reason==='expiry'?'Expired':'Closed'}: ${fmtUSD(pnl)} (${fmtR(r)})`, pnl>=0?'green':'red');
   rebuild();

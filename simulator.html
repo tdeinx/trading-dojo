@@ -767,6 +767,7 @@ function closeTrade(id, exitPrice, reason){
   const r = pos.riskUSD ? pnl/pos.riskUSD : NaN;
   const ruleAdherent = pos.rules.stop && pos.rules.risk && pos.rules.rr;
   state.journal.unshift({...pos, exit:exitPrice, exitReason:reason, pnl, r, closed:new Date().toISOString(), ruleAdherent});
+  window.dispatchEvent(new CustomEvent('dojo:milestone',{detail:{kind:'trade'}}));
   state.cash += pnl; state.realizedPnL += pnl;
   delete state.positions[id];
   awardBadge(pnl>0?'first_profit':'first_loss');
